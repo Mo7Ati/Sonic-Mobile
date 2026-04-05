@@ -2,6 +2,22 @@ import axios, { AxiosError } from 'axios';
 import { ENV } from '@/config/env';
 import { getToken, removeToken } from './secure-store';
 
+
+export interface ApiError {
+  message: string;
+  errors?: Record<string, string[]>;
+  error_code?: number;
+  status?: number;
+}
+
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  message: string;
+  data: T;
+  extra: unknown;
+}
+
+
 const api = axios.create({
   baseURL: `${ENV.API_BASE_URL}/api/customer`,
   headers: {
@@ -36,12 +52,6 @@ api.interceptors.response.use(
   },
 );
 
-export interface ApiError {
-  message: string;
-  errors?: Record<string, string[]>;
-  error_code?: number;
-  status?: number;
-}
 
 export function parseApiError(error: unknown): ApiError {
   if (axios.isAxiosError(error)) {
