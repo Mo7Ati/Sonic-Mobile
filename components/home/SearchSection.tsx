@@ -1,31 +1,49 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { useThemeColors } from '@/hooks/use-theme-color';
 
 interface SearchSectionProps {
   onPress?: () => void;
   placeholder?: string;
+  editable?: boolean;
+  value?: string;
+  onChangeText?: (text: string) => void;
 }
 
 export const SearchSection: React.FC<SearchSectionProps> = ({
   onPress,
   placeholder = 'Search stores, products...',
+  editable = false,
+  value,
+  onChangeText,
 }) => {
   const colors = useThemeColors();
 
   return (
     <View style={styles.wrap}>
       <Pressable
-        onPress={onPress}
+        onPress={editable ? undefined : onPress}
         style={({ pressed }) => [
           styles.bar,
           { backgroundColor: colors.input },
-          pressed && { opacity: 0.8 },
+          !editable && pressed && { opacity: 0.8 },
         ]}>
         <Ionicons name="search-outline" size={18} color={colors.mutedForeground} />
-        <Text style={[styles.placeholder, { color: colors.mutedForeground }]}>{placeholder}</Text>
+        {editable ? (
+          <TextInput
+            style={[styles.input, { color: colors.foreground }]}
+            placeholder={placeholder}
+            placeholderTextColor={colors.mutedForeground}
+            value={value}
+            onChangeText={onChangeText}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+        ) : (
+          <Text style={[styles.placeholder, { color: colors.mutedForeground }]}>{placeholder}</Text>
+        )}
         <View style={[styles.divider, { backgroundColor: colors.border }]} />
         <Pressable style={styles.filterHit} hitSlop={8}>
           <Ionicons name="options-outline" size={18} color={colors.foreground} />
@@ -51,6 +69,12 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     flex: 1,
     fontSize: 14,
+  },
+  input: {
+    marginLeft: 10,
+    flex: 1,
+    fontSize: 14,
+    padding: 0,
   },
   divider: {
     height: 28,

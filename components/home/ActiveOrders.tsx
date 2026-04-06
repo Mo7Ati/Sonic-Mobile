@@ -3,7 +3,6 @@ import React, { useCallback } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useThemeColors } from '@/hooks/use-theme-color';
-import { listItemKey } from './listItemKey';
 import { SectionHeader } from './SectionHeader';
 import type { ActiveOrder, Section } from './types';
 
@@ -102,7 +101,7 @@ export const ActiveOrders: React.FC<ActiveOrdersProps> = ({ section, onOrderPres
       <FlatList
         data={orders}
         renderItem={renderOrder}
-        keyExtractor={(item, index) => listItemKey(item.id, index)}
+        keyExtractor={(item) => item.id.toString()}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContent}

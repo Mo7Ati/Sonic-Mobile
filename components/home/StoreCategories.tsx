@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -16,6 +17,7 @@ export const StoreCategories: React.FC<StoreCategoriesProps> = ({
 }) => {
   const categories = (section.data as StoreCategoryItem[]) || [];
   const colors = useThemeColors();
+  const router = useRouter();
 
   if (categories.length === 0) return null;
 
@@ -27,7 +29,10 @@ export const StoreCategories: React.FC<StoreCategoriesProps> = ({
         renderItem={({ item }) => {
           return (
             <Pressable
-              onPress={() => console.log('Category pressed:', item.id)}
+              onPress={() => {
+                console.log('Category pressed:', item.id);
+                router.push({ pathname: '/store-category/[id]', params: { id: item.id.toString() } })
+              }}
               style={({ pressed }) => [styles.categoryPress, pressed && styles.categoryPressed]}>
               <View style={[styles.iconWrap]}>
                 <Image source={{ uri: item.image ?? '' }} style={styles.fill} resizeMode="cover" />

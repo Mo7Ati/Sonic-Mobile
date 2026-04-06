@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import React, { useCallback } from 'react';
 import {
   FlatList,
@@ -10,6 +9,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { DeliverToHeader } from '@/components/DeliverToHeader';
 import { useThemeColors } from '@/hooks/use-theme-color';
 import { useHomeSections } from '@/hooks/react-query-hooks/use-home-sections';
 import { parseApiError } from '@/services/api';
@@ -53,37 +53,14 @@ export const HomePage = () => {
     [],
   );
 
-  const header = (
-    <View style={styles.header}>
-      <View>
-        <Text style={[styles.deliverLabel, { color: colors.mutedForeground }]}>Deliver to</Text>
-        <Pressable style={styles.addressRow}>
-          <Ionicons name="location" size={14} color={colors.primary} />
-          <Text style={[styles.addressText, { color: colors.foreground }]}>Gaza - Rimal</Text>
-          <Ionicons name="chevron-down" size={14} color={colors.foreground} style={styles.chevron} />
-        </Pressable>
-      </View>
-      <View style={styles.headerActions}>
-        <Pressable style={[styles.iconButton, { backgroundColor: colors.card }, styles.iconButtonShadow]}>
-          <Ionicons name="notifications-outline" size={18} color={colors.foreground} />
-        </Pressable>
-        <Pressable style={[styles.iconButton, { backgroundColor: colors.primary }]}>
-          <Ionicons name="person" size={16} color={colors.primaryForeground} />
-        </Pressable>
-      </View>
-    </View>
-  );
-
   return (
     <View style={[styles.screen, { paddingTop: insets.top, backgroundColor: colors.background }]}>
-      {header}
+      <DeliverToHeader />
 
       <FlatList
         data={sections}
         renderItem={renderSection}
-        keyExtractor={(item) => {
-          return item.id.toString();
-        }}
+        keyExtractor={(item) => item.id.toString()}
         showsVerticalScrollIndicator={true}
         contentContainerStyle={styles.listContent}
         refreshControl={
@@ -102,50 +79,6 @@ export const HomePage = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 8,
-  },
-  deliverLabel: {
-    fontSize: 11,
-    fontWeight: '500',
-  },
-  addressRow: {
-    marginTop: 2,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  addressText: {
-    marginLeft: 4,
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  chevron: {
-    marginLeft: 2,
-  },
-  headerActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  iconButton: {
-    height: 36,
-    width: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 9999,
-  },
-  iconButtonShadow: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
-    elevation: 2,
   },
   listContent: {
     paddingBottom: 24,

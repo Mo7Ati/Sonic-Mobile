@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { ActiveOrders } from './ActiveOrders';
-import BranchList from './BranchList';
+import { ListItems } from './ListItems';
 import { MainBanner } from './MainBanner';
 import { RectangleBanners } from './RectangleBanners';
 import { SearchSection } from './SearchSection';
@@ -10,7 +10,7 @@ import { SquareBanners } from './SquareBanners';
 import { StoreCategories } from './StoreCategories';
 import { UnPaidOrders } from './UnPaidOrders';
 import { WrittenBanner } from './WrittenBanner';
-import type { Section, SectionCallbacks } from './types';
+import type { Section } from './types';
 
 interface SectionRendererProps {
   section: Section;
@@ -59,7 +59,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ section }) => 
     case 'store_category_list_items':
     case 'group_list_items':
       return (
-        <BranchList
+        <ListItems
           section={section}
           onSeeAll={seeAll}
         />
