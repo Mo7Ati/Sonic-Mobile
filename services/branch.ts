@@ -1,9 +1,24 @@
 import { Branch } from "@/hooks/react-query-hooks/use-branches-queries";
 import api, { ApiResponse } from "./api";
 
-export async function getBranches(storeCategoryId: number, search?: string): Promise<Branch[]> {
-    const { data } = await api.get<ApiResponse<Branch[]>>('/branches', {
-        params: { store_category_id: storeCategoryId, ...(search ? { search } : {}) },
+export interface BranchFilters {
+    store_category_id: number;
+    search?: string;
+    sort_by?: "rating" | "delivery_time" | "delivery_fee";
+    offers?: boolean;
+    rating_4_plus?: boolean;
+    fast_delivery?: boolean;
+}
+
+export interface PaginatedBranches {
+    data: Branch[];
+    current_page: number;
+    last_page: number;
+}
+
+export async function getBranches(filters: BranchFilters, page: number = 1): Promise<PaginatedBranches> {
+    const { data } = await api.get<ApiResponse<PaginatedBranches>>('/branches', {
+        params: { ...filters, page },
     });
     return data.data;
 }
