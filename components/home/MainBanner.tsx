@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image, Dimensions, StyleSheet, Pressable } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
-import { SectionItem, Section } from './types';
+import type { Section, SectionItem } from '@/services/home/home-types';
 
 const { width } = Dimensions.get('window');
 

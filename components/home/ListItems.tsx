@@ -1,17 +1,12 @@
-import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import {
-  FlatList,
-  Image,
-  Pressable,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 
-import { useThemeColors } from '@/hooks/use-theme-color';
 import { SectionHeader } from './SectionHeader';
-import { Branch, Section } from './types';
+import { Branch } from '@/services/branch/types';
+import { Section } from '@/services/home/home-types';
 import BranchesList from '../branches/branches-list';
 
 

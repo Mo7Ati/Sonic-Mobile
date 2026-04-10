@@ -1,7 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import { ActiveOrders } from './ActiveOrders';
 import { ListItems } from './ListItems';
 import { MainBanner } from './MainBanner';
 import { RectangleBanners } from './RectangleBanners';
@@ -10,7 +9,7 @@ import { SquareBanners } from './SquareBanners';
 import { StoreCategories } from './StoreCategories';
 import { UnPaidOrders } from './UnPaidOrders';
 import { WrittenBanner } from './WrittenBanner';
-import type { Section } from './types';
+import type { Section } from '@/services/home/home-types';
 
 interface SectionRendererProps {
   section: Section;
@@ -65,13 +64,13 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({ section }) => 
         />
       );
 
-    case 'active_orders':
-      return (
-        <ActiveOrders
-          section={section}
-          onSeeAll={seeAll}
-        />
-      );
+    // case 'active_orders':
+    //   return (
+    //     <ActiveOrders
+    //       section={section}
+    //       onSeeAll={seeAll}
+    //     />
+    //   );
 
     case 'un_paid_orders':
       return <UnPaidOrders section={section} />;

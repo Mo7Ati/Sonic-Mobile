@@ -1,7 +1,7 @@
 import BranchesList from "@/components/branches/branches-list";
 import BranchesListSkeleton from "@/components/branches/branches-list-skeleton";
 import { useThemeColors } from "@/hooks/use-theme-color";
-import { type Branch } from "@/hooks/react-query-hooks/use-branches-queries";
+import { type Branch } from "@/services/branch/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { StyleSheet, View } from "react-native";

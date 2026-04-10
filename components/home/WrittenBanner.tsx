@@ -3,7 +3,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useThemeColors } from '@/hooks/use-theme-color';
-import type { Section, WrittenBannerData } from './types';
+import type { Section, WrittenBannerData } from '@/services/home/home-types';
 
 interface WrittenBannerProps {
   section: Section;

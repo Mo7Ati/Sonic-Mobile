@@ -4,7 +4,8 @@ import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native
 
 import { useThemeColors } from '@/hooks/use-theme-color';
 import { SectionHeader } from './SectionHeader';
-import type { Section, StoreCategoryItem } from './types';
+import type { Section } from '@/services/home/home-types';
+import { StoreCategory } from '@/services/store-categories/types';
 
 interface StoreCategoriesProps {
   section: Section;
@@ -15,7 +16,7 @@ export const StoreCategories: React.FC<StoreCategoriesProps> = ({
   section,
   onSeeAll,
 }) => {
-  const categories = (section.data as StoreCategoryItem[]) || [];
+  const categories = (section.data as StoreCategory[]) || [];
   const colors = useThemeColors();
   const router = useRouter();
 

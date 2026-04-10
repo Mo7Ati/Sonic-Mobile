@@ -1,7 +1,7 @@
 import { useBranches } from "@/hooks/react-query-hooks/use-branches-queries";
 import { useStoreCategoryById } from "@/hooks/react-query-hooks/use-store-category";
 import { useDebouncedValue } from "@/hooks/use-debounce";
-import { BranchFilters } from "@/services/branch";
+import { BranchFilters } from "@/services/branch/branch-service";
 import { StoreCategory } from "@/services/store-categories/types";
 import { useCallback, useMemo, useState } from "react";
 import { DEFAULT_FILTERS, Filters } from "../components/filter-chips";

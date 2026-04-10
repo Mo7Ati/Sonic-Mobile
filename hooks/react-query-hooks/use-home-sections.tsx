@@ -1,14 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
-import { getHomeSections } from "@/services/home";
+import type { Section } from "@/services/home/home-types";
 import { ENV } from "@/config/env";
-import { mockSections } from "@/components/home/mockData";
-import type { Section } from "@/components/home/types";
+import { getHomeSections } from "@/services/home/home-service";
+import { useQuery } from "@tanstack/react-query";
 
 export function useHomeSections()  {
     return useQuery<Section[]>({
         queryKey: ['home-sections'],
         queryFn: getHomeSections,
-        enabled: !ENV.USE_MOCK_HOME,
-        initialData: ENV.USE_MOCK_HOME ? mockSections : undefined,
     });
 }

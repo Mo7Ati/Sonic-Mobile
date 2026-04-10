@@ -3,7 +3,8 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useThemeColors } from '@/hooks/use-theme-color';
-import type { Section, UnPaidOrdersData } from './types';
+import type { Section } from '@/services/home/home-types';
+import { UnPaidOrdersData } from '@/services/home/home-types';
 
 interface UnPaidOrdersProps {
   section: Section;

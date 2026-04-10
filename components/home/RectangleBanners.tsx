@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, Image, Pressable, StyleSheet, View, Dimensions } from 'react-native';
 import { SectionHeader } from './SectionHeader';
-import type { Section, SectionItem } from './types';
+import type { Section, SectionItem } from '@/services/home/home-types';
 
 const { width } = Dimensions.get('window');
 const ITEM_HEIGHT = 140;

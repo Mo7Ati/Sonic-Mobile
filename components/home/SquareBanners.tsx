@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
 
-import type { Section, SectionItem } from './types';
+import type { Section, SectionItem } from '@/services/home/home-types';
 import { SectionHeader } from './SectionHeader';
 
 interface SquareBannersProps {

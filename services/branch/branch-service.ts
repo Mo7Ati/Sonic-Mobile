@@ -1,5 +1,5 @@
-import { Branch } from "@/hooks/react-query-hooks/use-branches-queries";
-import api, { ApiResponse } from "./api";
+import { Branch } from "./types";
+import api, { ApiResponse } from "../api";
 
 export interface BranchFilters {
     store_category_id: number;
@@ -22,3 +22,5 @@ export async function getBranches(filters: BranchFilters, page: number = 1): Pro
     });
     return data.data;
 }
+
+
