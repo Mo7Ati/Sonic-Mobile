@@ -1,6 +1,6 @@
 import { Store } from "@/components/home/types";
 import { getBranches } from "@/services/branch";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export interface Branch {
     id: number;
@@ -14,11 +14,12 @@ export interface Branch {
     delivery_fee_before_discount?: number;
 }
 
-export function useBranches(storeCategoryId: number, initialData?: Branch[]) {
+export function useBranches(storeCategoryId: number, search?: string, initialData?: Branch[]) {
     return useQuery<Branch[]>({
-        queryKey: ['branches', storeCategoryId],
-        queryFn: () => getBranches(storeCategoryId),
+        queryKey: ['branches', storeCategoryId, search ?? ''],
+        queryFn: () => getBranches(storeCategoryId, search),
         enabled: !!storeCategoryId,
         initialData,
+        placeholderData: keepPreviousData,
     });
 }

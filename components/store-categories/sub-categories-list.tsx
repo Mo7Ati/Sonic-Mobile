@@ -1,8 +1,8 @@
+import { useThemeColors } from '@/hooks/use-theme-color'
+import { StoreCategory } from '@/services/store-categories/types'
+import { Text } from '@react-navigation/elements'
 import React from 'react'
 import { FlatList, Image, Pressable, StyleSheet, View } from 'react-native'
-import { Text } from '@react-navigation/elements'
-import { StoreCategory } from '@/services/store-category'
-import { useThemeColors } from '@/hooks/use-theme-color'
 
 function SubCategoryItem({
     item,
