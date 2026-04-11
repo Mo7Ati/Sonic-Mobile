@@ -1,7 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { ENV } from '@/config/env';
-import { getToken, removeToken } from './secure-store';
-
+import { getToken, removeToken } from '@/services/secure-store';
 
 export interface ApiError {
   message: string;
@@ -29,9 +28,11 @@ const api = axios.create({
 
 api.interceptors.request.use(async (config) => {
   const token = await getToken();
+  
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  // config.headers['Accept-Language'] = i18n.language || 'en';
   return config;
 });
 

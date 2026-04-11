@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react';
-import { router } from 'expo-router';
-import * as Linking from 'expo-linking';
-import Toast from 'react-native-toast-message';
-import { verifyEmailApi } from '@/services/auth';
-import { parseApiError } from '@/services/api';
 import { useAuth } from '@/contexts/auth-context';
+import { parseApiError } from '@/lib/api';
+import { verifyEmailApi } from '@/services/auth';
+import * as Linking from 'expo-linking';
+import { router } from 'expo-router';
+import { useEffect, useRef } from 'react';
+import Toast from 'react-native-toast-message';
 
 function parseUrl(url: string) {
   try {

@@ -1,20 +1,20 @@
+import { AuthButton } from '@/components/ui/auth-button';
+import { AuthInput } from '@/components/ui/auth-input';
+import { useAuth } from '@/contexts/auth-context';
+import { parseApiError, type ApiError } from '@/lib/api';
+import { Link } from 'expo-router';
 import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import {
-  View,
-  Text,
-  ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   StyleSheet,
+  Text,
+  View,
 } from 'react-native';
-import { Link } from 'expo-router';
-import { useForm, Controller } from 'react-hook-form';
-import Toast from 'react-native-toast-message';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AuthInput } from '@/components/ui/auth-input';
-import { AuthButton } from '@/components/ui/auth-button';
-import { useAuth } from '@/contexts/auth-context';
-import { parseApiError, type ApiError } from '@/services/api';
+import Toast from 'react-native-toast-message';
 
 interface LoginForm {
   email: string;

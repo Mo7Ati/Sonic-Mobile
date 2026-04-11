@@ -10,12 +10,12 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DeliverToHeader } from '@/components/DeliverToHeader';
-import { useThemeColors } from '@/hooks/use-theme-color';
 import { useHomeSections } from '@/hooks/react-query-hooks/use-home-sections';
-import { parseApiError } from '@/services/api';
+import { useThemeColors } from '@/hooks/use-theme-color';
+import { parseApiError } from '@/lib/api';
+import type { Section } from '@/services/home/home-types';
 import { HomePageSkeleton } from './HomePageSkeleton';
 import { SectionRenderer } from './SectionRenderer';
-import type { Section } from '@/services/home/home-types';
 
 export const HomePage = () => {
   const insets = useSafeAreaInsets();

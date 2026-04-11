@@ -1,5 +1,5 @@
 import type { Section } from './home-types';
-import api, { ApiResponse } from '../api';
+import api, { ApiResponse } from '@/lib/api';
 
 
 export async function getHomeSections(): Promise<Section[]> {

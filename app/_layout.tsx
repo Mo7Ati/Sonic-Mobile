@@ -1,12 +1,16 @@
 import { Colors } from '@/constants/theme';
 import { AuthProvider } from '@/contexts/auth-context';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import "@/lib/i18n";
+import { initLanguage } from '@/lib/i18n';
 import { Theme, ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useMemo, useState } from 'react';
+import { NativeModules, Text } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
 import 'react-native-reanimated';
+import { ThemedText } from '@/components/themed-text';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -39,6 +43,21 @@ function useAppTheme(): Theme {
 export default function RootLayout() {
   const theme = useAppTheme();
   const [queryClient] = useState(() => new QueryClient());
+  const [langReady, setLangReady] = useState(false);
+
+  useEffect(() => {
+    initLanguage().then((needsReload) => {
+      if (needsReload) {
+        // RTL state changed — reload the app for it to take effect
+        NativeModules.DevSettings?.reload?.();
+      } else {
+        setLangReady(true);
+      }
+    });
+  }, []);
+
+  if (!langReady) return <ThemedText style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>Loading...</ThemedText>;
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={theme}>

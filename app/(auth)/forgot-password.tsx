@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-} from 'react-native';
-import { router } from 'expo-router';
-import { useForm, Controller } from 'react-hook-form';
-import Toast from 'react-native-toast-message';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
-import { AuthInput } from '@/components/ui/auth-input';
 import { AuthButton } from '@/components/ui/auth-button';
+import { AuthInput } from '@/components/ui/auth-input';
 import { useAuth } from '@/contexts/auth-context';
-import { parseApiError, type ApiError } from '@/services/api';
+import { parseApiError, type ApiError } from '@/lib/api';
+import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import {
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 
 interface ForgotForm {
   email: string;

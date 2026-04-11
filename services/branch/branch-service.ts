@@ -1,5 +1,5 @@
 import { Branch } from "./types";
-import api, { ApiResponse } from "../api";
+import api, { ApiResponse } from "@/lib/api";
 
 export interface BranchFilters {
     store_category_id: number;

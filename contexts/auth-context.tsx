@@ -1,23 +1,23 @@
-import React, {
-  createContext,
-  useContext,
-  useReducer,
-  useEffect,
-  useCallback,
-  useMemo,
-} from 'react';
-import { setOnUnauthorized, parseApiError } from '@/services/api';
-import { getToken, setToken, removeToken } from '@/services/secure-store';
+import { parseApiError, setOnUnauthorized } from '@/lib/api';
 import {
-  loginApi,
-  registerApi,
-  logoutApi,
-  getUserApi,
-  forgotPasswordApi,
-  resetPasswordApi,
-  resendVerificationApi,
-  type Customer,
+    forgotPasswordApi,
+    getUserApi,
+    loginApi,
+    logoutApi,
+    registerApi,
+    resendVerificationApi,
+    resetPasswordApi,
+    type Customer,
 } from '@/services/auth';
+import { getToken, removeToken, setToken } from '@/services/secure-store';
+import React, {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useReducer,
+} from 'react';
 
 interface AuthState {
   user: Customer | null;
