@@ -1,5 +1,4 @@
-import { Store } from "@/components/home/types";
-import { Product } from "../product/types";
+import { Product } from "@/services/product/types";
 
 
 export type BranchStatus = "available" | "busy" | "coming_soon" | "closed";

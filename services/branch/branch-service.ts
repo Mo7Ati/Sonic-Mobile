@@ -23,4 +23,7 @@ export async function getBranches(filters: BranchFilters, page: number = 1): Pro
     return data.data;
 }
 
-
+export async function getBranch(id: number): Promise<Branch> {
+    const { data } = await api.get<ApiResponse<Branch>>(`/branches/${id}`);
+    return data.data;
+}

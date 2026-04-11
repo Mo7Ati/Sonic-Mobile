@@ -1,4 +1,4 @@
-import type { Section } from '@/components/home/types';
+import type { Section } from './home-types';
 import api, { ApiResponse } from '../api';
 
 

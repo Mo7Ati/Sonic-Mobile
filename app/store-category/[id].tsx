@@ -3,11 +3,11 @@ import BranchesListSkeleton from "@/components/branches/branches-list-skeleton";
 import { SearchSection } from "@/components/home/SearchSection";
 import SubCategoriesList from "@/components/store-categories/sub-categories-list";
 import SubCategoriesSkeleton from "@/components/store-categories/sub-categories-skeleton";
-import { Branch } from "@/hooks/react-query-hooks/use-branches-queries";
+import { Branch } from "@/services/branch/types";
 import { useThemeColors } from "@/hooks/use-theme-color";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -21,10 +21,17 @@ export default function StoreCategoryScreen() {
   const colors = useThemeColors();
   const { id } = useLocalSearchParams();
   const page = useStoreCategoryPage(Number(id));
+  const router = useRouter();
 
   const renderItem = useCallback(
-    ({ item }: { item: Branch }) => <BranchCard item={item} fullWidth />,
-    []
+    ({ item }: { item: Branch }) => (
+      <BranchCard
+        item={item}
+        fullWidth
+        onPress={() => router.push({ pathname: "/branch/[id]", params: { id: item.id } })}
+      />
+    ),
+    [router]
   );
 
   if (page.error) {
