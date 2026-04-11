@@ -24,28 +24,15 @@ export function DeliverToHeader({
   return (
     <View style={styles.header}>
       <View style={styles.addressContainer}>
-        <Ionicons name="location" size={20} color={colors.primary} />
+        <Ionicons name="location-outline" size={20} color={colors.primary} />
         <View>
           <Text style={[styles.deliverLabel, { color: colors.mutedForeground }]}>{caption}</Text>
           <Pressable style={styles.addressRow} onPress={onAddressPress}>
-
-            <Text style={[styles.addressText, { color: colors.foreground }]}>{address}</Text>
-            <Ionicons name="chevron-down" size={14} color={colors.foreground} style={styles.chevron} />
+            <Text style={styles.addressText}>{address}</Text>
+            <Ionicons name="chevron-down" size={14} style={styles.chevron} />
           </Pressable>
         </View>
       </View>
-      {/* <View style={styles.headerActions}>
-        <Pressable
-          style={[styles.iconButton, { backgroundColor: colors.card }, styles.iconButtonShadow]}
-          onPress={onNotificationsPress}>
-          <Ionicons name="notifications-outline" size={18} color={colors.foreground} />
-        </Pressable>
-        <Pressable
-          style={[styles.iconButton, { backgroundColor: colors.primary }]}
-          onPress={onProfilePress}>
-          <Ionicons name="person" size={16} color={colors.primaryForeground} />
-        </Pressable>
-      </View> */}
     </View>
   );
 }
@@ -67,6 +54,7 @@ const styles = StyleSheet.create({
   deliverLabel: {
     fontSize: 11,
     fontWeight: '500',
+    textAlign: 'left',
   },
   addressRow: {
     marginTop: 2,
@@ -78,7 +66,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   chevron: {
-    marginStart: 2,
+    marginStart: 4,
   },
   headerActions: {
     flexDirection: 'row',

@@ -99,12 +99,14 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 16,
     fontWeight: '700',
+    textAlign: 'left',
   },
   desc: {
     marginTop: 4,
     fontSize: 12,
     lineHeight: 16,
     opacity: 0.7,
+    textAlign: 'left',
   },
   arrowBtn: {
     marginStart: 12,

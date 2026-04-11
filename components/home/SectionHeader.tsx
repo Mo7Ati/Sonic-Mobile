@@ -21,7 +21,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description
   return (
     <View style={styles.row}>
       <View style={styles.titleBlock}>
-        <ThemedText style={[styles.title, { color: colors.foreground }]}>{title}</ThemedText>
+        <Text style={styles.title}>{title}</Text>
         {description ? (
           <Text style={[styles.description, { color: colors.mutedForeground }]}>{description}</Text>
         ) : null}

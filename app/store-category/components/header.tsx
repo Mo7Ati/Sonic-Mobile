@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
   deliverLabel: {
     fontSize: 14,
     fontWeight: "400",
+    textAlign: 'left',
   },
   address: {
     fontSize: 14,

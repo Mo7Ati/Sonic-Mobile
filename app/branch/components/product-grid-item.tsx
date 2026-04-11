@@ -20,7 +20,6 @@ export default function ProductGridItem({ product, onPress }: ProductGridItemPro
             onPress={onPress}
             style={({ pressed }) => [
                 styles.card,
-               ,
                 pressed && styles.pressed,
             ]}
         >
@@ -97,9 +96,11 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 14,
         fontWeight: "600",
+        textAlign: 'left',
     },
     price: {
         fontSize: 13,
         fontWeight: "500",
+        textAlign: 'left',
     },
 });

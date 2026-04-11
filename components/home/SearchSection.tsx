@@ -27,7 +27,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
         onPress={editable ? undefined : onPress}
         style={({ pressed }) => [
           styles.bar,
-          { backgroundColor: colors.input },
+          { borderColor: colors.border },
           !editable && pressed && { opacity: 0.8 },
         ]}>
         <Ionicons name="search-outline" size={18} color={colors.mutedForeground} />
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
   bar: {
     flexDirection: 'row',
     alignItems: 'center',
+    borderWidth: 1,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 12,

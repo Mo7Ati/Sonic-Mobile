@@ -85,11 +85,13 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 22,
         fontWeight: "800",
+        textAlign: 'left',
     },
     description: {
         fontSize: 13,
         fontWeight: "400",
         marginTop: 4,
+        textAlign: 'left',
     },
     grid: {
         marginTop: 16,

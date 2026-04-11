@@ -86,11 +86,13 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 16,
         fontWeight: "700",
+        textAlign: 'left',
     },
     description: {
         fontSize: 13,
         fontWeight: "400",
         lineHeight: 18,
+        textAlign: 'left',
     },
     priceRow: {
         flexDirection: "row",
@@ -111,6 +113,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: "500",
         marginTop: 2,
+        textAlign: 'left',
     },
     imageWrap: {
         width: 100,

@@ -59,7 +59,7 @@ const BranchCard = ({
           )}
         </View>
         <View style={styles.cardTextCol}>
-          <Text style={[styles.storeName, { color: colors.foreground }]} numberOfLines={1}>
+          <Text style={[styles.storeName]} numberOfLines={1}>
             {item.name}
           </Text>
           <Text style={[styles.branchName, { color: colors.mutedForeground }]} numberOfLines={1}>
@@ -146,11 +146,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     marginBottom: 2,
+    textAlign: 'left',
   },
   branchName: {
     fontSize: 10,
     fontWeight: '600',
     marginBottom: 4,
+    textAlign: 'left',
   },
   address: {
     fontSize: 12,

@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
     storeName: {
         fontSize: 18,
         fontWeight: "700",
+        textAlign: 'left',
     },
     categoryLine: {
         fontSize: 13,

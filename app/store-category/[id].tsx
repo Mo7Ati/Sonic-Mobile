@@ -51,7 +51,7 @@ export default function StoreCategoryScreen() {
         ListHeaderComponent={
           <>
             <SearchSection
-              placeholder="Search branches..."
+              placeholder="البحث عن فروع..."
               editable
               value={page.searchQuery}
               onChangeText={page.setSearchQuery}
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     marginTop: 8,
     marginBottom: 16,
+    textAlign: 'left',
   },
   emptyContainer: {
     alignItems: "center",

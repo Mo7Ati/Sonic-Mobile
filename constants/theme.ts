@@ -1,54 +1,55 @@
 import { Platform } from 'react-native';
 
 export const Colors = {
-  background: '#f5f5f5',
-  foreground: '#1a1a2e',
-  text: '#1a1a2e',
+  background: '#ffffff',
+  foreground: '#262626',
+  text: '#262626',
 
   card: '#ffffff',
-  cardForeground: '#1a1a2e',
+  cardForeground: '#262626',
 
   popover: '#ffffff',
-  popoverForeground: '#64748b',
+  popoverForeground: '#262626',
 
-  primary: '#00875a',
-  primaryForeground: '#ffffff',
+  primary: '#f59e0b',
+  primaryForeground: '#000000',
 
-  secondary: '#f0fdf4',
-  secondaryForeground: '#14532d',
+  secondary: '#f3f4f6',
+  secondaryForeground: '#4b5563',
 
-  muted: '#f1f5f9',
-  mutedForeground: '#64748b',
+  muted: '#f9fafb',
+  mutedForeground: '#6b7280',
 
-  accent: '#f0fdf4',
-  accentForeground: '#14532d',
+  accent: '#fffbeb',
+  accentForeground: '#92400e',
 
-  destructive: '#dc2626',
+  destructive: '#ef4444',
   destructiveForeground: '#ffffff',
 
-  border: '#e2e8f0',
-  input: '#f8fafc',
-  ring: '#00875a',
+  border: '#e5e7eb',
+  input: '#e5e7eb',
+  ring: '#f59e0b',
 
-  chart1: '#00875a',
-  chart2: '#3b82f6',
-  chart3: '#8b5cf6',
-  chart4: '#f59e0b',
-  chart5: '#10b981',
+  chart1: '#f59e0b',
+  chart2: '#d97706',
+  chart3: '#b45309',
+  chart4: '#92400e',
+  chart5: '#78350f',
 
-  sidebar: '#ffffff',
-  sidebarForeground: '#64748b',
-  sidebarPrimary: '#00875a',
+  sidebar: '#f9fafb',
+  sidebarForeground: '#262626',
+  sidebarPrimary: '#f59e0b',
   sidebarPrimaryForeground: '#ffffff',
-  sidebarAccent: '#f0fdf4',
-  sidebarAccentForeground: '#14532d',
-  sidebarBorder: '#e2e8f0',
-  sidebarRing: '#00875a',
+  sidebarAccent: '#fffbeb',
+  sidebarAccentForeground: '#92400e',
+  sidebarBorder: '#e5e7eb',
+  sidebarRing: '#f59e0b',
 
-  tint: '#00875a',
-  icon: '#94a3b8',
-  tabIconDefault: '#94a3b8',
-  tabIconSelected: '#00875a',
+  // derived (not explicitly provided but aligned)
+  tint: '#f59e0b',
+  icon: '#262626',
+  tabIconDefault: '#6b7280',
+  tabIconSelected: '#f59e0b',
 } as const;
 
 export type ThemeColors = typeof Colors;
