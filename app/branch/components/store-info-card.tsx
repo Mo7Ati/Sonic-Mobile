@@ -4,7 +4,7 @@ import { Branch } from "@/services/branch/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { Image } from "expo-image";
-import { Pressable, StyleSheet, View } from "react-native";
+import { I18nManager, Pressable, StyleSheet, View } from "react-native";
 
 interface StoreInfoCardProps {
     branch: Branch;
@@ -40,7 +40,7 @@ export default function StoreInfoCard({ branch }: StoreInfoCardProps) {
                         </Text>
                     ) : null}
                 </View>
-                <Ionicons name="chevron-forward" size={20} color={colors.mutedForeground} />
+                <Ionicons name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"} size={20} color={colors.mutedForeground} />
             </Pressable>
 
             <View style={[styles.metaRow, { borderTopColor: colors.border }]}>

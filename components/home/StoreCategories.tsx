@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   categoryPress: {
-    marginRight: 20,
+    marginEnd: 20,
     alignItems: 'center',
   },
   categoryPressed: {
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   listContent: {
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingStart: 20,
+    paddingEnd: 20,
   },
 });

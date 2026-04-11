@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { I18nManager, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { useThemeColors } from '@/hooks/use-theme-color';
 
@@ -66,12 +66,12 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   placeholder: {
-    marginLeft: 10,
+    marginStart: 10,
     flex: 1,
     fontSize: 14,
   },
   input: {
-    marginLeft: 10,
+    marginStart: 10,
     flex: 1,
     fontSize: 14,
     padding: 0,
@@ -81,6 +81,6 @@ const styles = StyleSheet.create({
     width: 1,
   },
   filterHit: {
-    marginLeft: 10,
+    marginStart: 10,
   },
 });

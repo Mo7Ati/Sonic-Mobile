@@ -2,7 +2,7 @@ import { useThemeColors } from "@/hooks/use-theme-color";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, View } from "react-native";
+import { I18nManager, Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface HeroHeaderProps {
@@ -37,7 +37,7 @@ export default function HeroHeader({ coverImage }: HeroHeaderProps) {
                         pressed && styles.pressed,
                     ]}
                 >
-                    <Ionicons name="arrow-back" size={22} color={colors.foreground} />
+                    <Ionicons name={I18nManager.isRTL ? "arrow-forward" : "arrow-back"} size={22} color={colors.foreground} />
                 </Pressable>
 
                 <View style={styles.rightActions}>

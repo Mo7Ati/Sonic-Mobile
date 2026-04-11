@@ -109,22 +109,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#fef2f2',
   },
   icon: {
-    marginRight: 10,
+    marginEnd: 10,
   },
   input: {
     flex: 1,
     fontSize: 16,
     color: '#111827',
     paddingVertical: 12,
+    textAlign: 'auto',
   },
   eyeButton: {
-    marginLeft: 8,
+    marginStart: 8,
     padding: 4,
   },
   errorText: {
     fontSize: 12,
     color: '#dc2626',
     marginTop: 4,
-    marginLeft: 2,
+    marginStart: 2,
   },
 });

@@ -26,7 +26,7 @@ export default function LanguageSwitch() {
             {
                 loading && <ThemedText>{t("loading")}</ThemedText>
             }
-            <View style={{ flexDirection: "row" }}><Text style={{ textAlign: "left" }}>{t("specialized_welcome", { name: "John", age: 20 })}</Text></View>
+            <View style={{ flexDirection: "row" }}><Text>{t("specialized_welcome", { name: "John", age: 20 })}</Text></View>
             <ThemedText>{t("cart_items", { count: 1 })}</ThemedText>
             <Button title="English" onPress={() => changeLanguage("en")} />
             <Button title="Arabic" onPress={() => changeLanguage("ar")} />

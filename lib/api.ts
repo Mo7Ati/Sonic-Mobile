@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { ENV } from '@/config/env';
+import i18n from '@/lib/i18n';
 import { getToken, removeToken } from '@/services/secure-store';
 
 export interface ApiError {
@@ -32,7 +33,7 @@ api.interceptors.request.use(async (config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  // config.headers['Accept-Language'] = i18n.language || 'en';
+  config.headers['Accept-Language'] = i18n.language || 'en';
   return config;
 });
 

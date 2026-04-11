@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         alignItems: "center",
-        paddingRight: 16,
+        paddingEnd: 16,
     },
     menuButton: {
         width: 44,

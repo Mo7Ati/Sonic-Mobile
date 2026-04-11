@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   chevron: {
-    marginLeft: 2,
+    marginStart: 2,
   },
   headerActions: {
     flexDirection: 'row',

@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { I18nManager, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useThemeColors } from '@/hooks/use-theme-color';
 import type { Section, WrittenBannerData } from '@/services/home/home-types';
@@ -40,7 +40,7 @@ export const WrittenBanner: React.FC<WrittenBannerProps> = ({ section, onPress }
             ) : null}
           </View>
           <View style={[styles.arrowBtn, { backgroundColor: `${textColor}15` }]}>
-            <Ionicons name="arrow-forward" size={18} color={textColor} />
+            <Ionicons name={I18nManager.isRTL ? "arrow-back" : "arrow-forward"} size={18} color={textColor} />
           </View>
         </View>
       </Pressable>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   deco1: {
     position: 'absolute',
-    right: -20,
+    end: -20,
     top: -20,
     width: 96,
     height: 96,
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   deco2: {
     position: 'absolute',
     bottom: -12,
-    left: -12,
+    start: -12,
     width: 64,
     height: 64,
     borderRadius: 9999,
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   deco3: {
     position: 'absolute',
-    right: 32,
+    end: 32,
     top: 32,
     width: 32,
     height: 32,
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   arrowBtn: {
-    marginLeft: 12,
+    marginStart: 12,
     height: 36,
     width: 36,
     alignItems: 'center',

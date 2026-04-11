@@ -73,7 +73,7 @@ export default function FilterChips({ filters, onFiltersChange }: Props) {
             name="swap-vertical"
             size={14}
             color={sortActive ? colors.primary : colors.foreground}
-            style={{ marginRight: 4 }}
+            style={{ marginEnd: 4 }}
           />
           <Text
             style={[
@@ -87,7 +87,7 @@ export default function FilterChips({ filters, onFiltersChange }: Props) {
             name="chevron-down"
             size={12}
             color={sortActive ? colors.primary : colors.foreground}
-            style={{ marginLeft: 2 }}
+            style={{ marginStart: 2 }}
           />
         </Pressable>
 

@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   card: {
-    marginRight: 12,
+    marginEnd: 12,
     overflow: 'hidden',
     borderRadius: 16,
   },
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   listContent: {
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingStart: 20,
+    paddingEnd: 20,
   },
 });

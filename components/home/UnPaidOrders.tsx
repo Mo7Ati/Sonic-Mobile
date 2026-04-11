@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { I18nManager, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useThemeColors } from '@/hooks/use-theme-color';
 import type { Section } from '@/services/home/home-types';
@@ -35,7 +35,7 @@ export const UnPaidOrders: React.FC<UnPaidOrdersProps> = ({ section, onPress }) 
 
         <View style={[styles.payPill, { backgroundColor: colors.chart4 }]}>
           <Text style={styles.payText}>Pay</Text>
-          <Ionicons name="arrow-forward" size={12} color="#fff" />
+          <Ionicons name={I18nManager.isRTL ? "arrow-back" : "arrow-forward"} size={12} color="#fff" />
         </View>
       </Pressable>
     </View>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   iconCircle: {
-    marginRight: 12,
+    marginEnd: 12,
     height: 32,
     width: 32,
     alignItems: 'center',

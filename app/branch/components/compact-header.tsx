@@ -2,7 +2,7 @@ import { useThemeColors } from "@/hooks/use-theme-color";
 import { Category } from "@/services/branch/types";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, View } from "react-native";
+import { I18nManager, Pressable, StyleSheet, View } from "react-native";
 import { Text } from "@react-navigation/elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CategoryTabs from "./category-tabs";
@@ -47,7 +47,7 @@ export default function CompactHeader({
                             pressed && styles.pressed,
                         ]}
                     >
-                        <Ionicons name="arrow-back" size={22} color={colors.foreground} />
+                        <Ionicons name={I18nManager.isRTL ? "arrow-forward" : "arrow-back"} size={22} color={colors.foreground} />
                     </Pressable>
 
                     <Text style={[styles.title, { color: colors.foreground }]} numberOfLines={1}>

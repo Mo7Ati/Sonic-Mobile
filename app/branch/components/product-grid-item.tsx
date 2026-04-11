@@ -2,7 +2,7 @@ import { useThemeColors } from "@/hooks/use-theme-color";
 import { Product } from "@/services/product/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Pressable, StyleSheet, View } from "react-native";
+import { I18nManager, Pressable, StyleSheet, View } from "react-native";
 import { Text } from "@react-navigation/elements";
 
 const ACTION_COLOR = "#00875a";
@@ -36,7 +36,7 @@ export default function ProductGridItem({ product, onPress }: ProductGridItemPro
                     <Ionicons name="fast-food-outline" size={36} color={colors.mutedForeground} />
                 )}
                 <View style={styles.actionButton}>
-                    <Ionicons name="chevron-forward" size={16} color="#fff" />
+                    <Ionicons name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"} size={16} color="#fff" />
                 </View>
             </View>
 
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     actionButton: {
         position: "absolute",
         bottom: 10,
-        right: 10,
+        end: 10,
         width: 32,
         height: 32,
         borderRadius: 16,

@@ -2,7 +2,7 @@ import { useThemeColors } from "@/hooks/use-theme-color";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, View } from "react-native";
+import { I18nManager, Pressable, StyleSheet, View } from "react-native";
 
 export default function Header() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export default function Header() {
         style={[styles.iconBtn, { borderColor: colors.border }]}
         hitSlop={8}
       >
-        <Ionicons name="arrow-back" size={20} color={colors.foreground} />
+        <Ionicons name={I18nManager.isRTL ? "arrow-forward" : "arrow-back"} size={20} color={colors.foreground} />
       </Pressable>
 
       <View style={styles.center}>

@@ -101,12 +101,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   listContent: {
-    paddingLeft: 20,
-    paddingRight: 8,
+    paddingStart: 20,
+    paddingEnd: 8,
   },
   card: {
     width: CARD_WIDTH,
-    marginRight: 12,
+    marginEnd: 12,
     borderRadius: 14,
     borderWidth: StyleSheet.hairlineWidth,
     padding: 12,
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   },
   cardFullWidth: {
     width: '100%',
-    marginRight: 0,
+    marginEnd: 0,
   },
   cardPressed: {
     opacity: 0.92,
