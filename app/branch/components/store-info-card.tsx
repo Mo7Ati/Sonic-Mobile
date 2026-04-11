@@ -1,4 +1,3 @@
-import { Colors } from "@/constants/theme";
 import { useThemeColors } from "@/hooks/use-theme-color";
 import { Branch } from "@/services/branch/types";
 import { Ionicons } from "@expo/vector-icons";
