@@ -1,5 +1,6 @@
 import { Colors } from '@/constants/theme';
 import { AuthProvider } from '@/contexts/auth-context';
+import { LanguageProvider } from '@/contexts/language-context';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Theme, ThemeProvider } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -7,6 +8,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useMemo, useState } from 'react';
 import 'react-native-reanimated';
+import '@/lib/i18n';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -40,18 +42,21 @@ export default function RootLayout() {
   const theme = useAppTheme();
   const [queryClient] = useState(() => new QueryClient());
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider value={theme}>
-        <AuthProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="store-category/[id]" options={{ headerShown: false }} />
-            <Stack.Screen name="branch/[id]" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-          </Stack>
-          <StatusBar style="auto" />
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <LanguageProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider value={theme}>
+          <AuthProvider>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="store-category/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="branch/[id]" options={{ headerShown: false }} />
+              <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+            </Stack>
+            <StatusBar style="auto" />
+          </AuthProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </LanguageProvider>
   );
 }
+//  "./plugins/withRTLSupport",

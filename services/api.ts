@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { ENV } from '@/config/env';
 import { getToken, removeToken } from './secure-store';
+import i18n from '@/lib/i18n';
 
 
 export interface ApiError {
@@ -23,6 +24,7 @@ const api = axios.create({
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+    'Accept-Language': i18n.language || 'en',
   },
   timeout: 15000,
 });
