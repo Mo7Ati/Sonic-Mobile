@@ -2,8 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { I18nManager, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { useThemeColors } from '@/hooks/use-theme-color';
-import { ThemedText } from '../themed-text';
+import { Spacing } from '@/constants/theme';
+import { useAppTheme } from '@/hooks/use-app-theme';
 import { useTranslation } from 'react-i18next';
 
 interface SectionHeaderProps {
@@ -13,7 +13,7 @@ interface SectionHeaderProps {
 }
 
 export const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description, onSeeAll }) => {
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
   const { t } = useTranslation('home');
 
   if (!title) return null;
@@ -21,7 +21,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description
   return (
     <View style={styles.row}>
       <View style={styles.titleBlock}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, { color: colors.foreground }]}>{title}</Text>
         {description ? (
           <Text style={[styles.description, { color: colors.mutedForeground }]}>{description}</Text>
         ) : null}
@@ -40,11 +40,11 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description
 
 const styles = StyleSheet.create({
   row: {
-    marginBottom: 12,
+    marginBottom: Spacing.tight,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
+    paddingHorizontal: Spacing.gutter,
   },
   titleBlock: {
     flexDirection: 'column',
@@ -55,13 +55,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   description: {
-    marginTop: 2,
+    marginTop: Spacing.xs / 2,
     fontSize: 12,
   },
   seeAll: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 2,
+    gap: Spacing.xs / 2,
   },
   seeAllPressed: {
     opacity: 0.6,

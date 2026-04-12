@@ -1,11 +1,10 @@
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { BorderRadius, Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Product } from "@/services/product/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { I18nManager, Pressable, StyleSheet, View } from "react-native";
 import { Text } from "@react-navigation/elements";
-
-const ACTION_COLOR = "#00875a";
 
 interface ProductGridItemProps {
     product: Product;
@@ -13,7 +12,7 @@ interface ProductGridItemProps {
 }
 
 export default function ProductGridItem({ product, onPress }: ProductGridItemProps) {
-    const colors = useThemeColors();
+    const { colors } = useAppTheme();
 
     return (
         <Pressable
@@ -34,8 +33,17 @@ export default function ProductGridItem({ product, onPress }: ProductGridItemPro
                 ) : (
                     <Ionicons name="fast-food-outline" size={36} color={colors.mutedForeground} />
                 )}
-                <View style={styles.actionButton}>
-                    <Ionicons name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"} size={16} color="#fff" />
+                <View
+                    style={[
+                        styles.actionButton,
+                        { backgroundColor: colors.success, shadowColor: colors.shadow },
+                    ]}
+                >
+                    <Ionicons
+                        name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"}
+                        size={16}
+                        color={colors.successForeground}
+                    />
                 </View>
             </View>
 
@@ -54,7 +62,7 @@ export default function ProductGridItem({ product, onPress }: ProductGridItemPro
 const styles = StyleSheet.create({
     card: {
         flex: 1,
-        borderRadius: 12,
+        borderRadius: BorderRadius.xl,
         overflow: "hidden",
         // padding: 5,
     },
@@ -63,7 +71,7 @@ const styles = StyleSheet.create({
     },
     imageWrap: {
         aspectRatio: 1,
-        borderRadius: 12,
+        borderRadius: BorderRadius.xl,
         overflow: "hidden",
         alignItems: "center",
         justifyContent: "center",
@@ -79,18 +87,16 @@ const styles = StyleSheet.create({
         width: 32,
         height: 32,
         borderRadius: 16,
-        backgroundColor: ACTION_COLOR,
         alignItems: "center",
         justifyContent: "center",
-        shadowColor: "#000",
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.15,
         shadowRadius: 3,
         elevation: 3,
     },
     info: {
-        paddingVertical: 8,
-        gap: 4,
+        paddingVertical: Spacing.sm,
+        gap: Spacing.xs,
         paddingHorizontal: 5,
     },
     name: {

@@ -1,4 +1,4 @@
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { StyleSheet, View } from "react-native";
 import { Text } from "@react-navigation/elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -8,7 +8,7 @@ interface CartBottomBarProps {
 }
 
 export default function CartBottomBar({ minimumOrder = 60 }: CartBottomBarProps) {
-    const colors = useThemeColors();
+    const { colors } = useAppTheme();
     const insets = useSafeAreaInsets();
 
     return (

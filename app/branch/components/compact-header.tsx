@@ -1,4 +1,4 @@
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Category } from "@/services/branch/types";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -26,7 +26,7 @@ export default function CompactHeader({
     onTabPress,
     onLayout,
 }: CompactHeaderProps) {
-    const colors = useThemeColors();
+    const { colors } = useAppTheme();
     const router = useRouter();
     const insets = useSafeAreaInsets();
 

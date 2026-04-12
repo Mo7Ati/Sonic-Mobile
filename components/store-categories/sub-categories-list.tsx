@@ -1,4 +1,4 @@
-import { useThemeColors } from '@/hooks/use-theme-color'
+import { useAppTheme } from '@/hooks/use-app-theme'
 import { StoreCategory } from '@/services/store-categories/types'
 import { Text } from '@react-navigation/elements'
 import React from 'react'
@@ -13,7 +13,7 @@ function SubCategoryItem({
     isActive: boolean
     onPress: (subCategory: StoreCategory) => void
 }) {
-    const colors = useThemeColors()
+    const { colors } = useAppTheme()
 
     return (
         <Pressable

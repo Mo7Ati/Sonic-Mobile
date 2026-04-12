@@ -4,7 +4,8 @@ import { SearchSection } from "@/components/home/SearchSection";
 import SubCategoriesList from "@/components/store-categories/sub-categories-list";
 import SubCategoriesSkeleton from "@/components/store-categories/sub-categories-skeleton";
 import { Branch } from "@/services/branch/types";
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -18,7 +19,7 @@ import Header from "./components/header";
 import { useStoreCategoryPage } from "./hooks/use-store-category-page";
 
 export default function StoreCategoryScreen() {
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
   const { id } = useLocalSearchParams();
   const page = useStoreCategoryPage(Number(id));
   const router = useRouter();
@@ -89,7 +90,7 @@ export default function StoreCategoryScreen() {
             <ActivityIndicator style={styles.loadingMore} size="small" color={colors.primary} />
           ) : null
         }
-        ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+        ItemSeparatorComponent={() => <View style={{ height: Spacing.tight }} />}
         contentContainerStyle={styles.scrollContent}
         style={page.isPlaceholderData ? styles.placeholderOpacity : undefined}
         showsVerticalScrollIndicator={false}
@@ -106,21 +107,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 32,
-    paddingHorizontal: 20,
+    paddingBottom: Spacing.xl,
+    paddingHorizontal: Spacing.gutter,
   },
   pageTitle: {
     fontSize: 24,
     fontWeight: "800",
-    marginTop: 8,
-    marginBottom: 16,
+    marginTop: Spacing.sm,
+    marginBottom: Spacing.md,
     textAlign: 'left',
   },
   emptyContainer: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 48,
-    gap: 12,
+    paddingVertical: Spacing['2xl'],
+    gap: Spacing.tight,
   },
   emptyText: {
     fontSize: 15,
@@ -131,6 +132,6 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   loadingMore: {
-    paddingVertical: 16,
+    paddingVertical: Spacing.md,
   },
 });

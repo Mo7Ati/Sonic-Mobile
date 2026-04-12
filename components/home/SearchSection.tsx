@@ -1,8 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { I18nManager, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { useThemeColors } from '@/hooks/use-theme-color';
+import { useAppTheme } from '@/hooks/use-app-theme';
+import { BorderRadius, Spacing } from '@/constants/theme';
 
 interface SearchSectionProps {
   onPress?: () => void;
@@ -19,7 +20,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
   value,
   onChangeText,
 }) => {
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
 
   return (
     <View style={styles.wrap}>
@@ -45,7 +46,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
           <Text style={[styles.placeholder, { color: colors.mutedForeground }]}>{placeholder}</Text>
         )}
         <View style={[styles.divider, { backgroundColor: colors.border }]} />
-        <Pressable style={styles.filterHit} hitSlop={8}>
+        <Pressable style={styles.filterHit} hitSlop={Spacing.sm}>
           <Ionicons name="options-outline" size={18} color={colors.foreground} />
         </Pressable>
       </Pressable>
@@ -55,24 +56,25 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
 
 const styles = StyleSheet.create({
   wrap: {
-    marginBottom: 12,
-    paddingHorizontal: 20,
+    marginBottom: Spacing.tight,
+    paddingHorizontal: Spacing.gutter,
   },
   bar: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
+    borderRadius: BorderRadius.xl,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.tight,
   },
   placeholder: {
-    marginStart: 10,
+    marginStart: Spacing.sm,
     flex: 1,
     fontSize: 14,
+    textAlign: 'left',
   },
   input: {
-    marginStart: 10,
+    marginStart: Spacing.sm + Spacing.xs,
     flex: 1,
     fontSize: 14,
     padding: 0,
@@ -82,6 +84,6 @@ const styles = StyleSheet.create({
     width: 1,
   },
   filterHit: {
-    marginStart: 10,
+    marginStart: Spacing.sm + Spacing.xs,
   },
 });

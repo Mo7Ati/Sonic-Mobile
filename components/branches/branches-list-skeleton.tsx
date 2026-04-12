@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { useThemeColors } from '@/hooks/use-theme-color';
+import { useAppTheme } from '@/hooks/use-app-theme';
 
 const SKELETON_COUNT = 4;
 
@@ -22,7 +22,7 @@ const BranchCardSkeleton = ({ bone, boneLight }: { bone: string; boneLight: stri
 );
 
 const BranchesListSkeleton = () => {
-    const colors = useThemeColors();
+    const { colors } = useAppTheme();
     const opacity = useRef(new Animated.Value(0.55)).current;
 
     const bone = colors.border;

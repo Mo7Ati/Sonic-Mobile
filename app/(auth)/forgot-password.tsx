@@ -1,5 +1,6 @@
 import { AuthButton } from '@/components/ui/auth-button';
 import { AuthInput } from '@/components/ui/auth-input';
+import { Colors, Spacing } from '@/constants/theme';
 import { useAuth } from '@/contexts/auth-context';
 import { parseApiError, type ApiError } from '@/lib/api';
 import { Ionicons } from '@expo/vector-icons';
@@ -68,7 +69,7 @@ export default function ForgotPasswordScreen() {
       <SafeAreaView style={styles.safe}>
         <ScrollView contentContainerStyle={styles.successScroll}>
           <View style={styles.successIcon}>
-            <Ionicons name="mail-open-outline" size={64} color="#0a7ea4" />
+            <Ionicons name="mail-open-outline" size={64} color={Colors.link} />
           </View>
           <Text style={styles.successTitle}>Check your email</Text>
           <Text style={styles.successMessage}>
@@ -108,7 +109,7 @@ export default function ForgotPasswordScreen() {
         >
           <View style={styles.header}>
             <View style={styles.iconCircle}>
-              <Ionicons name="key-outline" size={32} color="#0a7ea4" />
+              <Ionicons name="key-outline" size={32} color={Colors.link} />
             </View>
             <Text style={styles.title}>Forgot password?</Text>
             <Text style={styles.subtitle}>
@@ -165,54 +166,54 @@ export default function ForgotPasswordScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.background,
   },
   flex: {
     flex: 1,
   },
   scroll: {
     flexGrow: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: Spacing.lg,
     justifyContent: 'center',
   },
   header: {
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: Spacing.xl,
   },
   iconCircle: {
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: '#e0f2fe',
+    backgroundColor: Colors.surfaceInfo,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: Spacing.md,
   },
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#111827',
-    marginBottom: 8,
+    color: Colors.foreground,
+    marginBottom: Spacing.sm,
   },
   subtitle: {
     fontSize: 15,
-    color: '#6b7280',
+    color: Colors.mutedForeground,
     textAlign: 'center',
     lineHeight: 22,
-    paddingHorizontal: 16,
+    paddingHorizontal: Spacing.md,
   },
   form: {
     width: '100%',
   },
   submitButton: {
-    marginTop: 8,
+    marginTop: Spacing.sm,
   },
   backLink: {
-    marginTop: 24,
+    marginTop: Spacing.lg,
   },
   successScroll: {
     flexGrow: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: Spacing.lg,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -220,32 +221,32 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 48,
-    backgroundColor: '#e0f2fe',
+    backgroundColor: Colors.surfaceInfo,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 24,
+    marginBottom: Spacing.lg,
   },
   successTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#111827',
-    marginBottom: 12,
+    color: Colors.foreground,
+    marginBottom: Spacing.tight,
   },
   successMessage: {
     fontSize: 15,
-    color: '#6b7280',
+    color: Colors.mutedForeground,
     textAlign: 'center',
     lineHeight: 22,
-    paddingHorizontal: 16,
-    marginBottom: 32,
+    paddingHorizontal: Spacing.md,
+    marginBottom: Spacing.xl,
   },
   emailHighlight: {
     fontWeight: '600',
-    color: '#111827',
+    color: Colors.foreground,
   },
   backButton: {
     width: '100%',
-    marginBottom: 12,
+    marginBottom: Spacing.tight,
   },
   resendButton: {
     width: '100%',

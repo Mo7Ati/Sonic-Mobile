@@ -13,6 +13,7 @@ import Toast from 'react-native-toast-message';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthInput } from '@/components/ui/auth-input';
 import { AuthButton } from '@/components/ui/auth-button';
+import { Colors, Spacing } from '@/constants/theme';
 import { useAuth } from '@/contexts/auth-context';
 import { parseApiError, type ApiError } from '@/lib/api';
 
@@ -236,52 +237,52 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.background,
   },
   flex: {
     flex: 1,
   },
   scroll: {
     flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingVertical: 24,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.lg,
   },
   header: {
     alignItems: 'center',
-    marginBottom: 28,
+    marginBottom: Spacing.lg + Spacing.xs,
   },
   brand: {
     fontSize: 36,
     fontWeight: '800',
-    color: '#0a7ea4',
-    marginBottom: 8,
+    color: Colors.link,
+    marginBottom: Spacing.sm,
     letterSpacing: -0.5,
   },
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#111827',
-    marginBottom: 4,
+    color: Colors.foreground,
+    marginBottom: Spacing.xs,
   },
   subtitle: {
     fontSize: 15,
-    color: '#6b7280',
+    color: Colors.mutedForeground,
   },
   form: {
     width: '100%',
   },
   submitButton: {
-    marginTop: 8,
+    marginTop: Spacing.sm,
   },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 24,
-    gap: 4,
+    marginTop: Spacing.lg,
+    gap: Spacing.xs,
   },
   footerText: {
     fontSize: 15,
-    color: '#6b7280',
+    color: Colors.mutedForeground,
   },
 });

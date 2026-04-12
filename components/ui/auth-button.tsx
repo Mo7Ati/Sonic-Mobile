@@ -7,6 +7,8 @@ import {
   type ViewStyle,
 } from 'react-native';
 
+import { BorderRadius, Colors, Spacing } from '@/constants/theme';
+
 interface AuthButtonProps {
   title: string;
   onPress: () => void;
@@ -42,7 +44,7 @@ export function AuthButton({
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === 'primary' ? '#fff' : '#0a7ea4'}
+          color={variant === 'primary' ? Colors.inverseForeground : Colors.link}
           size="small"
         />
       ) : (
@@ -65,18 +67,18 @@ export function AuthButton({
 const styles = StyleSheet.create({
   base: {
     minHeight: 50,
-    borderRadius: 12,
+    borderRadius: BorderRadius.xl,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: Spacing.lg,
   },
   primary: {
-    backgroundColor: '#0a7ea4',
+    backgroundColor: Colors.link,
   },
   outline: {
     backgroundColor: 'transparent',
     borderWidth: 1.5,
-    borderColor: '#0a7ea4',
+    borderColor: Colors.link,
   },
   text: {
     backgroundColor: 'transparent',
@@ -93,15 +95,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   primaryText: {
-    color: '#fff',
+    color: Colors.inverseForeground,
   },
   outlineText: {
-    color: '#0a7ea4',
+    color: Colors.link,
   },
   textText: {
-    color: '#0a7ea4',
+    color: Colors.link,
   },
   disabledText: {
-    color: '#fff',
+    color: Colors.inverseForeground,
   },
 });

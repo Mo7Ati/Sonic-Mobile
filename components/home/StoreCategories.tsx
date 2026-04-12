@@ -2,7 +2,8 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { useThemeColors } from '@/hooks/use-theme-color';
+import { BorderRadius, Spacing } from '@/constants/theme';
+import { useAppTheme } from '@/hooks/use-app-theme';
 import { SectionHeader } from './SectionHeader';
 import type { Section } from '@/services/home/home-types';
 import { StoreCategory } from '@/services/store-categories/types';
@@ -17,7 +18,7 @@ export const StoreCategories: React.FC<StoreCategoriesProps> = ({
   onSeeAll,
 }) => {
   const categories = (section.data as StoreCategory[]) || [];
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
   const router = useRouter();
 
   if (categories.length === 0) return null;
@@ -55,23 +56,23 @@ export const StoreCategories: React.FC<StoreCategoriesProps> = ({
 
 const styles = StyleSheet.create({
   section: {
-    marginBottom: 16,
+    marginBottom: Spacing.md,
   },
   categoryPress: {
-    marginEnd: 20,
+    marginEnd: Spacing.gutter,
     alignItems: 'center',
   },
   categoryPressed: {
     opacity: 0.7,
   },
   iconWrap: {
-    marginBottom: 8,
+    marginBottom: Spacing.sm,
     height: 56,
     width: 56,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    borderRadius: 12,
+    borderRadius: BorderRadius.xl,
   },
   fill: {
     width: '100%',
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   listContent: {
-    paddingStart: 20,
-    paddingEnd: 20,
+    paddingStart: Spacing.gutter,
+    paddingEnd: Spacing.gutter,
   },
 });

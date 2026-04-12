@@ -2,7 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { I18nManager, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { useThemeColors } from '@/hooks/use-theme-color';
+import { BorderRadius, Spacing } from '@/constants/theme';
+import { useAppTheme } from '@/hooks/use-app-theme';
 import type { Section, WrittenBannerData } from '@/services/home/home-types';
 
 interface WrittenBannerProps {
@@ -12,7 +13,7 @@ interface WrittenBannerProps {
 
 export const WrittenBanner: React.FC<WrittenBannerProps> = ({ section, onPress }) => {
   const data = section.data as WrittenBannerData;
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
 
   if (!data) return null;
 
@@ -50,12 +51,12 @@ export const WrittenBanner: React.FC<WrittenBannerProps> = ({ section, onPress }
 
 const styles = StyleSheet.create({
   wrap: {
-    marginBottom: 16,
-    paddingHorizontal: 20,
+    marginBottom: Spacing.md,
+    paddingHorizontal: Spacing.gutter,
   },
   card: {
     overflow: 'hidden',
-    borderRadius: 16,
+    borderRadius: BorderRadius['2xl'],
   },
   cardPressed: {
     opacity: 0.9,
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     top: -20,
     width: 96,
     height: 96,
-    borderRadius: 9999,
+    borderRadius: BorderRadius.full,
     opacity: 0.06,
   },
   deco2: {
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
     start: -12,
     width: 64,
     height: 64,
-    borderRadius: 9999,
+    borderRadius: BorderRadius.full,
     opacity: 0.06,
   },
   deco3: {
@@ -84,14 +85,14 @@ const styles = StyleSheet.create({
     top: 32,
     width: 32,
     height: 32,
-    borderRadius: 9999,
+    borderRadius: BorderRadius.full,
     opacity: 0.04,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingHorizontal: Spacing.gutter,
+    paddingVertical: Spacing.md,
   },
   textBlock: {
     flex: 1,
@@ -102,18 +103,18 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   desc: {
-    marginTop: 4,
+    marginTop: Spacing.xs,
     fontSize: 12,
     lineHeight: 16,
     opacity: 0.7,
     textAlign: 'left',
   },
   arrowBtn: {
-    marginStart: 12,
+    marginStart: Spacing.tight,
     height: 36,
     width: 36,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 9999,
+    borderRadius: BorderRadius.full,
   },
 });

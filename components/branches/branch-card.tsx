@@ -1,5 +1,6 @@
 import { Branch } from "@/services/branch/types";
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { BorderRadius, Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Pressable, View, Image, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
@@ -16,10 +17,10 @@ const BranchCard = ({
   onPress?: () => void;
   fullWidth?: boolean;
 }) => {
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
 
   const cardShadow = {
-    shadowColor: '#000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
     shadowRadius: 8,
@@ -59,7 +60,7 @@ const BranchCard = ({
           )}
         </View>
         <View style={styles.cardTextCol}>
-          <Text style={[styles.storeName]} numberOfLines={1}>
+          <Text style={[styles.storeName, { color: colors.foreground }]} numberOfLines={1}>
             {item.name}
           </Text>
           <Text style={[styles.branchName, { color: colors.mutedForeground }]} numberOfLines={1}>
@@ -98,18 +99,18 @@ export default BranchCard;
 
 const styles = StyleSheet.create({
   section: {
-    marginBottom: 16,
+    marginBottom: Spacing.md,
   },
   listContent: {
-    paddingStart: 20,
-    paddingEnd: 8,
+    paddingStart: Spacing.gutter,
+    paddingEnd: Spacing.sm,
   },
   card: {
     width: CARD_WIDTH,
-    marginEnd: 12,
-    borderRadius: 14,
+    marginEnd: Spacing.tight,
+    borderRadius: BorderRadius["2xl"],
     borderWidth: StyleSheet.hairlineWidth,
-    padding: 12,
+    padding: Spacing.tight,
     overflow: 'hidden',
   },
   cardFullWidth: {
@@ -122,12 +123,12 @@ const styles = StyleSheet.create({
   cardRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 10,
+    gap: Spacing.sm + Spacing.xs,
   },
   logoWrap: {
     width: 48,
     height: 48,
-    borderRadius: 12,
+    borderRadius: BorderRadius.xl,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
   },
   cardTextCol: {
     flex: 1,
-    gap: 4,
+    gap: Spacing.xs,
     justifyContent: 'center',
     minWidth: 0,
   },
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
   branchName: {
     fontSize: 10,
     fontWeight: '600',
-    marginBottom: 4,
+    marginBottom: Spacing.xs,
     textAlign: 'left',
   },
   address: {
@@ -162,15 +163,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    gap: 10,
-    marginTop: 10,
-    paddingTop: 10,
+    gap: Spacing.sm + Spacing.xs,
+    marginTop: Spacing.sm + Spacing.xs,
+    paddingTop: Spacing.sm + Spacing.xs,
     borderTopWidth: StyleSheet.hairlineWidth,
   },
   metaItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: Spacing.xs,
   },
   metaText: {
     fontSize: 11,

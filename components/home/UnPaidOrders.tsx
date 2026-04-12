@@ -2,7 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { I18nManager, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { useThemeColors } from '@/hooks/use-theme-color';
+import { BorderRadius, Spacing } from '@/constants/theme';
+import { useAppTheme } from '@/hooks/use-app-theme';
 import type { Section } from '@/services/home/home-types';
 import { UnPaidOrdersData } from '@/services/home/home-types';
 
@@ -13,7 +14,7 @@ interface UnPaidOrdersProps {
 
 export const UnPaidOrders: React.FC<UnPaidOrdersProps> = ({ section, onPress }) => {
   const data = section.data as UnPaidOrdersData;
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
 
   if (!data || data.orders_count === 0) return null;
 
@@ -34,8 +35,8 @@ export const UnPaidOrders: React.FC<UnPaidOrdersProps> = ({ section, onPress }) 
         </View>
 
         <View style={[styles.payPill, { backgroundColor: colors.chart4 }]}>
-          <Text style={styles.payText}>Pay</Text>
-          <Ionicons name={I18nManager.isRTL ? "arrow-back" : "arrow-forward"} size={12} color="#fff" />
+          <Text style={[styles.payText, { color: colors.inverseForeground }]}>Pay</Text>
+          <Ionicons name={I18nManager.isRTL ? "arrow-back" : "arrow-forward"} size={12} color={colors.inverseForeground} />
         </View>
       </Pressable>
     </View>
@@ -44,25 +45,25 @@ export const UnPaidOrders: React.FC<UnPaidOrdersProps> = ({ section, onPress }) 
 
 const styles = StyleSheet.create({
   wrap: {
-    marginBottom: 12,
-    paddingHorizontal: 20,
+    marginBottom: Spacing.tight,
+    paddingHorizontal: Spacing.gutter,
   },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
     overflow: 'hidden',
-    borderRadius: 12,
+    borderRadius: BorderRadius.xl,
     borderWidth: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.tight,
   },
   iconCircle: {
-    marginEnd: 12,
+    marginEnd: Spacing.tight,
     height: 32,
     width: 32,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 9999,
+    borderRadius: BorderRadius.full,
   },
   textCol: {
     flex: 1,
@@ -77,14 +78,13 @@ const styles = StyleSheet.create({
   payPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    borderRadius: 9999,
-    paddingHorizontal: 12,
+    gap: Spacing.xs,
+    borderRadius: BorderRadius.full,
+    paddingHorizontal: Spacing.tight,
     paddingVertical: 6,
   },
   payText: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#ffffff',
   },
 });

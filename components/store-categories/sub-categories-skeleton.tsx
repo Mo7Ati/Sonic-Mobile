@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import { useThemeColors } from '@/hooks/use-theme-color';
+import { useAppTheme } from '@/hooks/use-app-theme';
 
 const SKELETON_COUNT = 5;
 
 const SubCategoriesSkeleton = () => {
-    const colors = useThemeColors();
+    const { colors } = useAppTheme();
     const opacity = useRef(new Animated.Value(0.55)).current;
 
     const bone = colors.border;

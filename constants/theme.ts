@@ -50,6 +50,41 @@ export const Colors = {
   icon: '#262626',
   tabIconDefault: '#6b7280',
   tabIconSelected: '#f59e0b',
+
+  /** Links and tappable text accents (distinct from brand primary). */
+  link: '#0a7ea4',
+
+  /** Positive / add-to-cart actions. */
+  success: '#00875a',
+  successForeground: '#ffffff',
+
+  /** Light text on vivid or dark fills (e.g. pills on chart tones). */
+  inverseForeground: '#ffffff',
+
+  /** Elevation / modal shadows. */
+  shadow: '#000000',
+
+  /** Modal / bottom-sheet scrim */
+  modalOverlay: 'rgba(0,0,0,0.4)',
+
+  /** Auth and info callout surfaces */
+  surfaceInfo: '#e0f2fe',
+  surfaceSuccess: '#f0fdf4',
+  surfaceError: '#fef2f2',
+
+  /** Input placeholder (lighter than mutedForeground) */
+  placeholder: '#9ca3af',
+
+  /** Success state icons (e.g. checkmarks) */
+  successBright: '#16a34a',
+
+  /** Promotional / loyalty accents */
+  promotional: '#7C3AED',
+  promotionalForeground: '#ffffff',
+  /** Soft purple surfaces (e.g. loyalty banners) */
+  promotionalSurface: '#F3F0FF',
+  /** Text on promotionalSurface */
+  promotionalStrong: '#6B21A8',
 } as const;
 
 export type ThemeColors = typeof Colors;
@@ -58,20 +93,31 @@ export type ColorName = keyof ThemeColors;
 export const Spacing = {
   xs: 4,
   sm: 8,
+  /** Tight inline meta gaps */
+  narrow: 6,
+  /** Common list row / chip gap between sm and md */
+  tight: 12,
+  /** Horizontal padding for screen content (matches prior 20px gutters). */
+  gutter: 20,
   md: 16,
   lg: 24,
   xl: 32,
+  /** Large vertical rhythm (e.g. auth header block) */
+  hero: 36,
   '2xl': 48,
 } as const;
 
 export const BorderRadius = {
-  sm: 4,   // radius - 4px
-  md: 6,   // radius - 2px
-  lg: 8,   // radius (0.5rem)
-  xl: 12,  // radius + 4px
+  sm: 4,
+  md: 6,
+  lg: 8,
+  xl: 12,
+  '2xl': 16,
+  pill: 20,
   full: 9999,
 } as const;
 
+/** System stacks for screens that do not use loaded Outfit (e.g. third-party demos). */
 export const Fonts = Platform.select({
   ios: {
     sans: 'system-ui',
@@ -84,11 +130,5 @@ export const Fonts = Platform.select({
     serif: 'serif',
     rounded: 'normal',
     mono: 'monospace',
-  },
-  web: {
-    sans: "Outfit, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    serif: "Georgia, 'Times New Roman', serif",
-    rounded: "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
-    mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
   },
 });

@@ -11,7 +11,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DeliverToHeader } from '@/components/DeliverToHeader';
 import { useHomeSections } from '@/hooks/react-query-hooks/use-home-sections';
-import { useThemeColors } from '@/hooks/use-theme-color';
+import { BorderRadius, Spacing } from '@/constants/theme';
+import { useAppTheme } from '@/hooks/use-app-theme';
 import { parseApiError } from '@/lib/api';
 import type { Section } from '@/services/home/home-types';
 import { HomePageSkeleton } from './HomePageSkeleton';
@@ -19,7 +20,7 @@ import { SectionRenderer } from './SectionRenderer';
 
 export const HomePage = () => {
   const insets = useSafeAreaInsets();
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
 
   const {
     data: sections,
@@ -28,6 +29,13 @@ export const HomePage = () => {
     error,
     refetch,
   } = useHomeSections();
+
+  const renderSection = useCallback(
+    ({ item }: { item: Section }) => (
+      <SectionRenderer section={item} />
+    ),
+    [],
+  );
 
   if (isPending) {
     return <HomePageSkeleton />;
@@ -45,13 +53,6 @@ export const HomePage = () => {
       </View>
     );
   }
-
-  const renderSection = useCallback(
-    ({ item }: { item: Section }) => (
-      <SectionRenderer section={item} />
-    ),
-    [],
-  );
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top, backgroundColor: colors.background }]}>
@@ -81,13 +82,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    paddingBottom: 24,
-    paddingTop: 8,
+    paddingBottom: Spacing.lg,
+    paddingTop: Spacing.sm,
   },
   errorBox: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 48,
+    paddingHorizontal: Spacing.lg,
+    paddingTop: Spacing['2xl'],
     alignItems: 'center',
   },
   errorText: {
@@ -96,10 +97,10 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   retryButton: {
-    marginTop: 20,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 9999,
+    marginTop: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.tight,
+    borderRadius: BorderRadius.full,
   },
   retryLabel: {
     fontSize: 15,
@@ -107,8 +108,8 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     textAlign: 'center',
-    marginTop: 32,
+    marginTop: Spacing.xl,
     fontSize: 15,
-    paddingHorizontal: 24,
+    paddingHorizontal: Spacing.lg,
   },
 });

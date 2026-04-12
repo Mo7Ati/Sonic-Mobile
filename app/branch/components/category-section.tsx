@@ -1,4 +1,4 @@
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Category } from "@/services/branch/types";
 import { Product } from "@/services/product/types";
 import { LayoutChangeEvent, StyleSheet, View } from "react-native";
@@ -19,7 +19,7 @@ export default function CategorySection({
     isFirst,
     onLayout,
 }: CategorySectionProps) {
-    const colors = useThemeColors();
+    const { colors } = useAppTheme();
 
     if (!products || products.length === 0) return null;
 

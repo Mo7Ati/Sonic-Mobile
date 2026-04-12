@@ -1,4 +1,5 @@
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { useLocalSearchParams } from "expo-router";
@@ -22,7 +23,7 @@ import StoreInfoCard from "./components/store-info-card";
 import { useBranchPage } from "./hooks/use-branch-page";
 
 export default function BranchScreen() {
-    const colors = useThemeColors();
+    const { colors } = useAppTheme();
     const { id } = useLocalSearchParams();
     const page = useBranchPage(Number(id));
 
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        gap: 12,
+        gap: Spacing.tight,
     },
     errorText: {
         fontSize: 15,
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     sectionsContainer: {
-        paddingHorizontal: 20,
-        paddingBottom: 32,
+        paddingHorizontal: Spacing.gutter,
+        paddingBottom: Spacing.xl,
     },
 });

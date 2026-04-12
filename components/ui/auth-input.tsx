@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+import { BorderRadius, Colors, Spacing } from '@/constants/theme';
+
 interface AuthInputProps extends TextInputProps {
   label: string;
   error?: string;
@@ -27,6 +29,12 @@ export function AuthInput({
   const [focused, setFocused] = useState(false);
   const [secureEntry, setSecureEntry] = useState(isPassword);
 
+  const iconColor = error
+    ? Colors.destructive
+    : focused
+      ? Colors.link
+      : Colors.placeholder;
+
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
@@ -41,13 +49,13 @@ export function AuthInput({
           <Ionicons
             name={icon}
             size={20}
-            color={error ? '#dc2626' : focused ? '#0a7ea4' : '#9ca3af'}
+            color={iconColor}
             style={styles.icon}
           />
         )}
         <TextInput
           style={[styles.input, style]}
-          placeholderTextColor="#9ca3af"
+          placeholderTextColor={Colors.placeholder}
           autoCapitalize="none"
           autoCorrect={false}
           secureTextEntry={secureEntry}
@@ -65,12 +73,12 @@ export function AuthInput({
           <Pressable
             onPress={() => setSecureEntry((v) => !v)}
             style={styles.eyeButton}
-            hitSlop={8}
+            hitSlop={Spacing.sm}
           >
             <Ionicons
               name={secureEntry ? 'eye-off-outline' : 'eye-outline'}
               size={20}
-              color="#9ca3af"
+              color={Colors.placeholder}
             />
           </Pressable>
         )}
@@ -82,50 +90,50 @@ export function AuthInput({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: Spacing.md,
   },
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#374151',
-    marginBottom: 6,
+    color: Colors.secondaryForeground,
+    marginBottom: Spacing.sm,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1.5,
-    borderColor: '#e5e7eb',
-    borderRadius: 12,
-    backgroundColor: '#f9fafb',
-    paddingHorizontal: 14,
+    borderColor: Colors.border,
+    borderRadius: BorderRadius.xl,
+    backgroundColor: Colors.muted,
+    paddingHorizontal: Spacing.md,
     minHeight: 50,
   },
   inputWrapperFocused: {
-    borderColor: '#0a7ea4',
-    backgroundColor: '#fff',
+    borderColor: Colors.link,
+    backgroundColor: Colors.background,
   },
   inputWrapperError: {
-    borderColor: '#dc2626',
-    backgroundColor: '#fef2f2',
+    borderColor: Colors.destructive,
+    backgroundColor: Colors.surfaceError,
   },
   icon: {
-    marginEnd: 10,
+    marginEnd: Spacing.sm + Spacing.xs,
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#111827',
-    paddingVertical: 12,
+    color: Colors.foreground,
+    paddingVertical: Spacing.tight,
     textAlign: 'auto',
   },
   eyeButton: {
-    marginStart: 8,
-    padding: 4,
+    marginStart: Spacing.sm,
+    padding: Spacing.xs,
   },
   errorText: {
     fontSize: 12,
-    color: '#dc2626',
-    marginTop: 4,
+    color: Colors.destructive,
+    marginTop: Spacing.xs,
     marginStart: 2,
   },
 });

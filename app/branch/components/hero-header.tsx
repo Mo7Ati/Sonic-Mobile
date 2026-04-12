@@ -1,4 +1,5 @@
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
@@ -12,7 +13,7 @@ interface HeroHeaderProps {
 const HERO_HEIGHT = 200;
 
 export default function HeroHeader({ coverImage }: HeroHeaderProps) {
-    const colors = useThemeColors();
+    const { colors } = useAppTheme();
     const router = useRouter();
     const insets = useSafeAreaInsets();
 
@@ -28,12 +29,12 @@ export default function HeroHeader({ coverImage }: HeroHeaderProps) {
             ) : (
                 <View style={[styles.coverImage, { backgroundColor: colors.muted }]} />
             )}
-            <View style={[styles.overlay, { paddingTop: insets.top + 8 }]}>
+            <View style={[styles.overlay, { paddingTop: insets.top + Spacing.sm }]}>
                 <Pressable
                     onPress={() => router.back()}
                     style={({ pressed }) => [
                         styles.iconButton,
-                        { backgroundColor: colors.card },
+                        { backgroundColor: colors.card, shadowColor: colors.shadow },
                         pressed && styles.pressed,
                     ]}
                 >
@@ -44,7 +45,7 @@ export default function HeroHeader({ coverImage }: HeroHeaderProps) {
                     <Pressable
                         style={({ pressed }) => [
                             styles.iconButton,
-                            { backgroundColor: colors.card },
+                            { backgroundColor: colors.card, shadowColor: colors.shadow },
                             pressed && styles.pressed,
                         ]}
                     >
@@ -53,7 +54,7 @@ export default function HeroHeader({ coverImage }: HeroHeaderProps) {
                     <Pressable
                         style={({ pressed }) => [
                             styles.iconButton,
-                            { backgroundColor: colors.card },
+                            { backgroundColor: colors.card, shadowColor: colors.shadow },
                             pressed && styles.pressed,
                         ]}
                     >
@@ -62,7 +63,7 @@ export default function HeroHeader({ coverImage }: HeroHeaderProps) {
                     <Pressable
                         style={({ pressed }) => [
                             styles.iconButton,
-                            { backgroundColor: colors.card },
+                            { backgroundColor: colors.card, shadowColor: colors.shadow },
                             pressed && styles.pressed,
                         ]}
                     >
@@ -88,11 +89,11 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "flex-start",
-        paddingHorizontal: 16,
+        paddingHorizontal: Spacing.md,
     },
     rightActions: {
         flexDirection: "row",
-        gap: 8,
+        gap: Spacing.sm,
     },
     iconButton: {
         width: 38,
@@ -100,7 +101,6 @@ const styles = StyleSheet.create({
         borderRadius: 19,
         alignItems: "center",
         justifyContent: "center",
-        shadowColor: "#000",
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.12,
         shadowRadius: 4,

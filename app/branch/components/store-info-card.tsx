@@ -1,4 +1,5 @@
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { BorderRadius, Colors, Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Branch } from "@/services/branch/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
@@ -10,7 +11,7 @@ interface StoreInfoCardProps {
 }
 
 export default function StoreInfoCard({ branch }: StoreInfoCardProps) {
-    const colors = useThemeColors();
+    const { colors } = useAppTheme();
 
     const categoryNames = branch.categories?.map((c) => c.name).join(", ");
 
@@ -73,15 +74,15 @@ export default function StoreInfoCard({ branch }: StoreInfoCardProps) {
                 </View>
             </View>
 
-            {/* <View style={[styles.proBanner, { backgroundColor: "#F3F0FF" }]}>
+            {/* <View style={[styles.proBanner, { backgroundColor: Colors.promotionalSurface }]}>
                 <View style={styles.proBadge}>
                     <Text style={styles.proBadgeText}>pro</Text>
                 </View>
-                <Text style={[styles.proText, { color: "#6B21A8" }]}>
+                <Text style={[styles.proText, { color: Colors.promotionalStrong }]}>
                     Get free delivery with pro
                 </Text>
                 <Pressable>
-                    <Text style={[styles.proLink, { color: "#6B21A8" }]}>Try free</Text>
+                    <Text style={[styles.proLink, { color: Colors.promotionalStrong }]}>Try free</Text>
                 </Pressable>
             </View> */}
         </View>
@@ -92,15 +93,15 @@ const styles = StyleSheet.create({
     card: {
         marginTop: -90,
         marginBottom: 5,
-        marginHorizontal: 16,
-        borderRadius: 16,
-        padding: 16,
+        marginHorizontal: Spacing.md,
+        borderRadius: BorderRadius["2xl"],
+        padding: Spacing.md,
         borderWidth: StyleSheet.hairlineWidth,
     },
     storeRow: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 12,
+        gap: Spacing.tight,
     },
     logoWrap: {
         width: 52,
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         alignItems: "center",
-        gap: 6,
+        gap: Spacing.narrow,
         marginTop: 14,
         paddingTop: 14,
         borderTopWidth: StyleSheet.hairlineWidth,
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
     metaItem: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 4,
+        gap: Spacing.xs,
     },
     metaText: {
         fontSize: 12,
@@ -152,20 +153,20 @@ const styles = StyleSheet.create({
     proBanner: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 8,
+        gap: Spacing.sm,
         marginTop: 14,
         paddingVertical: 10,
-        paddingHorizontal: 12,
+        paddingHorizontal: Spacing.tight,
         borderRadius: 10,
     },
     proBadge: {
-        backgroundColor: "#7C3AED",
-        paddingHorizontal: 8,
+        backgroundColor: Colors.promotional,
+        paddingHorizontal: Spacing.sm,
         paddingVertical: 2,
-        borderRadius: 6,
+        borderRadius: BorderRadius.md,
     },
     proBadgeText: {
-        color: "#fff",
+        color: Colors.promotionalForeground,
         fontSize: 11,
         fontWeight: "800",
     },

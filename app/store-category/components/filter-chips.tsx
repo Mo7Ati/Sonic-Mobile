@@ -1,4 +1,5 @@
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { BorderRadius, Colors, Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -47,7 +48,7 @@ interface Props {
 }
 
 export default function FilterChips({ filters, onFiltersChange }: Props) {
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
   const [sortModalVisible, setSortModalVisible] = useState(false);
 
   const sortActive = filters.sort !== "default";
@@ -73,7 +74,7 @@ export default function FilterChips({ filters, onFiltersChange }: Props) {
             name="swap-vertical"
             size={14}
             color={sortActive ? colors.primary : colors.foreground}
-            style={{ marginEnd: 4 }}
+            style={{ marginEnd: Spacing.xs }}
           />
           <Text
             style={[
@@ -129,7 +130,10 @@ export default function FilterChips({ filters, onFiltersChange }: Props) {
       >
         <Pressable style={styles.overlay} onPress={() => setSortModalVisible(false)}>
           <View
-            style={[styles.modal, { backgroundColor: colors.card }]}
+            style={[
+              styles.modal,
+              { backgroundColor: colors.card, shadowColor: colors.shadow },
+            ]}
             onStartShouldSetResponder={() => true}
           >
             <Text style={[styles.modalTitle, { color: colors.foreground }]}>
@@ -170,16 +174,16 @@ export default function FilterChips({ filters, onFiltersChange }: Props) {
 
 const styles = StyleSheet.create({
   row: {
-    paddingHorizontal: 20,
-    gap: 8,
-    paddingBottom: 16,
+    paddingHorizontal: Spacing.gutter,
+    gap: Spacing.sm,
+    paddingBottom: Spacing.md,
   },
   chip: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.pill,
     borderWidth: 1,
   },
   chipText: {
@@ -188,17 +192,16 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.4)",
+    backgroundColor: Colors.modalOverlay,
     justifyContent: "center",
     alignItems: "center",
   },
   modal: {
     width: "75%",
-    borderRadius: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    borderRadius: BorderRadius["2xl"],
+    paddingVertical: Spacing.tight,
+    paddingHorizontal: Spacing.gutter,
     elevation: 8,
-    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
     shadowRadius: 12,
@@ -206,14 +209,14 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 16,
     fontWeight: "700",
-    marginBottom: 8,
-    paddingVertical: 8,
+    marginBottom: Spacing.sm,
+    paddingVertical: Spacing.sm,
   },
   sortOption: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 14,
+    paddingVertical: Spacing.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   sortOptionText: {

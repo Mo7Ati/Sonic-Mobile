@@ -1,5 +1,6 @@
 import { AuthButton } from '@/components/ui/auth-button';
 import { AuthInput } from '@/components/ui/auth-input';
+import { Colors, Spacing } from '@/constants/theme';
 import { useAuth } from '@/contexts/auth-context';
 import { parseApiError, type ApiError } from '@/lib/api';
 import { Link } from 'expo-router';
@@ -165,57 +166,57 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.background,
   },
   flex: {
     flex: 1,
   },
   scroll: {
     flexGrow: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: Spacing.lg,
     justifyContent: 'center',
   },
   header: {
     alignItems: 'center',
-    marginBottom: 36,
+    marginBottom: Spacing.hero,
   },
   brand: {
     fontSize: 36,
     fontWeight: '800',
-    color: '#0a7ea4',
-    marginBottom: 8,
+    color: Colors.link,
+    marginBottom: Spacing.sm,
     letterSpacing: -0.5,
   },
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#111827',
-    marginBottom: 4,
+    color: Colors.foreground,
+    marginBottom: Spacing.xs,
   },
   subtitle: {
     fontSize: 15,
-    color: '#6b7280',
+    color: Colors.mutedForeground,
   },
   form: {
     width: '100%',
   },
   forgotButton: {
     alignSelf: 'flex-end',
-    marginBottom: 8,
+    marginBottom: Spacing.sm,
     minHeight: 32,
   },
   submitButton: {
-    marginTop: 8,
+    marginTop: Spacing.sm,
   },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 32,
-    gap: 4,
+    marginTop: Spacing.xl,
+    gap: Spacing.xs,
   },
   footerText: {
     fontSize: 15,
-    color: '#6b7280',
+    color: Colors.mutedForeground,
   },
 });

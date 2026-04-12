@@ -1,11 +1,10 @@
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { BorderRadius, Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Product } from "@/services/product/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Text } from "@react-navigation/elements";
-
-const ACTION_COLOR = "#00875a";
 
 interface ProductListItemProps {
     product: Product;
@@ -13,7 +12,7 @@ interface ProductListItemProps {
 }
 
 export default function ProductListItem({ product, onPress }: ProductListItemProps) {
-    const colors = useThemeColors();
+    const { colors } = useAppTheme();
 
     const hasComparePrice =
         product.compare_price != null && Number(product.compare_price) !== Number(product.price);
@@ -61,8 +60,16 @@ export default function ProductListItem({ product, onPress }: ProductListItemPro
                 ) : (
                     <Ionicons name="fast-food-outline" size={28} color={colors.mutedForeground} />
                 )}
-                <View style={styles.actionButton}>
-                    <Ionicons name="add-outline" size={14} />
+                <View
+                    style={[
+                        styles.actionButton,
+                        {
+                            backgroundColor: colors.success,
+                            shadowColor: colors.shadow,
+                        },
+                    ]}
+                >
+                    <Ionicons name="add-outline" size={14} color={colors.successForeground} />
                 </View>
             </View>
         </Pressable>
@@ -72,15 +79,15 @@ export default function ProductListItem({ product, onPress }: ProductListItemPro
 const styles = StyleSheet.create({
     row: {
         flexDirection: "row",
-        paddingVertical: 16,
-        gap: 12,
+        paddingVertical: Spacing.md,
+        gap: Spacing.tight,
     },
     pressed: {
         opacity: 0.85,
     },
     textCol: {
         flex: 1,
-        gap: 4,
+        gap: Spacing.xs,
         justifyContent: "center",
     },
     name: {
@@ -97,8 +104,8 @@ const styles = StyleSheet.create({
     priceRow: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 8,
-        marginTop: 4,
+        gap: Spacing.sm,
+        marginTop: Spacing.xs,
     },
     price: {
         fontSize: 14,
@@ -118,7 +125,7 @@ const styles = StyleSheet.create({
     imageWrap: {
         width: 100,
         height: 100,
-        borderRadius: 12,
+        borderRadius: BorderRadius.xl,
         overflow: "hidden",
         alignItems: "center",
         justifyContent: "center",
@@ -129,15 +136,13 @@ const styles = StyleSheet.create({
     },
     actionButton: {
         position: "absolute",
-        bottom: 8,
-        end: 8,
+        bottom: Spacing.sm,
+        end: Spacing.sm,
         width: 28,
         height: 28,
         borderRadius: 14,
-        backgroundColor: ACTION_COLOR,
         alignItems: "center",
         justifyContent: "center",
-        shadowColor: "#000",
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.15,
         shadowRadius: 3,

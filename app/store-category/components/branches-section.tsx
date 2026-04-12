@@ -1,6 +1,6 @@
 import BranchesList from "@/components/branches/branches-list";
 import BranchesListSkeleton from "@/components/branches/branches-list-skeleton";
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { type Branch } from "@/services/branch/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
@@ -19,7 +19,7 @@ export default function BranchesSection({
   isPlaceholderData,
   searchQuery,
 }: BranchesSectionProps) {
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
   const hasBranches = (branches?.length ?? 0) > 0;
 
   if (isLoading) {

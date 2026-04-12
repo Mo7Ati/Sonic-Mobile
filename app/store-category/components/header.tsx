@@ -1,4 +1,5 @@
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { BorderRadius, Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { useRouter } from "expo-router";
@@ -6,14 +7,14 @@ import { I18nManager, Pressable, StyleSheet, View } from "react-native";
 
 export default function Header() {
   const router = useRouter();
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
 
   return (
     <View style={styles.header}>
       <Pressable
         onPress={() => router.back()}
         style={[styles.iconBtn, { borderColor: colors.border }]}
-        hitSlop={8}
+        hitSlop={Spacing.sm}
       >
         <Ionicons name={I18nManager.isRTL ? "arrow-forward" : "arrow-back"} size={20} color={colors.foreground} />
       </Pressable>
@@ -35,20 +36,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm + Spacing.xs,
   },
   iconBtn: {
     width: 40,
     height: 40,
-    borderRadius: 12,
+    borderRadius: BorderRadius.xl,
     borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
   },
   center: {
     flex: 1,
-    marginHorizontal: 12,
+    marginHorizontal: Spacing.tight,
   },
   deliverLabel: {
     fontSize: 14,

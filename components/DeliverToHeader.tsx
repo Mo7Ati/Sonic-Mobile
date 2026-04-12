@@ -2,7 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { useThemeColors } from '@/hooks/use-theme-color';
+import { Spacing } from '@/constants/theme';
+import { useAppTheme } from '@/hooks/use-app-theme';
 
 export type DeliverToHeaderProps = {
   caption?: string;
@@ -19,7 +20,7 @@ export function DeliverToHeader({
   onNotificationsPress,
   onProfilePress,
 }: DeliverToHeaderProps) {
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
 
   return (
     <View style={styles.header}>
@@ -42,9 +43,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 8,
+    paddingHorizontal: Spacing.gutter,
+    paddingTop: Spacing.sm,
+    paddingBottom: Spacing.sm,
   },
   addressContainer: {
     flexDirection: 'row',
@@ -66,25 +67,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   chevron: {
-    marginStart: 4,
-  },
-  headerActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  iconButton: {
-    height: 36,
-    width: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 9999,
-  },
-  iconButtonShadow: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
-    elevation: 2,
+    marginStart: Spacing.xs,
   },
 });

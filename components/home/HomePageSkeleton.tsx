@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, ScrollView, StyleSheet, View } from 'react-native';
 
-import { useThemeColors } from '@/hooks/use-theme-color';
+import { BorderRadius, Spacing } from '@/constants/theme';
+import { useAppTheme } from '@/hooks/use-app-theme';
 
 export const HomePageSkeleton: React.FC = () => {
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
   const opacity = useRef(new Animated.Value(0.55)).current;
 
   const bone = colors.border;
@@ -89,28 +90,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 24,
-    paddingTop: 8,
-    paddingHorizontal: 20,
+    paddingBottom: Spacing.lg,
+    paddingTop: Spacing.sm,
+    paddingHorizontal: Spacing.gutter,
   },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 8,
+    paddingHorizontal: Spacing.gutter,
+    paddingTop: Spacing.sm,
+    paddingBottom: Spacing.sm,
   },
   headerLeft: {
-    gap: 8,
+    gap: Spacing.sm,
   },
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: Spacing.sm,
   },
   pill: {
-    borderRadius: 6,
+    borderRadius: BorderRadius.md,
   },
   pillShort: {
     width: 56,
@@ -123,22 +124,22 @@ const styles = StyleSheet.create({
   titleLine: {
     width: 120,
     height: 14,
-    marginBottom: 12,
+    marginBottom: Spacing.tight,
   },
   circle: {
     width: 36,
     height: 36,
-    borderRadius: 9999,
+    borderRadius: BorderRadius.full,
   },
   block: {
-    borderRadius: 12,
+    borderRadius: BorderRadius.xl,
   },
   searchBar: {
     height: 48,
     width: '100%',
   },
   sectionGap: {
-    marginTop: 20,
+    marginTop: Spacing.gutter,
   },
   hero: {
     height: 168,
@@ -146,27 +147,27 @@ const styles = StyleSheet.create({
   },
   chipsRow: {
     flexDirection: 'row',
-    gap: 10,
+    gap: Spacing.sm + Spacing.xs,
   },
   chip: {
     width: 72,
     height: 72,
-    borderRadius: 12,
+    borderRadius: BorderRadius.xl,
   },
   gridRow: {
     flexDirection: 'row',
-    gap: 10,
+    gap: Spacing.sm + Spacing.xs,
   },
   gridCell: {
     flex: 1,
     height: 96,
   },
   listSection: {
-    marginTop: 22,
+    marginTop: Spacing.lg + Spacing.narrow,
   },
   listRow: {
     height: 72,
     width: '100%',
-    marginTop: 10,
+    marginTop: Spacing.sm + Spacing.xs,
   },
 });

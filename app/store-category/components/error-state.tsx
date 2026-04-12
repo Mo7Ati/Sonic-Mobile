@@ -1,4 +1,5 @@
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { BorderRadius, Spacing } from "@/constants/theme";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { useRouter } from "expo-router";
@@ -11,7 +12,7 @@ interface ErrorStateProps {
 
 export default function ErrorState({ message }: ErrorStateProps) {
   const router = useRouter();
-  const colors = useThemeColors();
+  const { colors } = useAppTheme();
 
   return (
     <SafeAreaView style={[styles.screen, { backgroundColor: colors.background }]}>
@@ -44,23 +45,23 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 32,
-    gap: 12,
+    paddingHorizontal: Spacing.xl,
+    gap: Spacing.tight,
   },
   title: {
     fontSize: 18,
     fontWeight: "700",
-    marginTop: 4,
+    marginTop: Spacing.xs,
   },
   message: {
     fontSize: 14,
     textAlign: "center",
   },
   button: {
-    marginTop: 16,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 12,
+    marginTop: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.tight,
+    borderRadius: BorderRadius.xl,
   },
   buttonText: {
     fontSize: 15,

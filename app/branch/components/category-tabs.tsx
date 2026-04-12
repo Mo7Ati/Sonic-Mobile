@@ -1,4 +1,4 @@
-import { useThemeColors } from "@/hooks/use-theme-color";
+import { useAppTheme } from "@/hooks/use-app-theme";
 import { Category } from "@/services/branch/types";
 import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useEffect, useRef } from "react";
@@ -12,7 +12,7 @@ interface CategoryTabsProps {
 }
 
 export default function CategoryTabs({ categories, activeIndex, onTabPress }: CategoryTabsProps) {
-    const colors = useThemeColors();
+    const { colors } = useAppTheme();
     const scrollRef = useRef<ScrollView>(null);
     const tabWidths = useRef<number[]>([]);
 
