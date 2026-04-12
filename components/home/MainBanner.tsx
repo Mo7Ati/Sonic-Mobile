@@ -13,17 +13,29 @@ export const MainBanner: React.FC<MainBannerProps> = ({ section }) => {
   const items = section.data as SectionItem[];
   if (!items.length) return null;
 
+  const multipleSlides = items.length > 1;
+
   return (
     <View style={styles.section}>
       <Carousel
         width={width}
         height={160}
         data={items}
-        loop
-        autoPlay
+        loop={multipleSlides}
+        autoPlay={multipleSlides}
         autoPlayInterval={2000}
         pagingEnabled
         scrollAnimationDuration={800}
+        {...(multipleSlides
+          ? {
+              mode: 'parallax',
+              modeConfig: {
+                parallaxScrollingOffset: 48,
+                parallaxScrollingScale: 0.94,
+                parallaxAdjacentItemScale: 0.9,
+              },
+            }
+          : {})}
         renderItem={({ item }) => (
           <Pressable
             style={styles.item}

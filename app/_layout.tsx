@@ -75,7 +75,7 @@ export default function RootLayout() {
             <Stack.Screen name="branch/[id]" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={{ presentation: 'modal', title: i18n.t('content.title', { ns: 'modal' }) }} />
           </Stack>
-          <StatusBar style="dark" />
+          <StatusBar style="auto" />
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
