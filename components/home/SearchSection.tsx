@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { I18nManager, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
 
@@ -38,9 +38,9 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
         <Ionicons name="search-outline" size={18} color={colors.mutedForeground} />
         {editable ? (
           <TextInput
-            style={[styles.input, { color: colors.foreground }]}
+            style={[styles.input, { color: colors.foreground, writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr' }]}
             placeholder={resolvedPlaceholder}
-            placeholderTextColor={colors.mutedForeground}
+            placeholderTextColor={colors.placeholder}
             value={value}
             onChangeText={onChangeText}
             autoCapitalize="none"
@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
     marginStart: Spacing.sm,
     flex: 1,
     fontSize: 14,
-    textAlign: 'left',
   },
   input: {
     marginStart: Spacing.sm + Spacing.xs,

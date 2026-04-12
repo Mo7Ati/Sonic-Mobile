@@ -1,5 +1,6 @@
 import BranchesList from "@/components/branches/branches-list";
 import BranchesListSkeleton from "@/components/branches/branches-list-skeleton";
+import { Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { type Branch } from "@/services/branch/types";
 import { Ionicons } from "@expo/vector-icons";
@@ -25,7 +26,11 @@ export default function BranchesSection({
   const hasBranches = (branches?.length ?? 0) > 0;
 
   if (isLoading) {
-    return <BranchesListSkeleton />;
+    return (
+      <View style={{ paddingHorizontal: Spacing.gutter }}>
+        <BranchesListSkeleton />
+      </View>
+    );
   }
 
   if (hasBranches) {

@@ -6,7 +6,6 @@ import { useLocalSearchParams } from "expo-router";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
-    ActivityIndicator,
     NativeScrollEvent,
     NativeSyntheticEvent,
     ScrollView,
@@ -15,6 +14,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import BranchPageSkeleton from "./components/branch-page-skeleton";
 import CartBottomBar from "./components/cart-bottom-bar";
 import CategorySection from "./components/category-section";
 import CategoryTabs from "./components/category-tabs";
@@ -38,9 +38,9 @@ export default function BranchScreen() {
 
     if (page.isPending) {
         return (
-            <SafeAreaView style={[styles.centered, { backgroundColor: colors.background }]}>
-                <ActivityIndicator size="large" color={colors.primary} />
-            </SafeAreaView>
+            <View style={[styles.screen, { backgroundColor: colors.card }]}>
+                <BranchPageSkeleton />
+            </View>
         );
     }
 
