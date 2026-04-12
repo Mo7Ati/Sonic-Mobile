@@ -1,0 +1,9 @@
+{
+    "language": {
+        "loading": "Applying language…",
+        "title": "Language",
+        "description": "Choose your preferred language. The app will reload.",
+        "english": "English",
+        "arabic": "Arabic"
+    }
+}

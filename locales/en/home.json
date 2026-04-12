@@ -1,0 +1,11 @@
+{
+    "search_section": {
+        "placeholder": "Search stores, products..."
+    },
+    "unpaid_orders": {
+        "title_one": "{{count}} Unpaid Order",
+        "title_other": "{{count}} Unpaid Orders",
+        "subtitle": "Tap to complete payment",
+        "pay": "Pay"
+    }
+}

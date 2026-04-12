@@ -10,6 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -23,6 +24,7 @@ export default function StoreCategoryScreen() {
   const { id } = useLocalSearchParams();
   const page = useStoreCategoryPage(Number(id));
   const router = useRouter();
+  const { t } = useTranslation("store_category");
 
   const renderItem = useCallback(
     ({ item }: { item: Branch }) => (
@@ -52,7 +54,7 @@ export default function StoreCategoryScreen() {
         ListHeaderComponent={
           <>
             <SearchSection
-              placeholder="البحث عن فروع..."
+              placeholder={t("list.search_placeholder")}
               editable
               value={page.searchQuery}
               onChangeText={page.setSearchQuery}
@@ -79,8 +81,8 @@ export default function StoreCategoryScreen() {
               <Ionicons name="storefront-outline" size={48} color={colors.mutedForeground} />
               <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>
                 {page.debouncedSearch
-                  ? `No results for "${page.debouncedSearch}"`
-                  : "No branches available"}
+                  ? t("list.no_results", { query: page.debouncedSearch })
+                  : t("list.no_branches")}
               </Text>
             </View>
           ) : null

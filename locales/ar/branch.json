@@ -1,0 +1,8 @@
+{
+    "cart_bottom_bar": {
+        "minimum_hint": "أضف {{amount}} ج.م لبدء طلبك"
+    },
+    "product": {
+        "customizable": "قابل للتخصيص"
+    }
+}

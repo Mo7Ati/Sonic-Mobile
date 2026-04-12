@@ -1,0 +1,31 @@
+{
+    "header": {
+        "title": "استكشف"
+    },
+    "intro": {
+        "body": "يتضمن هذا التطبيق مثالاً للمساعدة على البدء."
+    },
+    "collapsible": {
+        "routing_title": "التوجيه المبني على الملفات",
+        "routing_intro": "يحتوي هذا التطبيق على شاشتين:",
+        "routing_conjunction": "و",
+        "routing_tabs_prefix": "ملف التخطيط في",
+        "routing_tabs_suffix": "يُعدّ شريط التبويب.",
+        "routing_learn_more": "اعرف المزيد",
+        "platforms_title": "دعم أندرويد وiOS والويب",
+        "platforms_body": "يمكنك فتح هذا المشروع على أندرويد وiOS والويب. لفتح نسخة الويب، اضغط w في الطرفية التي تشغّل المشروع.",
+        "images_title": "الصور",
+        "images_body": "للصور الثابتة يمكنك استخدام اللاحقتين @2x و@3x لتوفير ملفات لكثافات الشاشة المختلفة",
+        "animations_title": "الحركات",
+        "animations_body": "يتضمن هذا القالب مثالاً لمكوّن متحرك. يستخدم المكوّن components/HelloWave.tsx مكتبة react-native-reanimated لإنشاء حركة يد تلويح.",
+        "parallax_ios": "يوفر المكوّن components/ParallaxScrollView.tsx تأثيراً parallax لصورة الرأس."
+    },
+    "paths": {
+        "index_tab": "app/(tabs)/index.tsx",
+        "explore_tab": "app/(tabs)/explore.tsx",
+        "tabs_layout": "app/(tabs)/_layout.tsx",
+        "hello_wave": "components/HelloWave.tsx",
+        "reanimated": "react-native-reanimated",
+        "parallax": "components/ParallaxScrollView.tsx"
+    }
+}

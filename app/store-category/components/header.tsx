@@ -3,11 +3,13 @@ import { useAppTheme } from "@/hooks/use-app-theme";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { I18nManager, Pressable, StyleSheet, View } from "react-native";
 
 export default function Header() {
   const router = useRouter();
   const { colors } = useAppTheme();
+  const { t } = useTranslation("store_category");
 
   return (
     <View style={styles.header}>
@@ -21,9 +23,9 @@ export default function Header() {
 
       <View style={styles.center}>
         <Text style={[styles.deliverLabel, { color: colors.mutedForeground }]}>
-          Deliver to{" "}
+          {t("header.deliver_prefix")}{" "}
           <Text style={[styles.address, { color: colors.foreground }]} numberOfLines={1}>
-            Nasr City - Mostafa El N...
+            {t("header.address_placeholder")}
           </Text>
         </Text>
       </View>

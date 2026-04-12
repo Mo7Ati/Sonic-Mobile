@@ -1,0 +1,45 @@
+{
+    "actions": {
+        "retry": "إعادة المحاولة",
+        "go_back": "رجوع",
+        "see_all": "عرض الكل"
+    },
+    "errors": {
+        "title": "خطأ",
+        "something_went_wrong": "حدث خطأ ما",
+        "failed_to_load_data": "تعذر تحميل البيانات",
+        "branch_not_found": "لم يتم العثور على الفرع"
+    },
+    "empty": {
+        "nothing_to_show": "لا يوجد شيء لعرضه حالياً."
+    },
+    "tab_bar": {
+        "home": "الرئيسية",
+        "orders": "الطلبات",
+        "profile": "الحساب"
+    },
+    "labels": {
+        "free": "مجاني",
+        "store": "المتجر",
+        "delivered_by_store": "التوصيل من المتجر"
+    },
+    "delivery": {
+        "time_mins": "{{time}} دقيقة"
+    },
+    "currency": {
+        "egp": "ج.م",
+        "ils": "₪"
+    },
+    "deliver_to": "التوصيل إلى",
+    "address_placeholder": "مدينة نصر - مصطفى النجار...",
+    "validation": {
+        "email_required": "البريد الإلكتروني مطلوب",
+        "email_invalid": "أدخل عنوان بريد إلكتروني صالح",
+        "password_required": "كلمة المرور مطلوبة",
+        "name_required": "الاسم مطلوب",
+        "password_min": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+        "password_confirm_required": "يرجى تأكيد كلمة المرور",
+        "passwords_mismatch": "كلمتا المرور غير متطابقتين",
+        "reset_token_required": "رمز إعادة التعيين مطلوب"
+    }
+}

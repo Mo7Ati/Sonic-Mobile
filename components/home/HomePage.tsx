@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useTranslation } from 'react-i18next';
+
 import { DeliverToHeader } from '@/components/DeliverToHeader';
 import { useHomeSections } from '@/hooks/react-query-hooks/use-home-sections';
 import { BorderRadius, Spacing } from '@/constants/theme';
@@ -21,6 +23,7 @@ import { SectionRenderer } from './SectionRenderer';
 export const HomePage = () => {
   const insets = useSafeAreaInsets();
   const { colors } = useAppTheme();
+  const { t } = useTranslation('general');
 
   const {
     data: sections,
@@ -47,7 +50,7 @@ export const HomePage = () => {
         <View style={styles.errorBox}>
           <Text style={[styles.errorText, { color: colors.mutedForeground }]}>{parseApiError(error).message}</Text>
           <Pressable style={[styles.retryButton, { backgroundColor: colors.primary }]} onPress={() => void refetch()}>
-            <Text style={[styles.retryLabel, { color: colors.primaryForeground }]}>Retry</Text>
+            <Text style={[styles.retryLabel, { color: colors.primaryForeground }]}>{t('general:actions.retry')}</Text>
           </Pressable>
         </View>
       </View>
@@ -71,7 +74,7 @@ export const HomePage = () => {
             tintColor={colors.primary}
           />
         }
-        ListEmptyComponent={<Text style={[styles.emptyText, { color: colors.mutedForeground }]}>Nothing to show yet.</Text>}
+        ListEmptyComponent={<Text style={[styles.emptyText, { color: colors.mutedForeground }]}>{t('general:empty.nothing_to_show')}</Text>}
       />
     </View>
   );

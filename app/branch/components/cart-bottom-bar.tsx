@@ -1,4 +1,5 @@
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 import { Text } from "@react-navigation/elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -10,6 +11,7 @@ interface CartBottomBarProps {
 export default function CartBottomBar({ minimumOrder = 60 }: CartBottomBarProps) {
     const { colors } = useAppTheme();
     const insets = useSafeAreaInsets();
+    const { t } = useTranslation("branch");
 
     return (
         <View
@@ -23,7 +25,7 @@ export default function CartBottomBar({ minimumOrder = 60 }: CartBottomBarProps)
             ]}
         >
             <Text style={[styles.text, { color: colors.mutedForeground }]}>
-                Add EGP {minimumOrder.toFixed(2)} to start your order
+                {t("cart_bottom_bar.minimum_hint", { amount: minimumOrder.toFixed(2) })}
             </Text>
         </View>
     );

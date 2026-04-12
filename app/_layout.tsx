@@ -1,7 +1,7 @@
 import { outfitFontsToLoad, FontFamily } from '@/constants/fonts';
 import { Colors } from '@/constants/theme';
 import { AuthProvider } from '@/contexts/auth-context';
-import { initLanguage } from '@/lib/i18n';
+import i18n, { initLanguage } from '@/lib/i18n';
 import { Theme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -73,7 +73,7 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="store-category/[id]" options={{ headerShown: false }} />
             <Stack.Screen name="branch/[id]" options={{ headerShown: false }} />
-            <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+            <Stack.Screen name="modal" options={{ presentation: 'modal', title: i18n.t('content.title', { ns: 'modal' }) }} />
           </Stack>
           <StatusBar style="dark" />
         </AuthProvider>

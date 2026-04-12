@@ -6,6 +6,7 @@ import { parseApiError, type ApiError } from '@/lib/api';
 import { Link } from 'expo-router';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -25,6 +26,7 @@ interface LoginForm {
 export default function LoginScreen() {
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation(['auth', 'general']);
 
   const {
     control,
@@ -56,14 +58,14 @@ export default function LoginScreen() {
       } else if (apiError.status === 403) {
         Toast.show({
           type: 'error',
-          text1: 'Account Deactivated',
-          text2: 'Your account has been deactivated. Please contact support.',
+          text1: t('login.toast_deactivated_title'),
+          text2: t('login.toast_deactivated_message'),
           visibilityTime: 5000,
         });
       } else {
         Toast.show({
           type: 'error',
-          text1: 'Login Failed',
+          text1: t('login.toast_failed_title'),
           text2: apiError.message,
         });
       }
@@ -84,9 +86,9 @@ export default function LoginScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-            <Text style={styles.brand}>Sonic</Text>
-            <Text style={styles.title}>Welcome back</Text>
-            <Text style={styles.subtitle}>Sign in to your account</Text>
+            <Text style={styles.brand}>{t('shared.brand')}</Text>
+            <Text style={styles.title}>{t('login.title')}</Text>
+            <Text style={styles.subtitle}>{t('login.subtitle')}</Text>
           </View>
 
           <View style={styles.form}>
@@ -94,17 +96,17 @@ export default function LoginScreen() {
               control={control}
               name="email"
               rules={{
-                required: 'Email is required',
+                required: t('general:validation.email_required'),
                 pattern: {
                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: 'Enter a valid email address',
+                  message: t('general:validation.email_invalid'),
                 },
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
-                  label="Email"
+                  label={t('shared.email')}
                   icon="mail-outline"
-                  placeholder="you@example.com"
+                  placeholder={t('shared.email_placeholder')}
                   keyboardType="email-address"
                   autoComplete="email"
                   value={value}
@@ -118,12 +120,12 @@ export default function LoginScreen() {
             <Controller
               control={control}
               name="password"
-              rules={{ required: 'Password is required' }}
+              rules={{ required: t('general:validation.password_required') }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
-                  label="Password"
+                  label={t('shared.password')}
                   icon="lock-closed-outline"
-                  placeholder="Enter your password"
+                  placeholder={t('login.password_placeholder')}
                   isPassword
                   autoComplete="password"
                   value={value}
@@ -136,7 +138,7 @@ export default function LoginScreen() {
 
             <Link href="/(auth)/forgot-password" asChild>
               <AuthButton
-                title="Forgot password?"
+                title={t('login.forgot_password')}
                 onPress={() => {}}
                 variant="text"
                 style={styles.forgotButton}
@@ -144,7 +146,7 @@ export default function LoginScreen() {
             </Link>
 
             <AuthButton
-              title="Sign In"
+              title={t('shared.sign_in')}
               onPress={handleSubmit(onSubmit)}
               loading={loading}
               style={styles.submitButton}
@@ -152,9 +154,9 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Don&apos;t have an account?</Text>
+            <Text style={styles.footerText}>{t('login.no_account')}</Text>
             <Link href="/(auth)/register" asChild>
-              <AuthButton title="Sign Up" onPress={() => {}} variant="text" />
+              <AuthButton title={t('shared.sign_up')} onPress={() => {}} variant="text" />
             </Link>
           </View>
         </ScrollView>

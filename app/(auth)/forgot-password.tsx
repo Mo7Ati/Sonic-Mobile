@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
     KeyboardAvoidingView,
     Platform,
@@ -26,6 +27,7 @@ export default function ForgotPasswordScreen() {
   const { forgotPassword } = useAuth();
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const { t } = useTranslation(['auth', 'general']);
 
   const {
     control,
@@ -55,7 +57,7 @@ export default function ForgotPasswordScreen() {
       } else {
         Toast.show({
           type: 'error',
-          text1: 'Error',
+          text1: t('general:errors.title'),
           text2: apiError.message,
         });
       }
@@ -71,21 +73,17 @@ export default function ForgotPasswordScreen() {
           <View style={styles.successIcon}>
             <Ionicons name="mail-open-outline" size={64} color={Colors.link} />
           </View>
-          <Text style={styles.successTitle}>Check your email</Text>
+          <Text style={styles.successTitle}>{t('forgot_password.success_title')}</Text>
           <Text style={styles.successMessage}>
-            We sent a password reset link to{' '}
-            <Text style={styles.emailHighlight}>{getValues('email')}</Text>.
-            {'\n\n'}
-            Open the link in the email to reset your password. If you don&apos;t see
-            it, check your spam folder.
+            {t('forgot_password.success_message', { email: getValues('email') })}
           </Text>
           <AuthButton
-            title="Back to Sign In"
+            title={t('shared.back_to_sign_in')}
             onPress={() => router.replace('/(auth)/login')}
             style={styles.backButton}
           />
           <AuthButton
-            title="Resend Email"
+            title={t('forgot_password.resend_email')}
             onPress={handleSubmit(onSubmit)}
             loading={loading}
             variant="outline"
@@ -111,9 +109,9 @@ export default function ForgotPasswordScreen() {
             <View style={styles.iconCircle}>
               <Ionicons name="key-outline" size={32} color={Colors.link} />
             </View>
-            <Text style={styles.title}>Forgot password?</Text>
+            <Text style={styles.title}>{t('forgot_password.title')}</Text>
             <Text style={styles.subtitle}>
-              Enter your email and we&apos;ll send you a link to reset your password.
+              {t('forgot_password.subtitle')}
             </Text>
           </View>
 
@@ -122,17 +120,17 @@ export default function ForgotPasswordScreen() {
               control={control}
               name="email"
               rules={{
-                required: 'Email is required',
+                required: t('general:validation.email_required'),
                 pattern: {
                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: 'Enter a valid email address',
+                  message: t('general:validation.email_invalid'),
                 },
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
-                  label="Email"
+                  label={t('shared.email')}
                   icon="mail-outline"
-                  placeholder="you@example.com"
+                  placeholder={t('shared.email_placeholder')}
                   keyboardType="email-address"
                   autoComplete="email"
                   value={value}
@@ -144,7 +142,7 @@ export default function ForgotPasswordScreen() {
             />
 
             <AuthButton
-              title="Send Reset Link"
+              title={t('forgot_password.send_reset_link')}
               onPress={handleSubmit(onSubmit)}
               loading={loading}
               style={styles.submitButton}
@@ -152,7 +150,7 @@ export default function ForgotPasswordScreen() {
           </View>
 
           <AuthButton
-            title="Back to Sign In"
+            title={t('shared.back_to_sign_in')}
             onPress={() => router.back()}
             variant="text"
             style={styles.backLink}

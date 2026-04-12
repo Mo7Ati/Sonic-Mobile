@@ -1,7 +1,8 @@
 import { BorderRadius, Colors, Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export type SortOption = "default" | "rating" | "delivery_time" | "delivery_fee";
@@ -20,27 +21,7 @@ export const DEFAULT_FILTERS: Filters = {
   fastDelivery: false,
 };
 
-const SORT_OPTIONS: { label: string; value: SortOption }[] = [
-  { label: "Default", value: "default" },
-  { label: "Rating", value: "rating" },
-  { label: "Delivery time", value: "delivery_time" },
-  { label: "Delivery fee", value: "delivery_fee" },
-];
-
-const SORT_LABELS: Record<SortOption, string> = {
-  default: "Sort by",
-  rating: "Rating",
-  delivery_time: "Delivery time",
-  delivery_fee: "Delivery fee",
-};
-
 type ToggleKey = "offers" | "rating4Plus" | "fastDelivery";
-
-const TOGGLE_CHIPS: { key: ToggleKey; label: string }[] = [
-  { key: "offers", label: "Offers" },
-  { key: "rating4Plus", label: "Rating 4.0+" },
-  { key: "fastDelivery", label: "Fast delivery" },
-];
 
 interface Props {
   filters: Filters;
@@ -49,7 +30,39 @@ interface Props {
 
 export default function FilterChips({ filters, onFiltersChange }: Props) {
   const { colors } = useAppTheme();
+  const { t } = useTranslation("store_category");
   const [sortModalVisible, setSortModalVisible] = useState(false);
+
+  const sortOptions = useMemo(
+    () =>
+      [
+        { label: t("filter_chips.sort_default"), value: "default" as const },
+        { label: t("filter_chips.sort_rating"), value: "rating" as const },
+        { label: t("filter_chips.sort_delivery_time"), value: "delivery_time" as const },
+        { label: t("filter_chips.sort_delivery_fee"), value: "delivery_fee" as const },
+      ] satisfies { label: string; value: SortOption }[],
+    [t],
+  );
+
+  const sortChipLabels = useMemo(
+    (): Record<SortOption, string> => ({
+      default: t("filter_chips.sort_by"),
+      rating: t("filter_chips.sort_rating"),
+      delivery_time: t("filter_chips.sort_delivery_time"),
+      delivery_fee: t("filter_chips.sort_delivery_fee"),
+    }),
+    [t],
+  );
+
+  const toggleChips = useMemo(
+    () =>
+      [
+        { key: "offers" as const, label: t("filter_chips.toggle_offers") },
+        { key: "rating4Plus" as const, label: t("filter_chips.toggle_rating") },
+        { key: "fastDelivery" as const, label: t("filter_chips.toggle_fast") },
+      ] satisfies { key: ToggleKey; label: string }[],
+    [t],
+  );
 
   const sortActive = filters.sort !== "default";
 
@@ -82,7 +95,7 @@ export default function FilterChips({ filters, onFiltersChange }: Props) {
               { color: sortActive ? colors.primary : colors.foreground },
             ]}
           >
-            {SORT_LABELS[filters.sort]}
+            {sortChipLabels[filters.sort]}
           </Text>
           <Ionicons
             name="chevron-down"
@@ -93,7 +106,7 @@ export default function FilterChips({ filters, onFiltersChange }: Props) {
         </Pressable>
 
         {/* Toggle chips */}
-        {TOGGLE_CHIPS.map(({ key, label }) => {
+        {toggleChips.map(({ key, label }) => {
           const active = filters[key];
           return (
             <Pressable
@@ -137,10 +150,10 @@ export default function FilterChips({ filters, onFiltersChange }: Props) {
             onStartShouldSetResponder={() => true}
           >
             <Text style={[styles.modalTitle, { color: colors.foreground }]}>
-              Sort by
+              {t("filter_chips.modal_title")}
             </Text>
 
-            {SORT_OPTIONS.map((option) => {
+            {sortOptions.map((option) => {
               const selected = filters.sort === option.value;
               return (
                 <Pressable

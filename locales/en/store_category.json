@@ -1,0 +1,22 @@
+{
+    "list": {
+        "search_placeholder": "Search branches…",
+        "no_results": "No results for \"{{query}}\"",
+        "no_branches": "No branches available"
+    },
+    "header": {
+        "deliver_prefix": "Deliver to",
+        "address_placeholder": "Nasr City - Mostafa El N…"
+    },
+    "filter_chips": {
+        "sort_by": "Sort by",
+        "sort_default": "Default",
+        "sort_rating": "Rating",
+        "sort_delivery_time": "Delivery time",
+        "sort_delivery_fee": "Delivery fee",
+        "toggle_offers": "Offers",
+        "toggle_rating": "Rating 4.0+",
+        "toggle_fast": "Fast delivery",
+        "modal_title": "Sort by"
+    }
+}

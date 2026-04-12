@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { useLocalSearchParams } from "expo-router";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import {
     ActivityIndicator,
     NativeScrollEvent,
@@ -26,6 +27,7 @@ export default function BranchScreen() {
     const { colors } = useAppTheme();
     const { id } = useLocalSearchParams();
     const page = useBranchPage(Number(id));
+    const { t } = useTranslation("general");
 
     const onScroll = useCallback(
         (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -47,7 +49,7 @@ export default function BranchScreen() {
             <SafeAreaView style={[styles.centered, { backgroundColor: colors.background }]}>
                 <Ionicons name="alert-circle-outline" size={48} color={colors.mutedForeground} />
                 <Text style={[styles.errorText, { color: colors.mutedForeground }]}>
-                    {page.error?.message ?? "Branch not found"}
+                    {page.error?.message ?? t("errors.branch_not_found")}
                 </Text>
             </SafeAreaView>
         );
@@ -58,7 +60,7 @@ export default function BranchScreen() {
     return (
         <View style={[styles.screen, { backgroundColor: colors.card }]}>
             <CompactHeader
-                storeName={branch.name ?? "Store"}
+                storeName={branch.name ?? t("labels.store")}
                 showNameRow={page.showCompactHeader}
                 showTabs={page.showFloatingTabs}
                 categories={categories}

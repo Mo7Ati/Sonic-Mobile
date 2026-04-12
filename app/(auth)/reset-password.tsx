@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -30,6 +31,7 @@ export default function ResetPasswordScreen() {
   const params = useLocalSearchParams<{ token?: string; email?: string }>();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const { t } = useTranslation(['auth', 'general']);
 
   const {
     control,
@@ -75,7 +77,7 @@ export default function ResetPasswordScreen() {
       } else {
         Toast.show({
           type: 'error',
-          text1: 'Error',
+          text1: t('general:errors.title'),
           text2: apiError.message,
         });
       }
@@ -91,13 +93,12 @@ export default function ResetPasswordScreen() {
           <View style={styles.successIcon}>
             <Ionicons name="checkmark-circle-outline" size={64} color={Colors.successBright} />
           </View>
-          <Text style={styles.successTitle}>Password Reset!</Text>
+          <Text style={styles.successTitle}>{t('reset_password.success_title')}</Text>
           <Text style={styles.successMessage}>
-            Your password has been reset successfully. You can now sign in with
-            your new password.
+            {t('reset_password.success_message')}
           </Text>
           <AuthButton
-            title="Sign In"
+            title={t('shared.sign_in')}
             onPress={() => router.replace('/(auth)/login')}
             style={styles.signInButton}
           />
@@ -121,20 +122,20 @@ export default function ResetPasswordScreen() {
             <View style={styles.iconCircle}>
               <Ionicons name="shield-checkmark-outline" size={32} color={Colors.link} />
             </View>
-            <Text style={styles.title}>Reset Password</Text>
-            <Text style={styles.subtitle}>Enter your new password below.</Text>
+            <Text style={styles.title}>{t('reset_password.title')}</Text>
+            <Text style={styles.subtitle}>{t('reset_password.subtitle')}</Text>
           </View>
 
           <View style={styles.form}>
             <Controller
               control={control}
               name="token"
-              rules={{ required: 'Reset token is required' }}
+              rules={{ required: t('general:validation.reset_token_required') }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
-                  label="Reset Token"
+                  label={t('reset_password.reset_token')}
                   icon="key-outline"
-                  placeholder="Paste from your email"
+                  placeholder={t('reset_password.token_placeholder')}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -147,17 +148,17 @@ export default function ResetPasswordScreen() {
               control={control}
               name="email"
               rules={{
-                required: 'Email is required',
+                required: t('general:validation.email_required'),
                 pattern: {
                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: 'Enter a valid email address',
+                  message: t('general:validation.email_invalid'),
                 },
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
-                  label="Email"
+                  label={t('shared.email')}
                   icon="mail-outline"
-                  placeholder="you@example.com"
+                  placeholder={t('shared.email_placeholder')}
                   keyboardType="email-address"
                   autoComplete="email"
                   value={value}
@@ -172,14 +173,14 @@ export default function ResetPasswordScreen() {
               control={control}
               name="password"
               rules={{
-                required: 'Password is required',
-                minLength: { value: 8, message: 'Password must be at least 8 characters' },
+                required: t('general:validation.password_required'),
+                minLength: { value: 8, message: t('general:validation.password_min') },
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
-                  label="New Password"
+                  label={t('reset_password.new_password')}
                   icon="lock-closed-outline"
-                  placeholder="At least 8 characters"
+                  placeholder={t('register.password_placeholder')}
                   isPassword
                   autoComplete="new-password"
                   value={value}
@@ -194,15 +195,15 @@ export default function ResetPasswordScreen() {
               control={control}
               name="password_confirmation"
               rules={{
-                required: 'Please confirm your password',
+                required: t('general:validation.password_confirm_required'),
                 validate: (value) =>
-                  value === password || 'Passwords do not match',
+                  value === password || t('general:validation.passwords_mismatch'),
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
-                  label="Confirm New Password"
+                  label={t('reset_password.confirm_new_password')}
                   icon="lock-closed-outline"
-                  placeholder="Re-enter your new password"
+                  placeholder={t('reset_password.confirm_new_placeholder')}
                   isPassword
                   autoComplete="new-password"
                   value={value}
@@ -214,7 +215,7 @@ export default function ResetPasswordScreen() {
             />
 
             <AuthButton
-              title="Reset Password"
+              title={t('reset_password.submit')}
               onPress={handleSubmit(onSubmit)}
               loading={loading}
               style={styles.submitButton}
@@ -222,7 +223,7 @@ export default function ResetPasswordScreen() {
           </View>
 
           <AuthButton
-            title="Back to Sign In"
+            title={t('shared.back_to_sign_in')}
             onPress={() => router.replace('/(auth)/login')}
             variant="text"
             style={styles.backLink}

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Link } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthInput } from '@/components/ui/auth-input';
@@ -28,6 +29,7 @@ interface RegisterForm {
 export default function RegisterScreen() {
   const { register } = useAuth();
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation(['auth', 'general']);
 
   const {
     control,
@@ -81,7 +83,7 @@ export default function RegisterScreen() {
       } else {
         Toast.show({
           type: 'error',
-          text1: 'Registration Failed',
+          text1: t('register.toast_failed_title'),
           text2: apiError.message,
         });
       }
@@ -102,21 +104,21 @@ export default function RegisterScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-            <Text style={styles.brand}>Sonic</Text>
-            <Text style={styles.title}>Create an account</Text>
-            <Text style={styles.subtitle}>Join Sonic today</Text>
+            <Text style={styles.brand}>{t('shared.brand')}</Text>
+            <Text style={styles.title}>{t('register.title')}</Text>
+            <Text style={styles.subtitle}>{t('register.subtitle')}</Text>
           </View>
 
           <View style={styles.form}>
             <Controller
               control={control}
               name="name"
-              rules={{ required: 'Name is required' }}
+              rules={{ required: t('general:validation.name_required') }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
-                  label="Full Name"
+                  label={t('register.full_name')}
                   icon="person-outline"
-                  placeholder="John Doe"
+                  placeholder={t('register.name_placeholder')}
                   autoComplete="name"
                   value={value}
                   onChangeText={onChange}
@@ -130,17 +132,17 @@ export default function RegisterScreen() {
               control={control}
               name="email"
               rules={{
-                required: 'Email is required',
+                required: t('general:validation.email_required'),
                 pattern: {
                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: 'Enter a valid email address',
+                  message: t('general:validation.email_invalid'),
                 },
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
-                  label="Email"
+                  label={t('shared.email')}
                   icon="mail-outline"
-                  placeholder="you@example.com"
+                  placeholder={t('shared.email_placeholder')}
                   keyboardType="email-address"
                   autoComplete="email"
                   value={value}
@@ -156,9 +158,9 @@ export default function RegisterScreen() {
               name="phone_number"
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
-                  label="Phone Number (optional)"
+                  label={t('register.phone_optional')}
                   icon="call-outline"
-                  placeholder="+1 234 567 890"
+                  placeholder={t('register.phone_placeholder')}
                   keyboardType="phone-pad"
                   autoComplete="tel"
                   value={value}
@@ -173,14 +175,14 @@ export default function RegisterScreen() {
               control={control}
               name="password"
               rules={{
-                required: 'Password is required',
-                minLength: { value: 8, message: 'Password must be at least 8 characters' },
+                required: t('general:validation.password_required'),
+                minLength: { value: 8, message: t('general:validation.password_min') },
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
-                  label="Password"
+                  label={t('shared.password')}
                   icon="lock-closed-outline"
-                  placeholder="At least 8 characters"
+                  placeholder={t('register.password_placeholder')}
                   isPassword
                   autoComplete="new-password"
                   value={value}
@@ -195,15 +197,15 @@ export default function RegisterScreen() {
               control={control}
               name="password_confirmation"
               rules={{
-                required: 'Please confirm your password',
+                required: t('general:validation.password_confirm_required'),
                 validate: (value) =>
-                  value === password || 'Passwords do not match',
+                  value === password || t('general:validation.passwords_mismatch'),
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
-                  label="Confirm Password"
+                  label={t('register.confirm_password')}
                   icon="lock-closed-outline"
-                  placeholder="Re-enter your password"
+                  placeholder={t('register.confirm_placeholder')}
                   isPassword
                   autoComplete="new-password"
                   value={value}
@@ -215,7 +217,7 @@ export default function RegisterScreen() {
             />
 
             <AuthButton
-              title="Create Account"
+              title={t('register.create_account')}
               onPress={handleSubmit(onSubmit)}
               loading={loading}
               style={styles.submitButton}
@@ -223,9 +225,9 @@ export default function RegisterScreen() {
           </View>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Already have an account?</Text>
+            <Text style={styles.footerText}>{t('register.have_account')}</Text>
             <Link href="/(auth)/login" asChild>
-              <AuthButton title="Sign In" onPress={() => {}} variant="text" />
+              <AuthButton title={t('shared.sign_in')} onPress={() => {}} variant="text" />
             </Link>
           </View>
         </ScrollView>

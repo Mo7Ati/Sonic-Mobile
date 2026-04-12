@@ -1,0 +1,22 @@
+{
+    "list": {
+        "search_placeholder": "البحث عن فروع…",
+        "no_results": "لا نتائج لـ \"{{query}}\"",
+        "no_branches": "لا توجد فروع متاحة"
+    },
+    "header": {
+        "deliver_prefix": "التوصيل إلى",
+        "address_placeholder": "مدينة نصر - مصطفى الن…"
+    },
+    "filter_chips": {
+        "sort_by": "ترتيب حسب",
+        "sort_default": "الافتراضي",
+        "sort_rating": "التقييم",
+        "sort_delivery_time": "وقت التوصيل",
+        "sort_delivery_fee": "رسوم التوصيل",
+        "toggle_offers": "عروض",
+        "toggle_rating": "تقييم 4.0+",
+        "toggle_fast": "توصيل سريع",
+        "modal_title": "ترتيب حسب"
+    }
+}

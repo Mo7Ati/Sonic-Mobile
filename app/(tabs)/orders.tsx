@@ -1,5 +1,6 @@
 import { Image } from 'expo-image';
 import { Platform, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { Collapsible } from '@/components/ui/collapsible';
 import { ExternalLink } from '@/components/external-link';
@@ -10,6 +11,8 @@ import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors, Fonts, Spacing } from '@/constants/theme';
 
 export default function TabTwoScreen() {
+  const { t } = useTranslation('orders');
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={Colors.secondary}
@@ -22,60 +25,46 @@ export default function TabTwoScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
+        <ThemedText type="title">{t('header.title')}</ThemedText>
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
+      <ThemedText>{t('intro.body')}</ThemedText>
+      <Collapsible title={t('collapsible.routing_title')}>
         <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
+          {t('collapsible.routing_intro')}{' '}
+          <ThemedText type="defaultSemiBold">{t('paths.index_tab')}</ThemedText>{' '}
+          {t('collapsible.routing_conjunction')}{' '}
+          <ThemedText type="defaultSemiBold">{t('paths.explore_tab')}</ThemedText>
         </ThemedText>
         <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
+          {t('collapsible.routing_tabs_prefix')}{' '}
+          <ThemedText type="defaultSemiBold">{t('paths.tabs_layout')}</ThemedText>{' '}
+          {t('collapsible.routing_tabs_suffix')}
         </ThemedText>
         <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
+          <ThemedText type="link">{t('collapsible.routing_learn_more')}</ThemedText>
         </ExternalLink>
       </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
+      <Collapsible title={t('collapsible.platforms_title')}>
+        <ThemedText>{t('collapsible.platforms_body')}</ThemedText>
       </Collapsible>
-      <Collapsible title="Images">
+      <Collapsible title={t('collapsible.images_title')}>
         <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
+          {t('collapsible.images_body')}
         </ThemedText>
         <Image
           source={require('@/assets/images/react-logo.png')}
           style={{ width: 100, height: 100, alignSelf: 'center' }}
         />
         <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
+          <ThemedText type="link">{t('collapsible.routing_learn_more')}</ThemedText>
         </ExternalLink>
       </Collapsible>
-      <Collapsible title="Animations">
+      <Collapsible title={t('collapsible.animations_title')}>
         <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
+          {t('collapsible.animations_body')}
         </ThemedText>
         {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
+          ios: <ThemedText>{t('collapsible.parallax_ios')}</ThemedText>,
         })}
       </Collapsible>
     </ParallaxScrollView>

@@ -14,7 +14,7 @@ interface SectionHeaderProps {
 
 export const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description, onSeeAll }) => {
   const { colors } = useAppTheme();
-  const { t } = useTranslation('home');
+  const { t } = useTranslation('general');
 
   if (!title) return null;
 
@@ -30,7 +30,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description
         <Pressable
           onPress={onSeeAll}
           style={({ pressed }) => [styles.seeAll, pressed && styles.seeAllPressed]}>
-          <Text style={[styles.seeAllText, { color: colors.primary }]}>{t('general.see_all')}</Text>
+          <Text style={[styles.seeAllText, { color: colors.primary }]}>{t('actions.see_all')}</Text>
           <Ionicons name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"} size={14} color={colors.primary} />
         </Pressable>
       ) : null}

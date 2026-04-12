@@ -3,6 +3,7 @@ import { useAppTheme } from "@/hooks/use-app-theme";
 import { Product } from "@/services/product/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Text } from "@react-navigation/elements";
 
@@ -13,6 +14,7 @@ interface ProductListItemProps {
 
 export default function ProductListItem({ product, onPress }: ProductListItemProps) {
     const { colors } = useAppTheme();
+    const { t } = useTranslation(["general", "branch"]);
 
     const hasComparePrice =
         product.compare_price != null && Number(product.compare_price) !== Number(product.price);
@@ -36,16 +38,16 @@ export default function ProductListItem({ product, onPress }: ProductListItemPro
                 ) : null}
                 <View style={styles.priceRow}>
                     <Text style={[styles.price, { color: colors.foreground }]}>
-                        EGP {Number(product.price).toFixed(2)}
+                        {t("general:currency.egp")} {Number(product.price).toFixed(2)}
                     </Text>
                     {hasComparePrice ? (
                         <Text style={[styles.comparePrice, { color: colors.mutedForeground }]}>
-                            EGP {Number(product.compare_price).toFixed(2)}
+                            {t("general:currency.egp")} {Number(product.compare_price).toFixed(2)}
                         </Text>
                     ) : null}
                 </View>
                 <Text style={[styles.customizable, { color: colors.mutedForeground }]}>
-                    Customizable
+                    {t("branch:product.customizable")}
                 </Text>
             </View>
 

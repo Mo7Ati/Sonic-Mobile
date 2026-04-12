@@ -2,6 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { useTranslation } from 'react-i18next';
+
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { BorderRadius, Spacing } from '@/constants/theme';
 
@@ -15,12 +17,14 @@ interface SearchSectionProps {
 
 export const SearchSection: React.FC<SearchSectionProps> = ({
   onPress,
-  placeholder = 'Search stores, products...',
+  placeholder,
   editable = false,
   value,
   onChangeText,
 }) => {
   const { colors } = useAppTheme();
+  const { t } = useTranslation('home');
+  const resolvedPlaceholder = placeholder ?? t('search_section.placeholder');
 
   return (
     <View style={styles.wrap}>
@@ -35,7 +39,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
         {editable ? (
           <TextInput
             style={[styles.input, { color: colors.foreground }]}
-            placeholder={placeholder}
+            placeholder={resolvedPlaceholder}
             placeholderTextColor={colors.mutedForeground}
             value={value}
             onChangeText={onChangeText}
@@ -43,7 +47,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({
             autoCorrect={false}
           />
         ) : (
-          <Text style={[styles.placeholder, { color: colors.mutedForeground }]}>{placeholder}</Text>
+          <Text style={[styles.placeholder, { color: colors.mutedForeground }]}>{resolvedPlaceholder}</Text>
         )}
         <View style={[styles.divider, { backgroundColor: colors.border }]} />
         <Pressable style={styles.filterHit} hitSlop={Spacing.sm}>

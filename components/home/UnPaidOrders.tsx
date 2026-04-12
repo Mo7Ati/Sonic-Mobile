@@ -2,6 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { I18nManager, Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { useTranslation } from 'react-i18next';
+
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import type { Section } from '@/services/home/home-types';
@@ -15,6 +17,7 @@ interface UnPaidOrdersProps {
 export const UnPaidOrders: React.FC<UnPaidOrdersProps> = ({ section, onPress }) => {
   const data = section.data as UnPaidOrdersData;
   const { colors } = useAppTheme();
+  const { t } = useTranslation('home');
 
   if (!data || data.orders_count === 0) return null;
 
@@ -29,13 +32,13 @@ export const UnPaidOrders: React.FC<UnPaidOrdersProps> = ({ section, onPress }) 
 
         <View style={styles.textCol}>
           <Text style={[styles.title, { color: colors.foreground }]}>
-            {data.orders_count} Unpaid {data.orders_count === 1 ? 'Order' : 'Orders'}
+            {t('unpaid_orders.title', { count: data.orders_count })}
           </Text>
-          <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>Tap to complete payment</Text>
+          <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>{t('unpaid_orders.subtitle')}</Text>
         </View>
 
         <View style={[styles.payPill, { backgroundColor: colors.chart4 }]}>
-          <Text style={[styles.payText, { color: colors.inverseForeground }]}>Pay</Text>
+          <Text style={[styles.payText, { color: colors.inverseForeground }]}>{t('unpaid_orders.pay')}</Text>
           <Ionicons name={I18nManager.isRTL ? "arrow-back" : "arrow-forward"} size={12} color={colors.inverseForeground} />
         </View>
       </Pressable>

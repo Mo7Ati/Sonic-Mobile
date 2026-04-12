@@ -3,6 +3,7 @@ import { useAppTheme } from "@/hooks/use-app-theme";
 import { Product } from "@/services/product/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { useTranslation } from "react-i18next";
 import { I18nManager, Pressable, StyleSheet, View } from "react-native";
 import { Text } from "@react-navigation/elements";
 
@@ -13,6 +14,7 @@ interface ProductGridItemProps {
 
 export default function ProductGridItem({ product, onPress }: ProductGridItemProps) {
     const { colors } = useAppTheme();
+    const { t } = useTranslation("general");
 
     return (
         <Pressable
@@ -52,7 +54,7 @@ export default function ProductGridItem({ product, onPress }: ProductGridItemPro
                     {product.name}
                 </Text>
                 <Text style={[styles.price, { color: colors.foreground }]}>
-                    EGP {Number(product.price).toFixed(2)}
+                    {t("currency.egp")} {Number(product.price).toFixed(2)}
                 </Text>
             </View>
         </Pressable>

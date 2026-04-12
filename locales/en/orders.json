@@ -1,0 +1,31 @@
+{
+    "header": {
+        "title": "Explore"
+    },
+    "intro": {
+        "body": "This app includes example code to help you get started."
+    },
+    "collapsible": {
+        "routing_title": "File-based routing",
+        "routing_intro": "This app has two screens:",
+        "routing_conjunction": "and",
+        "routing_tabs_prefix": "The layout file in",
+        "routing_tabs_suffix": "sets up the tab navigator.",
+        "routing_learn_more": "Learn more",
+        "platforms_title": "Android, iOS, and web support",
+        "platforms_body": "You can open this project on Android, iOS, and the web. To open the web version, press w in the terminal running this project.",
+        "images_title": "Images",
+        "images_body": "For static images, you can use the @2x and @3x suffixes to provide files for different screen densities",
+        "animations_title": "Animations",
+        "animations_body": "This template includes an example of an animated component. The components/HelloWave.tsx component uses the powerful react-native-reanimated library to create a waving hand animation.",
+        "parallax_ios": "The components/ParallaxScrollView.tsx component provides a parallax effect for the header image."
+    },
+    "paths": {
+        "index_tab": "app/(tabs)/index.tsx",
+        "explore_tab": "app/(tabs)/explore.tsx",
+        "tabs_layout": "app/(tabs)/_layout.tsx",
+        "hello_wave": "components/HelloWave.tsx",
+        "reanimated": "react-native-reanimated",
+        "parallax": "components/ParallaxScrollView.tsx"
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "search_section": {
+        "placeholder": "ابحث عن متاجر، منتجات..."
+    },
+    "unpaid_orders": {
+        "title_one": "طلب غير مدفوع {{count}}",
+        "title_other": "{{count}} طلبات غير مدفوعة",
+        "subtitle": "اضغط لإتمام الدفع",
+        "pay": "ادفع"
+    }
+}

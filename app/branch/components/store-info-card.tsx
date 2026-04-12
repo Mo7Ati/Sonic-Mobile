@@ -4,6 +4,7 @@ import { Branch } from "@/services/branch/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { Image } from "expo-image";
+import { useTranslation } from "react-i18next";
 import { I18nManager, Pressable, StyleSheet, View } from "react-native";
 
 interface StoreInfoCardProps {
@@ -12,6 +13,7 @@ interface StoreInfoCardProps {
 
 export default function StoreInfoCard({ branch }: StoreInfoCardProps) {
     const { colors } = useAppTheme();
+    const { t } = useTranslation("general");
 
     const categoryNames = branch.categories?.map((c) => c.name).join(", ");
 
@@ -32,7 +34,7 @@ export default function StoreInfoCard({ branch }: StoreInfoCardProps) {
                 </View>
                 <View style={styles.storeTextCol}>
                     <Text style={[styles.storeName, { color: colors.foreground }]}>
-                        {branch.name ?? "Store"}
+                        {branch.name ?? t("labels.store")}
                     </Text>
                     {categoryNames ? (
                         <Text style={[styles.categoryLine, { color: colors.mutedForeground }]} numberOfLines={1}>
@@ -48,7 +50,7 @@ export default function StoreInfoCard({ branch }: StoreInfoCardProps) {
                     <View style={styles.metaItem}>
                         <Ionicons name="time-outline" size={16} color={colors.mutedForeground} />
                         <Text style={[styles.metaText, { color: colors.foreground }]}>
-                            {branch.delivery_time} mins
+                            {t("delivery.time_mins", { time: branch.delivery_time })}
                         </Text>
                     </View>
                 ) : null}
@@ -59,7 +61,7 @@ export default function StoreInfoCard({ branch }: StoreInfoCardProps) {
                         <View style={styles.metaItem}>
                             <Ionicons name="bicycle-outline" size={16} color={colors.mutedForeground} />
                             <Text style={[styles.metaText, { color: colors.foreground }]}>
-                                ILS {Number(branch.delivery_fee).toFixed(2)}
+                                {t("currency.ils")} {Number(branch.delivery_fee).toFixed(2)}
                             </Text>
                         </View>
                     </>
@@ -68,7 +70,7 @@ export default function StoreInfoCard({ branch }: StoreInfoCardProps) {
                 <Text style={[styles.metaDot, { color: colors.mutedForeground }]}>·</Text>
                 <View style={styles.metaItem}>
                     <Text style={[styles.metaText, { color: colors.mutedForeground }]}>
-                        Delivered by store
+                        {t("labels.delivered_by_store")}
                     </Text>
                     <Ionicons name="information-circle-outline" size={14} color={colors.mutedForeground} />
                 </View>
