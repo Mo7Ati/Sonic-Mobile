@@ -1,8 +1,7 @@
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { Category } from "@/services/branch/types";
-import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useEffect, useRef } from "react";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { Text } from "@react-navigation/elements";
 
 interface CategoryTabsProps {
@@ -13,50 +12,51 @@ interface CategoryTabsProps {
 
 export default function CategoryTabs({ categories, activeIndex, onTabPress }: CategoryTabsProps) {
     const { colors } = useAppTheme();
-    const scrollRef = useRef<ScrollView>(null);
-    const tabWidths = useRef<number[]>([]);
-
-    const scrollToTab = useCallback((index: number) => {
-        let offset = 0;
-        for (let i = 0; i < index; i++) {
-            offset += tabWidths.current[i] ?? 80;
-        }
-        const tabWidth = tabWidths.current[index] ?? 80;
-        const centerOffset = offset - 60 + tabWidth / 2;
-        scrollRef.current?.scrollTo({ x: Math.max(0, centerOffset), animated: true });
-    }, []);
+    const listRef = useRef<FlatList<Category>>(null);
 
     useEffect(() => {
-        scrollToTab(activeIndex);
-    }, [activeIndex, scrollToTab]);
+        if (categories.length === 0 || activeIndex >= categories.length) return;
+        listRef.current?.scrollToIndex({
+            index: activeIndex,
+            animated: true,
+            viewPosition: 0.5,
+        });
+    }, [activeIndex, categories.length]);
 
-    const handlePress = useCallback((index: number) => {
-        onTabPress(index);
-    }, [onTabPress]);
+    const onScrollToIndexFailed = useCallback(
+        (info: { index: number }) => {
+            setTimeout(() => {
+                listRef.current?.scrollToIndex({
+                    index: info.index,
+                    animated: true,
+                    viewPosition: 0.5,
+                });
+            }, 200);
+        },
+        [],
+    );
+
+    const keyExtractor = useCallback((item: Category) => String(item.id), []);
 
     return (
         <View style={[styles.container, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
-            <Pressable style={styles.menuButton}>
-                <Ionicons name="menu-outline" size={22} color={colors.foreground} />
-            </Pressable>
-            <ScrollView
-                ref={scrollRef}
+            <FlatList
+                ref={listRef}
+                data={categories}
                 horizontal
                 showsHorizontalScrollIndicator={false}
+                keyExtractor={keyExtractor}
                 contentContainerStyle={styles.scrollContent}
-            >
-                {categories.map((category, index) => {
+                extraData={activeIndex}
+                initialNumToRender={categories.length}
+                onScrollToIndexFailed={onScrollToIndexFailed}
+                renderItem={({ item, index }) => {
                     const isActive = index === activeIndex;
                     return (
                         <Pressable
-                            key={category.id}
-                            onPress={() => handlePress(index)}
-                            onLayout={(e) => {
-                                tabWidths.current[index] = e.nativeEvent.layout.width;
-                            }}
+                            onPress={() => onTabPress(index)}
                             style={[
                                 styles.tab,
-                                isActive && styles.activeTab,
                                 isActive && { borderBottomColor: colors.foreground },
                             ]}
                         >
@@ -68,42 +68,28 @@ export default function CategoryTabs({ categories, activeIndex, onTabPress }: Ca
                                 ]}
                                 numberOfLines={1}
                             >
-                                {category.name}
+                                {item.name}
                             </Text>
                         </Pressable>
                     );
-                })}
-            </ScrollView>
+                }}
+            />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
         borderBottomWidth: StyleSheet.hairlineWidth,
     },
     scrollContent: {
-        alignItems: "center",
-        paddingEnd: 16,
-    },
-    menuButton: {
-        width: 44,
-        height: 44,
-        alignItems: "center",
-        justifyContent: "center",
-        // borderRightWidth: StyleSheet.hairlineWidth,
+        paddingHorizontal: 16,
     },
     tab: {
         paddingHorizontal: 14,
         paddingVertical: 12,
         borderBottomWidth: 2,
         borderBottomColor: "transparent",
-    },
-    activeTab: {
-        borderBottomWidth: 2,
     },
     tabText: {
         fontSize: 14,
