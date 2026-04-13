@@ -1,0 +1,9 @@
+{
+    "your_choice_from": "Your choice of {{name}}",
+    "required": "Required",
+    "optional": "Optional",
+    "additions_title": "Your choice of toppings",
+    "choose_up_to": "Choose up to {{count}} items",
+    "add_to_cart": "Add to Cart",
+    "complete_selections": "Complete selections to add to cart"
+}

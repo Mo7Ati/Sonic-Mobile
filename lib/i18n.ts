@@ -20,6 +20,8 @@ import enBranch from "@/locales/en/branch.json";
 import arBranch from "@/locales/ar/branch.json";
 import enModal from "@/locales/en/modal.json";
 import arModal from "@/locales/ar/modal.json";
+import enProduct from "@/locales/en/product.json";
+import arProduct from "@/locales/ar/product.json";
 
 const resources = {
     en: {
@@ -31,6 +33,7 @@ const resources = {
         store_category: enStoreCategory,
         branch: enBranch,
         modal: enModal,
+        product: enProduct,
     },
     ar: {
         general: arGeneral,
@@ -41,6 +44,7 @@ const resources = {
         store_category: arStoreCategory,
         branch: arBranch,
         modal: arModal,
+        product: arProduct,
     }
 }
 
@@ -58,6 +62,7 @@ i18n.use(initReactI18next).init({
         "store_category",
         "branch",
         "modal",
+        "product",
     ],
     interpolation: {
         escapeValue: false

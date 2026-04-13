@@ -57,13 +57,13 @@ export default function CategoryTabs({ categories, activeIndex, onTabPress }: Ca
                             onPress={() => onTabPress(index)}
                             style={[
                                 styles.tab,
-                                isActive && { borderBottomColor: colors.foreground },
+                                isActive && { borderBottomColor: colors.primary },
                             ]}
                         >
                             <Text
                                 style={[
                                     styles.tabText,
-                                    { color: isActive ? colors.foreground : colors.mutedForeground },
+                                    { color: isActive ? colors.primary : colors.mutedForeground },
                                     isActive && styles.activeTabText,
                                 ]}
                                 numberOfLines={1}

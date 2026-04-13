@@ -66,12 +66,12 @@ export default function ProductListItem({ product, onPress }: ProductListItemPro
                     style={[
                         styles.actionButton,
                         {
-                            backgroundColor: colors.success,
+                            backgroundColor: colors.primary,
                             shadowColor: colors.shadow,
                         },
                     ]}
                 >
-                    <Ionicons name="add-outline" size={14} color={colors.successForeground} />
+                    <Ionicons name="add-outline" size={14} color={colors.primaryForeground} />
                 </View>
             </View>
         </Pressable>

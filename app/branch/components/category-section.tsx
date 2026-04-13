@@ -1,6 +1,7 @@
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { Category } from "@/services/branch/types";
 import { Product } from "@/services/product/types";
+import { useRouter } from "expo-router";
 import { LayoutChangeEvent, StyleSheet, View } from "react-native";
 import { Text } from "@react-navigation/elements";
 import ProductGridItem from "./product-grid-item";
@@ -20,6 +21,7 @@ export default function CategorySection({
     onLayout,
 }: CategorySectionProps) {
     const { colors } = useAppTheme();
+    const router = useRouter();
 
     if (!products || products.length === 0) return null;
 
@@ -35,15 +37,15 @@ export default function CategorySection({
             ) : null}
 
             {isFirst ? (
-                <GridLayout products={products} />
+                <GridLayout products={products} onProductPress={(id) => router.push({ pathname: "/product/[id]", params: { id } })} />
             ) : (
-                <ListLayout products={products} borderColor={colors.border} />
+                <ListLayout products={products} borderColor={colors.border} onProductPress={(id) => router.push({ pathname: "/product/[id]", params: { id } })} />
             )}
         </View>
     );
 }
 
-function GridLayout({ products }: { products: Product[] }) {
+function GridLayout({ products, onProductPress }: { products: Product[]; onProductPress: (id: number) => void }) {
     const rows: Product[][] = [];
     for (let i = 0; i < products.length; i += 2) {
         rows.push(products.slice(i, i + 2));
@@ -54,7 +56,7 @@ function GridLayout({ products }: { products: Product[] }) {
             {rows.map((row, rowIndex) => (
                 <View key={rowIndex} style={styles.gridRow}>
                     {row.map((product) => (
-                        <ProductGridItem key={product.id} product={product} />
+                        <ProductGridItem key={product.id} product={product} onPress={() => onProductPress(product.id)} />
                     ))}
                     {row.length === 1 && <View style={{ flex: 1 }} />}
                 </View>
@@ -63,12 +65,12 @@ function GridLayout({ products }: { products: Product[] }) {
     );
 }
 
-function ListLayout({ products, borderColor }: { products: Product[]; borderColor: string }) {
+function ListLayout({ products, borderColor, onProductPress }: { products: Product[]; borderColor: string; onProductPress: (id: number) => void }) {
     return (
         <View>
             {products.map((product, index) => (
                 <View key={product.id}>
-                    <ProductListItem product={product} />
+                    <ProductListItem product={product} onPress={() => onProductPress(product.id)} />
                     {index < products.length - 1 && (
                         <View style={[styles.divider, { backgroundColor: borderColor }]} />
                     )}

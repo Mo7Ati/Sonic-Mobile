@@ -38,13 +38,13 @@ export default function ProductGridItem({ product, onPress }: ProductGridItemPro
                 <View
                     style={[
                         styles.actionButton,
-                        { backgroundColor: colors.success, shadowColor: colors.shadow },
+                        { backgroundColor: colors.primary, shadowColor: colors.shadow },
                     ]}
                 >
                     <Ionicons
                         name={I18nManager.isRTL ? "chevron-back" : "chevron-forward"}
                         size={16}
-                        color={colors.successForeground}
+                        color={colors.primaryForeground}
                     />
                 </View>
             </View>

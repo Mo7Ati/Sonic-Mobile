@@ -1,0 +1,9 @@
+{
+    "your_choice_from": "اختيارك من {{name}}",
+    "required": "مطلوب",
+    "optional": "إختياري",
+    "additions_title": "إختيارك من التوبينج",
+    "choose_up_to": "إختر حتى {{count}} صنف",
+    "add_to_cart": "أضف للسلة",
+    "complete_selections": "أكمل الاختيارات للإضافة للسلة"
+}

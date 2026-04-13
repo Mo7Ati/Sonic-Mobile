@@ -18,7 +18,7 @@ export default function StoreInfoCard({ branch }: StoreInfoCardProps) {
     const categoryNames = branch.categories?.map((c) => c.name).join(", ");
 
     return (
-        <View style={[styles.card, { backgroundColor: colors.card }]}>
+        <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <Pressable style={styles.storeRow}>
                 <View style={[styles.logoWrap, { backgroundColor: colors.muted }]}>
                     {branch.logo ? (
