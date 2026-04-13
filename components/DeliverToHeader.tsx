@@ -3,28 +3,28 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'expo-router';
 
-import { Spacing } from '@/constants/theme';
+import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { FontFamily } from '@/constants/fonts';
+import { selectItemsCount, useCartStore } from '@/stores/cart-store';
 
 export type DeliverToHeaderProps = {
   caption?: string;
   address?: string;
   onAddressPress?: () => void;
-  onNotificationsPress?: () => void;
-  onProfilePress?: () => void;
 };
 
 export function DeliverToHeader({
   caption,
   address,
   onAddressPress,
-  onNotificationsPress,
-  onProfilePress,
 }: DeliverToHeaderProps) {
   const { colors } = useAppTheme();
   const { t } = useTranslation('general');
+  const router = useRouter();
+  const itemsCount = useCartStore(selectItemsCount);
   const resolvedCaption = caption ?? t('deliver_to');
   const resolvedAddress = address ?? t('address_placeholder');
 
@@ -40,6 +40,17 @@ export function DeliverToHeader({
           </Pressable>
         </View>
       </View>
+
+      <Pressable onPress={() => router.push('/cart')} hitSlop={8} style={styles.cartButton}>
+        <Ionicons name="cart-outline" size={24} color={colors.foreground} />
+        {itemsCount > 0 && (
+          <View style={[styles.badge, { backgroundColor: colors.primary }]}>
+            <Text style={[styles.badgeText, { color: colors.primaryForeground }]}>
+              {itemsCount > 99 ? '99+' : itemsCount}
+            </Text>
+          </View>
+        )}
+      </Pressable>
     </View>
   );
 }
@@ -75,5 +86,24 @@ const styles = StyleSheet.create({
   },
   chevron: {
     marginStart: Spacing.xs,
+  },
+  cartButton: {
+    position: 'relative',
+    padding: Spacing.xs,
+  },
+  badge: {
+    position: 'absolute',
+    top: 0,
+    end: 0,
+    minWidth: 18,
+    height: 18,
+    borderRadius: BorderRadius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+  },
+  badgeText: {
+    fontSize: 10,
+    fontWeight: '800',
   },
 });

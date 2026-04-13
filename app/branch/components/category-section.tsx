@@ -11,6 +11,7 @@ interface CategorySectionProps {
     category: Category;
     products: Product[];
     isFirst: boolean;
+    branchId: number;
     onLayout?: (e: LayoutChangeEvent) => void;
 }
 
@@ -18,10 +19,15 @@ export default function CategorySection({
     category,
     products,
     isFirst,
+    branchId,
     onLayout,
 }: CategorySectionProps) {
     const { colors } = useAppTheme();
     const router = useRouter();
+
+    const openProduct = (productId: number) => {
+        router.push({ pathname: "/product/[id]", params: { id: productId, branchId } });
+    };
 
     if (!products || products.length === 0) return null;
 
@@ -37,9 +43,9 @@ export default function CategorySection({
             ) : null}
 
             {isFirst ? (
-                <GridLayout products={products} onProductPress={(id) => router.push({ pathname: "/product/[id]", params: { id } })} />
+                <GridLayout products={products} onProductPress={openProduct} />
             ) : (
-                <ListLayout products={products} borderColor={colors.border} onProductPress={(id) => router.push({ pathname: "/product/[id]", params: { id } })} />
+                <ListLayout products={products} borderColor={colors.border} onProductPress={openProduct} />
             )}
         </View>
     );

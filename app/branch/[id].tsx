@@ -103,6 +103,7 @@ export default function BranchScreen() {
                                 category={category}
                                 products={products}
                                 isFirst={index === 0}
+                                branchId={branch.id}
                                 onLayout={(e) =>
                                     page.registerSectionOffset(index, e.nativeEvent.layout.y)
                                 }
@@ -112,7 +113,7 @@ export default function BranchScreen() {
                 </View>
             </ScrollView>
 
-            {/* <CartBottomBar /> */}
+            <CartBottomBar branchId={branch.id} />
         </View>
     );
 }

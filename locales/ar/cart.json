@@ -1,0 +1,19 @@
+{
+    "title": "السلة",
+    "empty_title": "سلة التسوق فارغة",
+    "empty_subtitle": "أضف منتجات من متجر للبدء",
+    "start_shopping": "ابدأ التسوق",
+    "view_cart": "عرض السلة",
+    "items_count": "{{count}} عناصر",
+    "items_count_one": "عنصر واحد",
+    "subtotal": "المجموع الفرعي",
+    "clear_cart": "تفريغ السلة",
+    "clear_cart_confirm": "هل أنت متأكد أنك تريد تفريغ السلة؟",
+    "branch_conflict_title": "متجر مختلف",
+    "branch_conflict_message": "تحتوي سلتك على عناصر من متجر آخر. هل تريد استبدال السلة بعناصر من هذا المتجر؟",
+    "replace_cart": "استبدال السلة",
+    "item_added": "تمت إضافة العنصر إلى السلة",
+    "item_removed": "تم حذف العنصر",
+    "cart_cleared": "تم تفريغ السلة",
+    "update_item": "تحديث العنصر"
+}

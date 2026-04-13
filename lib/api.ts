@@ -2,6 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { ENV } from '@/config/env';
 import i18n from '@/lib/i18n';
 import { getToken, removeToken } from '@/services/secure-store';
+import { getOrCreateSessionId } from '@/services/session';
 
 export interface ApiError {
   message: string;
@@ -29,9 +30,12 @@ const api = axios.create({
 
 api.interceptors.request.use(async (config) => {
   const token = await getToken();
-  
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+  } else {
+    const sessionId = await getOrCreateSessionId();
+    config.headers['X-Session-Id'] = sessionId;
   }
   config.headers['Accept-Language'] = i18n.language || 'en';
   return config;

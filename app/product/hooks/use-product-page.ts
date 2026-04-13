@@ -1,19 +1,36 @@
 import { useProductDetail } from "@/hooks/react-query-hooks/use-product-detail";
+import type { AddCartItemPayload } from "@/services/cart/types";
+import { useCartStore } from "@/stores/cart-store";
+import { useRouter } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { ScrollView } from "react-native";
+import { useTranslation } from "react-i18next";
+import { Alert, ScrollView } from "react-native";
 
-export function useProductPage(productId: number) {
+export function useProductPage(productId: number, branchId: number, editCartItemId?: number) {
     const { data: product, isPending, error } = useProductDetail(productId);
+
+    // Resolve edit state from cart store
+    const editItem = useCartStore((s) =>
+        editCartItemId ? s.cart?.items.find((i) => i.id === editCartItemId) : undefined,
+    );
 
     const scrollRef = useRef<ScrollView>(null);
     const [showCompactHeader, setShowCompactHeader] = useState(false);
 
-    // Option selections: { [group_id]: option_item_id }
-    const [selectedOptions, setSelectedOptions] = useState<Record<number, number>>({});
-    // Addition selections: Set of addition ids
-    const [selectedAdditions, setSelectedAdditions] = useState<Set<number>>(new Set());
-    // Quantity
-    const [quantity, setQuantity] = useState(1);
+    // Pre-fill from edit item if available
+    const [selectedOptions, setSelectedOptions] = useState<Record<number, number>>(() => {
+        if (!editItem?.options_data) return {};
+        const map: Record<number, number> = {};
+        for (const opt of editItem.options_data) {
+            map[opt.group_id] = opt.item_id;
+        }
+        return map;
+    });
+    const [selectedAdditions, setSelectedAdditions] = useState<Set<number>>(() => {
+        if (!editItem?.additions_data) return new Set();
+        return new Set(editItem.additions_data.map((a) => a.id));
+    });
+    const [quantity, setQuantity] = useState(editItem?.quantity ?? 1);
 
     const imageHeight = useRef(0);
 
@@ -85,6 +102,88 @@ export function useProductPage(productId: number) {
         return total * quantity;
     }, [product, selectedOptions, selectedAdditions, quantity]);
 
+    const addItem = useCartStore((state) => state.addItem);
+    const removeItem = useCartStore((state) => state.removeItem);
+    const router = useRouter();
+    const { t } = useTranslation(["cart", "general"]);
+    const isEditing = !!editCartItemId;
+
+    const buildPayload = useCallback((): AddCartItemPayload | null => {
+        if (!product) return null;
+
+        const options = product.options
+            .filter((g) => selectedOptions[g.group_id] !== undefined)
+            .map((g) => {
+                const item = g.items.find(
+                    (i) => i.id === selectedOptions[g.group_id],
+                )!;
+                return {
+                    group_id: g.group_id,
+                    group_name: g.group,
+                    item_id: item.id,
+                    item_name: item.name,
+                    price: Number(item.price),
+                };
+            });
+
+        const additions = product.additions
+            .filter((a) => selectedAdditions.has(a.id))
+            .map((a) => ({
+                id: a.id,
+                name: a.name,
+                price: Number(a.price),
+            }));
+
+        return {
+            branch_id: branchId,
+            product_id: product.id,
+            quantity,
+            unit_price: Number(product.price),
+            options: options.length > 0 ? options : undefined,
+            additions: additions.length > 0 ? additions : undefined,
+        };
+    }, [product, selectedOptions, selectedAdditions, quantity, branchId]);
+
+    const addToCart = useCallback(async () => {
+        const payload = buildPayload();
+        if (!payload) return;
+
+        // Edit mode: remove old item first, then add updated one
+        if (editCartItemId) {
+            await removeItem(editCartItemId);
+        }
+
+        const result = await addItem(payload);
+
+        if (result.success) {
+            router.back();
+            return;
+        }
+
+        if (result.conflict) {
+            Alert.alert(
+                t("cart:branch_conflict_title"),
+                t("cart:branch_conflict_message"),
+                [
+                    { text: t("general:actions.go_back"), style: "cancel" },
+                    {
+                        text: t("cart:replace_cart"),
+                        style: "destructive",
+                        onPress: async () => {
+                            const retry = await addItem({
+                                ...payload,
+                                force_replace: true,
+                            });
+                            if (retry.success) {
+                                router.back();
+                            }
+                        },
+                    },
+                ],
+            );
+        }
+    }, [buildPayload, editCartItemId, addItem, removeItem, router, t]);
+
     return {
         product,
         isPending,
@@ -102,5 +201,7 @@ export function useProductPage(productId: number) {
         toggleAddition,
         incrementQuantity,
         decrementQuantity,
+        addToCart,
+        isEditing,
     };
 }

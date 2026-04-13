@@ -10,6 +10,8 @@ import {
     type Customer,
 } from '@/services/auth';
 import { getToken, removeToken, setToken } from '@/services/secure-store';
+import { clearSessionId } from '@/services/session';
+import { useCartStore } from '@/stores/cart-store';
 import React, {
     createContext,
     useCallback,
@@ -132,15 +134,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch {
         await removeToken();
         dispatch({ type: 'RESTORE_FAILED' });
+      } finally {
+        // Fetch cart for both authenticated users and guests
+        useCartStore.getState().fetchCart();
       }
     }
     restoreToken();
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
+    // Interceptor sends X-Session-Id automatically (no token yet) so server merges guest cart
     const result = await loginApi(email, password);
     await setToken(result.token);
     dispatch({ type: 'SIGN_IN', user: result.customer, token: result.token });
+
+    // Clear guest session, then fetch the (possibly merged) cart
+    await clearSessionId();
+    useCartStore.getState().fetchCart();
   }, []);
 
   const register = useCallback(
@@ -165,6 +175,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Server logout may fail if token is already expired; proceed with local cleanup
     }
     await handleSignOut();
+    useCartStore.getState().reset();
   }, [handleSignOut]);
 
   const forgotPassword = useCallback(async (email: string) => {

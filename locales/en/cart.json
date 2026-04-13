@@ -1,0 +1,19 @@
+{
+    "title": "Cart",
+    "empty_title": "Your cart is empty",
+    "empty_subtitle": "Add items from a store to get started",
+    "start_shopping": "Start Shopping",
+    "view_cart": "View Cart",
+    "items_count": "{{count}} items",
+    "items_count_one": "1 item",
+    "subtotal": "Subtotal",
+    "clear_cart": "Clear Cart",
+    "clear_cart_confirm": "Are you sure you want to clear your cart?",
+    "branch_conflict_title": "Different Store",
+    "branch_conflict_message": "Your cart contains items from another store. Do you want to replace your cart with items from this store?",
+    "replace_cart": "Replace Cart",
+    "item_added": "Item added to cart",
+    "item_removed": "Item removed",
+    "cart_cleared": "Cart cleared",
+    "update_item": "Update Item"
+}

@@ -24,8 +24,8 @@ import { useProductPage } from "./hooks/use-product-page";
 
 export default function ProductScreen() {
     const { colors } = useAppTheme();
-    const { id } = useLocalSearchParams();
-    const page = useProductPage(Number(id));
+    const { id, branchId, editCartItemId } = useLocalSearchParams<{ id: string; branchId: string; editCartItemId?: string }>();
+    const page = useProductPage(Number(id), Number(branchId), editCartItemId ? Number(editCartItemId) : undefined);
     const { t } = useTranslation(["product", "general"]);
 
     const onScroll = useCallback(
@@ -107,11 +107,10 @@ export default function ProductScreen() {
                 totalPrice={page.totalPrice}
                 quantity={page.quantity}
                 allOptionsSelected={page.allOptionsSelected}
+                isEditing={page.isEditing}
                 onIncrement={page.incrementQuantity}
                 onDecrement={page.decrementQuantity}
-                onAddToCart={() => {
-                    // TODO: integrate with cart context/state
-                }}
+                onAddToCart={page.addToCart}
             />
         </View>
     );

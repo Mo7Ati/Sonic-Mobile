@@ -10,6 +10,7 @@ interface AddToCartBarProps {
     totalPrice: number;
     quantity: number;
     allOptionsSelected: boolean;
+    isEditing?: boolean;
     onIncrement: () => void;
     onDecrement: () => void;
     onAddToCart: () => void;
@@ -19,12 +20,13 @@ export default function AddToCartBar({
     totalPrice,
     quantity,
     allOptionsSelected,
+    isEditing,
     onIncrement,
     onDecrement,
     onAddToCart,
 }: AddToCartBarProps) {
     const { colors } = useAppTheme();
-    const { t } = useTranslation(["product", "general"]);
+    const { t } = useTranslation(["product", "general", "cart"]);
     const insets = useSafeAreaInsets();
 
     return (
@@ -67,7 +69,7 @@ export default function AddToCartBar({
                             },
                         ]}
                     >
-                        {t("product:add_to_cart")}{"  "}
+                        {isEditing ? t("cart:update_item") : t("product:add_to_cart")}{"  "}
                         {totalPrice.toFixed(2)} {t("general:currency.egp")}
                     </Text>
                 </Pressable>
