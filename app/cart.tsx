@@ -9,13 +9,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
     ActivityIndicator,
-    Alert,
     FlatList,
+    I18nManager,
     Pressable,
     StyleSheet,
+    TextInput,
     View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,7 +25,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import type { CartItem as CartItemType } from "@/services/cart/types";
 
 export default function CartScreen() {
-    const { colors } = useAppTheme();
+    const { colors, font } = useAppTheme();
     const { t } = useTranslation(["cart", "general"]);
     const router = useRouter();
 
@@ -31,21 +33,7 @@ export default function CartScreen() {
     const isLoading = useCartStore((s) => s.isLoading);
     const itemsCount = useCartStore(selectItemsCount);
     const subtotal = useCartStore(selectSubtotal);
-    const clearCart = useCartStore((s) => s.clearCart);
-
-    const handleClear = () => {
-        Alert.alert(t("cart:clear_cart"), t("cart:clear_cart_confirm"), [
-            { text: t("general:actions.go_back"), style: "cancel" },
-            {
-                text: t("cart:clear_cart"),
-                style: "destructive",
-                onPress: () => {
-                    clearCart();
-                    router.back();
-                },
-            },
-        ]);
-    };
+    const [notes, setNotes] = useState("");
 
     if (isLoading && !cart) {
         return (
@@ -76,14 +64,17 @@ export default function CartScreen() {
                     color={colors.mutedForeground}
                 />
                 <Text
-                    style={[styles.emptyTitle, { color: colors.foreground }]}
+                    style={[
+                        styles.emptyTitle,
+                        { color: colors.foreground, fontFamily: font.bold },
+                    ]}
                 >
                     {t("cart:empty_title")}
                 </Text>
                 <Text
                     style={[
                         styles.emptySubtitle,
-                        { color: colors.mutedForeground },
+                        { color: colors.mutedForeground, fontFamily: font.regular },
                     ]}
                 >
                     {t("cart:empty_subtitle")}
@@ -98,7 +89,7 @@ export default function CartScreen() {
                     <Text
                         style={[
                             styles.startShoppingText,
-                            { color: colors.primaryForeground },
+                            { color: colors.primaryForeground, fontFamily: font.bold },
                         ]}
                     >
                         {t("cart:start_shopping")}
@@ -113,16 +104,15 @@ export default function CartScreen() {
             style={[styles.screen, { backgroundColor: colors.background }]}
         >
             {/* Header */}
-            <View
-                style={[
-                    styles.header,
-                    { borderBottomColor: colors.border },
-                ]}
-            >
-                <Pressable onPress={() => router.back()} hitSlop={8}>
+            <View style={styles.header}>
+                <Pressable
+                    onPress={() => router.back()}
+                    hitSlop={8}
+                    style={[styles.backButton, { borderColor: colors.border }]}
+                >
                     <Ionicons
-                        name="arrow-back"
-                        size={24}
+                        name={I18nManager.isRTL ? "arrow-forward" : "arrow-back"}
+                        size={20}
                         color={colors.foreground}
                     />
                 </Pressable>
@@ -130,7 +120,7 @@ export default function CartScreen() {
                     <Text
                         style={[
                             styles.headerTitle,
-                            { color: colors.foreground },
+                            { color: colors.foreground, fontFamily: font.bold },
                         ]}
                     >
                         {t("cart:title")}
@@ -138,19 +128,12 @@ export default function CartScreen() {
                     <Text
                         style={[
                             styles.headerSubtitle,
-                            { color: colors.mutedForeground },
+                            { color: colors.mutedForeground, fontFamily: font.regular },
                         ]}
                     >
                         {cart.branch.name}
                     </Text>
                 </View>
-                <Pressable onPress={handleClear} hitSlop={8}>
-                    <Ionicons
-                        name="trash-outline"
-                        size={22}
-                        color={colors.destructive}
-                    />
-                </Pressable>
             </View>
 
             {/* Items */}
@@ -169,17 +152,66 @@ export default function CartScreen() {
                         ]}
                     />
                 )}
+                ListFooterComponent={
+                    <>
+                        <View
+                            style={[
+                                styles.separator,
+                                { backgroundColor: colors.border },
+                            ]}
+                        />
+                        {/* Notes Input */}
+                        <View style={styles.notesSection}>
+                            <Text
+                                style={[
+                                    styles.notesLabel,
+                                    { color: colors.foreground, fontFamily: font.semiBold },
+                                ]}
+                            >
+                                {t("cart:notes")}
+                            </Text>
+                            <TextInput
+                                style={[
+                                    styles.notesInput,
+                                    {
+                                        color: colors.foreground,
+                                        backgroundColor: colors.muted,
+                                        borderColor: colors.border,
+                                        fontFamily: font.regular,
+                                    },
+                                ]}
+                                placeholder={t("cart:notes_placeholder")}
+                                placeholderTextColor={colors.placeholder}
+                                value={notes}
+                                onChangeText={setNotes}
+                                multiline
+                                numberOfLines={3}
+                                textAlignVertical="top"
+                                textAlign="right"
+                            />
+                        </View>
+                    </>
+                }
             />
 
             {/* Footer */}
             <View
                 style={[styles.footer, { borderTopColor: colors.border }]}
             >
+                {/* Subtotal */}
                 <View style={styles.footerRow}>
                     <Text
                         style={[
+                            styles.subtotalValue,
+                            { color: colors.foreground, fontFamily: font.bold },
+                        ]}
+                    >
+                        {subtotal.toFixed(2)} {t("general:currency.egp")}
+                    </Text>
+                    <Text
+                        style={[
                             styles.subtotalLabel,
-                            { color: colors.mutedForeground },
+                            { color: colors.mutedForeground, fontFamily: font.medium },
                         ]}
                     >
                         {t("cart:subtotal")} ({itemsCount}{" "}
@@ -188,22 +220,64 @@ export default function CartScreen() {
                             : t("cart:items_count", { count: itemsCount })}
                         )
                     </Text>
-                    <Text
+                </View>
+
+                {/* Action Buttons */}
+                <View style={styles.buttonsRow}>
+                    <Pressable
+                        onPress={() => {
+                            
+                        }}
                         style={[
-                            styles.subtotalValue,
-                            { color: colors.foreground },
+                            styles.checkoutButton,
+                            { backgroundColor: colors.primary },
                         ]}
                     >
-                        {subtotal.toFixed(2)} {t("general:currency.egp")}
-                    </Text>
+                        <Text
+                            style={[
+                                styles.buttonText,
+                                { color: colors.primaryForeground, fontFamily: font.bold },
+                            ]}
+                        >
+                            {t("cart:go_to_checkout")}
+                        </Text>
+                    </Pressable>
+                    <Pressable
+                        onPress={() => router.push({
+                            pathname: "/branch/[id]",
+                            params: {
+                                id: String(cart.branch.id),
+                            },
+                        })}
+                        hitSlop={8}
+                        style={[
+                            styles.addMoreButton,
+                            { backgroundColor: colors.foreground },
+                        ]}
+                    >
+                        <Text
+                            style={[
+                                styles.buttonText,
+                                { color: colors.background, fontFamily: font.bold },
+                            ]}
+                        >
+                            {t("cart:add_more_items")}
+                        </Text>
+                    </Pressable>
                 </View>
             </View>
         </SafeAreaView>
     );
 }
 
-function CartItemRow({ item, branchId }: { item: CartItemType; branchId: number }) {
-    const { colors } = useAppTheme();
+function CartItemRow({
+    item,
+    branchId,
+}: {
+    item: CartItemType;
+    branchId: number;
+}) {
+    const { colors, font } = useAppTheme();
     const { t } = useTranslation(["cart", "general"]);
     const router = useRouter();
     const updateItemQuantity = useCartStore((s) => s.updateItemQuantity);
@@ -232,125 +306,160 @@ function CartItemRow({ item, branchId }: { item: CartItemType; branchId: number 
         });
     };
 
-    return (
-        <Pressable onPress={handleEdit} style={[styles.itemRow, { backgroundColor: colors.card }]}>
-            {item.image ? (
-                <Image
-                    source={{ uri: item.image }}
-                    style={styles.itemImage}
-                    contentFit="cover"
-                />
-            ) : (
-                <View
-                    style={[
-                        styles.itemImage,
-                        styles.itemImagePlaceholder,
-                        { backgroundColor: colors.muted },
-                    ]}
-                >
-                    <Ionicons
-                        name="fast-food-outline"
-                        size={24}
-                        color={colors.mutedForeground}
-                    />
-                </View>
-            )}
+    const hasDiscount =
+        item.compare_price != null &&
+        item.compare_price > 0 &&
+        item.compare_price > item.unit_price;
 
-            <View style={styles.itemDetails}>
+    const optionsText = item.options_data
+        ?.map((o) => o.item_name)
+        .join(", ");
+    const additionsText = item.additions_data
+        ?.map((a) => a.name)
+        .join(", ");
+    const descriptionParts = [optionsText, additionsText].filter(Boolean);
+    const description = descriptionParts.join(", ");
+
+    return (
+        <View style={styles.itemRow}>
+            {/* Content side */}
+            <View style={styles.itemContent}>
+                {/* Name */}
                 <Text
-                    style={[styles.itemName, { color: colors.foreground }]}
+                    style={[
+                        styles.itemName,
+                        { color: colors.foreground, fontFamily: font.semiBold },
+                    ]}
                     numberOfLines={2}
                 >
                     {item.name}
                 </Text>
 
-                {item.options_data && item.options_data.length > 0 && (
+                {/* Description (options + additions) */}
+                {description ? (
                     <Text
                         style={[
-                            styles.itemMeta,
-                            { color: colors.mutedForeground },
+                            styles.itemDescription,
+                            { color: colors.mutedForeground, fontFamily: font.regular },
                         ]}
-                        numberOfLines={1}
+                        numberOfLines={2}
                     >
-                        {item.options_data
-                            .map((o) => o.item_name)
-                            .join(", ")}
+                        {item.quantity > 1 ? `${item.quantity}x ` : ""}
+                        {description}
                     </Text>
-                )}
+                ) : null}
 
-                {item.additions_data && item.additions_data.length > 0 && (
+                {/* Edit link */}
+                <Pressable onPress={handleEdit} hitSlop={6}>
                     <Text
                         style={[
-                            styles.itemMeta,
-                            { color: colors.mutedForeground },
+                            styles.editLink,
+                            { color: colors.link, fontFamily: font.medium },
                         ]}
-                        numberOfLines={1}
                     >
-                        +{" "}
-                        {item.additions_data.map((a) => a.name).join(", ")}
+                        {t("cart:edit")}
                     </Text>
-                )}
+                </Pressable>
 
-                <View style={styles.itemFooter}>
+                {/* Prices */}
+                <View style={styles.priceRow}>
+                    {hasDiscount && (
+                        <Text
+                            style={[
+                                styles.comparePrice,
+                                { color: colors.mutedForeground, fontFamily: font.regular },
+                            ]}
+                        >
+                            {(item.compare_price! * item.quantity).toFixed(2)}
+                        </Text>
+                    )}
                     <Text
                         style={[
                             styles.itemPrice,
-                            { color: colors.foreground },
+                            hasDiscount
+                                ? { color: colors.primary, fontFamily: font.bold }
+                                : { color: colors.foreground, fontFamily: font.bold },
                         ]}
                     >
                         {item.total_price.toFixed(2)}{" "}
                         {t("general:currency.egp")}
                     </Text>
-
-                    <View style={styles.quantityStepper}>
-                        <Pressable
-                            onPress={handleDecrement}
-                            style={[
-                                styles.stepperButton,
-                                { backgroundColor: colors.muted },
-                            ]}
-                            hitSlop={4}
-                        >
-                            <Ionicons
-                                name={
-                                    item.quantity <= 1
-                                        ? "trash-outline"
-                                        : "remove"
-                                }
-                                size={16}
-                                color={
-                                    item.quantity <= 1
-                                        ? colors.destructive
-                                        : colors.mutedForeground
-                                }
-                            />
-                        </Pressable>
-                        <Text
-                            style={[
-                                styles.quantityText,
-                                { color: colors.foreground },
-                            ]}
-                        >
-                            {item.quantity}
-                        </Text>
-                        <Pressable
-                            onPress={handleIncrement}
-                            style={[
-                                styles.stepperButton,
-                                { backgroundColor: colors.primary },
-                            ]}
-                            hitSlop={4}
-                        >
-                            <Ionicons
-                                name="add"
-                                size={16}
-                                color={colors.primaryForeground}
-                            />
-                        </Pressable>
-                    </View>
                 </View>
             </View>
-        </Pressable>
+
+            {/* Image + Stepper side */}
+            <View style={styles.itemImageColumn}>
+                {item.image ? (
+                    <Image
+                        source={{ uri: item.image }}
+                        style={styles.itemImage}
+                        contentFit="cover"
+                    />
+                ) : (
+                    <View
+                        style={[
+                            styles.itemImage,
+                            styles.itemImagePlaceholder,
+                            { backgroundColor: colors.muted },
+                        ]}
+                    >
+                        <Ionicons
+                            name="fast-food-outline"
+                            size={28}
+                            color={colors.mutedForeground}
+                        />
+                    </View>
+                )}
+
+                {/* Quantity stepper */}
+                <View style={styles.quantityStepper}>
+                    <Pressable
+                        onPress={handleIncrement}
+                        style={[
+                            styles.stepperButton,
+                            { backgroundColor: colors.muted },
+                        ]}
+                        hitSlop={4}
+                    >
+                        <Ionicons
+                            name="add"
+                            size={16}
+                            color={colors.foreground}
+                        />
+                    </Pressable>
+                    <Text
+                        style={[
+                            styles.quantityText,
+                            { color: colors.foreground, fontFamily: font.bold },
+                        ]}
+                    >
+                        {item.quantity}
+                    </Text>
+                    <Pressable
+                        onPress={handleDecrement}
+                        style={[
+                            styles.stepperButton,
+                            { backgroundColor: colors.muted },
+                        ]}
+                        hitSlop={4}
+                    >
+                        <Ionicons
+                            name={
+                                item.quantity <= 1
+                                    ? "trash-outline"
+                                    : "remove"
+                            }
+                            size={16}
+                            color={
+                                item.quantity <= 1
+                                    ? colors.destructive
+                                    : colors.foreground
+                            }
+                        />
+                    </Pressable>
+                </View>
+            </View>
+        </View>
     );
 }
 
@@ -366,12 +475,10 @@ const styles = StyleSheet.create({
     },
     emptyTitle: {
         fontSize: 20,
-        fontWeight: "700",
         marginTop: Spacing.md,
     },
     emptySubtitle: {
         fontSize: 14,
-        fontWeight: "400",
         textAlign: "center",
     },
     startShoppingButton: {
@@ -382,33 +489,41 @@ const styles = StyleSheet.create({
     },
     startShoppingText: {
         fontSize: 15,
-        fontWeight: "700",
     },
 
     // Header
+    backButton: {
+        width: 38,
+        height: 38,
+        borderRadius: BorderRadius.full,
+        borderWidth: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
     header: {
         flexDirection: "row",
         alignItems: "center",
+        gap: Spacing.tight,
+        justifyContent: "space-between",
         paddingHorizontal: Spacing.gutter,
         paddingVertical: Spacing.tight,
-        borderBottomWidth: StyleSheet.hairlineWidth,
     },
     headerCenter: {
         flex: 1,
-        marginHorizontal: Spacing.md,
     },
     headerTitle: {
         fontSize: 18,
-        fontWeight: "700",
+        textAlign: "left",
     },
     headerSubtitle: {
         fontSize: 13,
-        fontWeight: "400",
+        textAlign: "left",
+        marginTop: 2,
     },
 
     // List
     listContent: {
-        paddingVertical: Spacing.sm,
+        paddingBottom: Spacing.md,
     },
     separator: {
         height: StyleSheet.hairlineWidth,
@@ -419,40 +534,56 @@ const styles = StyleSheet.create({
     itemRow: {
         flexDirection: "row",
         paddingHorizontal: Spacing.gutter,
-        paddingVertical: Spacing.tight,
+        paddingVertical: Spacing.md,
         gap: Spacing.tight,
     },
+    itemContent: {
+        flex: 1,
+        justifyContent: "flex-start",
+    },
+    itemName: {
+        fontSize: 15,
+        textAlign: "left",
+        lineHeight: 22,
+    },
+    itemDescription: {
+        fontSize: 12,
+        textAlign: "left",
+        marginTop: 4,
+        lineHeight: 18,
+    },
+    editLink: {
+        fontSize: 13,
+        marginTop: 6,
+        textAlign: "left",
+    },
+    priceRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: Spacing.sm,
+        marginTop: Spacing.sm,
+    },
+    comparePrice: {
+        fontSize: 13,
+        textDecorationLine: "line-through",
+    },
+    itemPrice: {
+        fontSize: 15,
+    },
+
+    // Image + stepper column
+    itemImageColumn: {
+        alignItems: "center",
+        gap: Spacing.sm,
+    },
     itemImage: {
-        width: 72,
-        height: 72,
-        borderRadius: BorderRadius.lg,
+        width: 100,
+        height: 100,
+        borderRadius: BorderRadius.xl,
     },
     itemImagePlaceholder: {
         alignItems: "center",
         justifyContent: "center",
-    },
-    itemDetails: {
-        flex: 1,
-        justifyContent: "center",
-    },
-    itemName: {
-        fontSize: 15,
-        fontWeight: "600",
-    },
-    itemMeta: {
-        fontSize: 12,
-        fontWeight: "400",
-        marginTop: 2,
-    },
-    itemFooter: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginTop: Spacing.sm,
-    },
-    itemPrice: {
-        fontSize: 14,
-        fontWeight: "700",
     },
     quantityStepper: {
         flexDirection: "row",
@@ -460,36 +591,76 @@ const styles = StyleSheet.create({
         gap: Spacing.sm,
     },
     stepperButton: {
-        width: 28,
-        height: 28,
+        width: 30,
+        height: 30,
         borderRadius: BorderRadius.full,
         alignItems: "center",
         justifyContent: "center",
     },
     quantityText: {
         fontSize: 15,
-        fontWeight: "700",
         minWidth: 20,
         textAlign: "center",
+    },
+
+    // Notes
+    notesSection: {
+        paddingHorizontal: Spacing.gutter,
+        paddingTop: Spacing.md,
+    },
+    notesLabel: {
+        fontSize: 14,
+        marginBottom: Spacing.sm,
+        textAlign: "left",
+    },
+    notesInput: {
+        borderWidth: 1,
+        borderRadius: BorderRadius.xl,
+        paddingHorizontal: Spacing.md,
+        paddingVertical: Spacing.tight,
+        fontSize: 14,
+        minHeight: 80,
+        lineHeight: 22,
     },
 
     // Footer
     footer: {
         borderTopWidth: StyleSheet.hairlineWidth,
         paddingHorizontal: Spacing.gutter,
-        paddingVertical: Spacing.md,
+        paddingTop: Spacing.tight,
+        paddingBottom: Spacing.sm,
     },
     footerRow: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+        marginBottom: Spacing.tight,
     },
     subtotalLabel: {
-        fontSize: 15,
-        fontWeight: "500",
+        fontSize: 14,
     },
     subtotalValue: {
         fontSize: 18,
-        fontWeight: "800",
+    },
+    buttonsRow: {
+        flexDirection: "row",
+        gap: Spacing.sm,
+    },
+    checkoutButton: {
+        flex: 1,
+        paddingVertical: Spacing.tight,
+        borderRadius: BorderRadius.xl,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    addMoreButton: {
+        flex: 1,
+        paddingVertical: Spacing.tight,
+        borderRadius: BorderRadius.xl,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    buttonText: {
+        fontSize: 15,
     },
 });

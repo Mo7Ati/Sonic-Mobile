@@ -15,5 +15,10 @@
     "item_added": "تمت إضافة العنصر إلى السلة",
     "item_removed": "تم حذف العنصر",
     "cart_cleared": "تم تفريغ السلة",
-    "update_item": "تحديث العنصر"
+    "update_item": "تحديث العنصر",
+    "edit": "تعديل",
+    "notes": "ملاحظات",
+    "notes_placeholder": "أضف ملاحظاتك هنا...",
+    "go_to_checkout": "اذهب للدفع",
+    "add_more_items": "إضافة أصناف"
 }

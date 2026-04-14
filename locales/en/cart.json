@@ -15,5 +15,10 @@
     "item_added": "Item added to cart",
     "item_removed": "Item removed",
     "cart_cleared": "Cart cleared",
-    "update_item": "Update Item"
+    "update_item": "Update Item",
+    "edit": "Edit",
+    "notes": "Notes",
+    "notes_placeholder": "Add your notes here...",
+    "go_to_checkout": "Go to Checkout",
+    "add_more_items": "Add Items"
 }

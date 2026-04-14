@@ -26,6 +26,7 @@ export interface CartItem {
     image: string | null;
     quantity: number;
     unit_price: number;
+    compare_price: number | null;
     options_data: CartItemOption[] | null;
     options_amount: number;
     additions_data: CartItemAddition[] | null;
