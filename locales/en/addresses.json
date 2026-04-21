@@ -1,0 +1,16 @@
+{
+    "title": "My Addresses",
+    "add_address": "Add Address",
+    "edit_address": "Edit Address",
+    "add_delivery_address": "Add delivery address",
+    "address_name": "Address Name",
+    "address_name_placeholder": "e.g. Home, Work",
+    "save": "Save Address",
+    "update": "Update Address",
+    "delete": "Delete",
+    "delete_confirm_title": "Delete Address",
+    "delete_confirm_message": "Are you sure you want to delete this address?",
+    "cancel": "Cancel",
+    "no_addresses": "No saved addresses yet.",
+    "select_address": "Select Address"
+}

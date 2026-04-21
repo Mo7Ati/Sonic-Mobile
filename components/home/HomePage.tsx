@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   FlatList,
   Pressable,
@@ -12,18 +12,34 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { DeliverToHeader } from '@/components/DeliverToHeader';
+import { AddressSelector } from '@/components/AddressSelector';
 import { useHomeSections } from '@/hooks/react-query-hooks/use-home-sections';
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { parseApiError } from '@/lib/api';
 import type { Section } from '@/services/home/home-types';
+import { selectSelectedAddress, useAddressStore } from '@/stores/address-store';
 import { HomePageSkeleton } from './HomePageSkeleton';
 import { SectionRenderer } from './SectionRenderer';
 
 export const HomePage = () => {
   const insets = useSafeAreaInsets();
   const { colors } = useAppTheme();
-  const { t } = useTranslation('general');
+  const { t } = useTranslation(['general', 'addresses']);
+
+  const selectedAddress = useAddressStore(selectSelectedAddress);
+  const fetchAddresses = useAddressStore((s) => s.fetchAddresses);
+  const fetchFieldTemplates = useAddressStore((s) => s.fetchFieldTemplates);
+  const [selectorVisible, setSelectorVisible] = useState(false);
+
+  useEffect(() => {
+    fetchFieldTemplates();
+    fetchAddresses();
+  }, [fetchFieldTemplates, fetchAddresses]);
+
+  const addressDisplay = selectedAddress
+    ? selectedAddress.fields.map((f) => f.value).filter(Boolean).join(', ')
+    : undefined;
 
   const {
     data: sections,
@@ -59,7 +75,14 @@ export const HomePage = () => {
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top, backgroundColor: colors.background }]}>
-      <DeliverToHeader />
+      <DeliverToHeader
+        address={addressDisplay ?? t('addresses:add_delivery_address')}
+        onAddressPress={() => setSelectorVisible(true)}
+      />
+      <AddressSelector
+        visible={selectorVisible}
+        onClose={() => setSelectorVisible(false)}
+      />
 
       <FlatList
         data={sections}

@@ -75,6 +75,8 @@ export default function RootLayout() {
             <Stack.Screen name="branch/[id]" options={{ headerShown: false }} />
             <Stack.Screen name="product/[id]" options={{ headerShown: false, presentation: "modal" }} />
             <Stack.Screen name="cart" options={{ headerShown: false }} />
+            <Stack.Screen name="addresses/index" options={{ headerShown: false }} />
+            <Stack.Screen name="addresses/add" options={{ headerShown: false }} />
             <Stack.Screen name="modal" options={{ presentation: 'modal', title: i18n.t('content.title', { ns: 'modal' }) }} />
           </Stack>
           <StatusBar style="auto" />

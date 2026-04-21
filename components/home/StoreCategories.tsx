@@ -1,12 +1,15 @@
 import { useRouter } from 'expo-router';
-import React from 'react';
-import { FlatList, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useMemo } from 'react';
+import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { SectionHeader } from './SectionHeader';
 import type { Section } from '@/services/home/home-types';
 import { StoreCategory } from '@/services/store-categories/types';
+
+const CATEGORY_GAP = Spacing.sm;
+const CATEGORY_COLUMNS = 3;
 
 interface StoreCategoriesProps {
   section: Section;
@@ -20,36 +23,44 @@ export const StoreCategories: React.FC<StoreCategoriesProps> = ({
   const categories = (section.data as StoreCategory[]) || [];
   const { colors } = useAppTheme();
   const router = useRouter();
+  const { width: windowWidth } = useWindowDimensions();
+
+  const { tileWidth, iconSize } = useMemo(() => {
+    const inner = windowWidth - Spacing.gutter * 2;
+    const tile = (inner - CATEGORY_GAP * (CATEGORY_COLUMNS - 1)) / CATEGORY_COLUMNS;
+    const icon = Math.min(100, Math.floor(tile) - 4);
+    return { tileWidth: tile, iconSize: icon };
+  }, [windowWidth]);
 
   if (categories.length === 0) return null;
 
   return (
     <View style={styles.section}>
       <SectionHeader title={section.title} description={section.description} onSeeAll={onSeeAll} />
-      <FlatList
-        data={categories}
-        renderItem={({ item }) => {
-          return (
-            <Pressable
-              onPress={() => {
-                console.log('Category pressed:', item.id);
-                router.push({ pathname: '/store-category/[id]', params: { id: item.id.toString() } })
-              }}
-              style={({ pressed }) => [styles.categoryPress, pressed && styles.categoryPressed]}>
-              <View style={[styles.iconWrap]}>
-                <Image source={{ uri: item.image ?? '' }} style={styles.fill} resizeMode="cover" />
-              </View>
-              <Text style={[styles.label, { color: colors.foreground }]} numberOfLines={1}>
-                {item.name}
-              </Text>
-            </Pressable>
-          );
-        }}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.listContent}
-      />
+      <View style={[styles.wrap, { paddingHorizontal: Spacing.gutter }]}>
+        {categories.map((item) => (
+          <Pressable
+            key={item.id}
+            onPress={() => {
+              console.log('Category pressed:', item.id);
+              router.push({ pathname: '/store-category/[id]', params: { id: item.id.toString() } });
+            }}
+            style={({ pressed }) => [
+              styles.categoryPress,
+              { width: tileWidth },
+              pressed && styles.categoryPressed,
+            ]}>
+            <View style={[styles.iconWrap, { width: iconSize, height: iconSize }]}>
+              <Image source={{ uri: item.image ?? '' }} style={styles.fill} resizeMode="cover" />
+            </View>
+            <Text
+              style={[styles.label, { color: colors.foreground, maxWidth: tileWidth }]}
+              numberOfLines={2}>
+              {item.name}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
     </View>
   );
 };
@@ -58,8 +69,12 @@ const styles = StyleSheet.create({
   section: {
     marginBottom: Spacing.md,
   },
+  wrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: CATEGORY_GAP,
+  },
   categoryPress: {
-    marginEnd: Spacing.gutter,
     alignItems: 'center',
   },
   categoryPressed: {
@@ -67,25 +82,18 @@ const styles = StyleSheet.create({
   },
   iconWrap: {
     marginBottom: Spacing.sm,
-    height: 56,
-    width: 56,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    borderRadius: BorderRadius.xl,
+    borderRadius: BorderRadius['2xl'],
   },
   fill: {
     width: '100%',
     height: '100%',
   },
   label: {
-    maxWidth: 64,
     textAlign: 'center',
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '500',
-  },
-  listContent: {
-    paddingStart: Spacing.gutter,
-    paddingEnd: Spacing.gutter,
   },
 });

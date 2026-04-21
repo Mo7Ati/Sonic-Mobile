@@ -18,6 +18,16 @@ import { useAppTheme } from '@/hooks/use-app-theme';
 
 const WIN_W = Dimensions.get('window').width;
 
+const CATEGORY_GRID_GAP = Spacing.sm;
+const CATEGORY_GRID_COLS = 3;
+
+function getCategoryGridMetrics(screenWidth: number) {
+  const inner = screenWidth - Spacing.gutter * 2;
+  const tileW = (inner - CATEGORY_GRID_GAP * (CATEGORY_GRID_COLS - 1)) / CATEGORY_GRID_COLS;
+  const icon = Math.min(100, Math.floor(tileW) - 4);
+  return { tileW, icon };
+}
+
 type ShimmerBoneProps = {
   height: number;
   width?: number | `${number}%`;
@@ -147,6 +157,8 @@ export const HomePageSkeleton: React.FC = () => {
     [shine, sweep],
   );
 
+  const { tileW: categoryTileW, icon: categoryIconSize } = getCategoryGridMetrics(WIN_W);
+
   return (
     <View
       style={[styles.screen, { paddingTop: insets.top, backgroundColor: colors.background }]}
@@ -253,24 +265,20 @@ export const HomePageSkeleton: React.FC = () => {
             highlight={highlight}
             translateX={translateX}
           />
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.hListContent}
-          >
+          <View style={[styles.categoryGridWrap, { paddingHorizontal: Spacing.gutter }]}>
             {[0, 1, 2, 3, 4, 5].map((i) => (
-              <View key={i} style={styles.categoryItem}>
+              <View key={i} style={[styles.categoryItem, { width: categoryTileW }]}>
                 <ShimmerBone
-                  height={56}
-                  width={56}
-                  borderRadius={BorderRadius.xl}
+                  height={categoryIconSize}
+                  width={categoryIconSize}
+                  borderRadius={BorderRadius['2xl']}
                   baseColor={boneMuted}
                   highlight={highlight}
                   translateX={translateX}
                 />
                 <ShimmerBone
-                  height={10}
-                  width={52}
+                  height={11}
+                  width="78%"
                   borderRadius={BorderRadius.md}
                   baseColor={bone}
                   highlight={highlight}
@@ -279,7 +287,7 @@ export const HomePageSkeleton: React.FC = () => {
                 />
               </View>
             ))}
-          </ScrollView>
+          </View>
         </View>
 
         {/* Promo tiles */}
@@ -487,15 +495,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  hListContent: {
-    paddingStart: Spacing.gutter,
-    paddingEnd: Spacing.sm,
+  categoryGridWrap: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexWrap: 'wrap',
+    gap: CATEGORY_GRID_GAP,
   },
   categoryItem: {
     alignItems: 'center',
-    marginEnd: Spacing.gutter,
   },
   gridRow: {
     flexDirection: 'row',

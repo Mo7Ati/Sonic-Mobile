@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 
 const DEFAULT_API_URL = 'http://192.168.1.158:8000'
   // ? 'http://192.168.1.158:8000'

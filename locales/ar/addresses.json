@@ -1,0 +1,16 @@
+{
+    "title": "عناويني",
+    "add_address": "إضافة عنوان",
+    "edit_address": "تعديل العنوان",
+    "add_delivery_address": "أضف عنوان التوصيل",
+    "address_name": "اسم العنوان",
+    "address_name_placeholder": "مثال: المنزل، العمل",
+    "save": "حفظ العنوان",
+    "update": "تحديث العنوان",
+    "delete": "حذف",
+    "delete_confirm_title": "حذف العنوان",
+    "delete_confirm_message": "هل أنت متأكد من حذف هذا العنوان؟",
+    "cancel": "إلغاء",
+    "no_addresses": "لا توجد عناوين محفوظة بعد.",
+    "select_address": "اختر العنوان"
+}

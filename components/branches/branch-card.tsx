@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 
 
-const CARD_WIDTH = 272;
+const CARD_WIDTH = 300;
 
 const BranchCard = ({
   item,
@@ -109,8 +109,8 @@ const styles = StyleSheet.create({
     width: CARD_WIDTH,
     marginEnd: Spacing.tight,
     borderRadius: BorderRadius["2xl"],
-    borderWidth: StyleSheet.hairlineWidth,
-    padding: Spacing.tight,
+    borderWidth: 1,
+    padding: Spacing.sm + Spacing.xs,
     overflow: 'hidden',
   },
   cardFullWidth: {
@@ -126,8 +126,8 @@ const styles = StyleSheet.create({
     gap: Spacing.sm + Spacing.xs,
   },
   logoWrap: {
-    width: 48,
-    height: 48,
+    width: 56,
+    height: 56,
     borderRadius: BorderRadius.xl,
     alignItems: 'center',
     justifyContent: 'center',
@@ -144,13 +144,13 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   storeName: {
-    fontSize: 15,
-    fontWeight: '500',
+    fontSize: 16,
+    fontWeight: '600',
     marginBottom: 2,
     textAlign: 'left',
   },
   branchName: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '600',
     marginBottom: Spacing.xs,
     textAlign: 'left',
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     gap: Spacing.sm + Spacing.xs,
     marginTop: Spacing.sm + Spacing.xs,
     paddingTop: Spacing.sm + Spacing.xs,
-    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopWidth: 1,
   },
   metaItem: {
     flexDirection: 'row',
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
   },
   metaText: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '500',
   },
 });

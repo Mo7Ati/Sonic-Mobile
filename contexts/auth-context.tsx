@@ -11,6 +11,7 @@ import {
 } from '@/services/auth';
 import { getToken, removeToken, setToken } from '@/services/secure-store';
 import { clearSessionId } from '@/services/session';
+import { useAddressStore } from '@/stores/address-store';
 import { useCartStore } from '@/stores/cart-store';
 import React, {
     createContext,
@@ -143,14 +144,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    // Interceptor sends X-Session-Id automatically (no token yet) so server merges guest cart
+    // Interceptor sends X-Session-Id automatically (no token yet) so server merges guest cart & addresses
     const result = await loginApi(email, password);
     await setToken(result.token);
     dispatch({ type: 'SIGN_IN', user: result.customer, token: result.token });
 
-    // Clear guest session, then fetch the (possibly merged) cart
+    // Clear guest session, then fetch the (possibly merged) cart & addresses
     await clearSessionId();
     useCartStore.getState().fetchCart();
+    useAddressStore.getState().fetchAddresses();
   }, []);
 
   const register = useCallback(
@@ -164,6 +166,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const result = await registerApi(params);
       await setToken(result.token);
       dispatch({ type: 'SIGN_IN', user: result.customer, token: result.token });
+
+      // Clear guest session, then fetch the (possibly merged) cart & addresses
+      await clearSessionId();
+      useCartStore.getState().fetchCart();
+      useAddressStore.getState().fetchAddresses();
     },
     [],
   );
@@ -176,6 +183,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     await handleSignOut();
     useCartStore.getState().reset();
+    useAddressStore.getState().reset();
   }, [handleSignOut]);
 
   const forgotPassword = useCallback(async (email: string) => {
