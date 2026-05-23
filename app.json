@@ -9,7 +9,10 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "ExpoLocalization_supportsRTL": true
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -19,17 +22,22 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.Sonic"
     },
     "extra": {
-      "supportsRTL": true
+      "supportsRTL": true,
+      "router": {},
+      "eas": {
+        "projectId": "f911490c-2f33-44cb-940c-b65003cf9a4b"
+      }
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/splash.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
