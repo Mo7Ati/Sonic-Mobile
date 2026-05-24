@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
@@ -23,6 +24,12 @@ import enCart from "@/locales/en/cart.json";
 import arCart from "@/locales/ar/cart.json";
 import enAddresses from "@/locales/en/addresses.json";
 import arAddresses from "@/locales/ar/addresses.json";
+import { I18nManager } from "react-native";
+
+export type AppLanguage = "ar" | "en";
+
+export const LANGUAGE_STORAGE_KEY = "sonic_language";
+export const DEFAULT_LANGUAGE: AppLanguage = "ar";
 
 const resources = {
     en: {
@@ -50,30 +57,48 @@ const resources = {
         product: arProduct,
         cart: arCart,
         addresses: arAddresses,
-    }
+    },
+};
+
+
+
+const getStoredLanguage = async () => {
+    const stored = await AsyncStorage.getItem('appLanguage');
+    if (stored) return stored;
+    return I18nManager.isRTL ? 'ar' : 'en';
+};
+
+
+const initI18n = async () => {
+    const storedLanguage = await getStoredLanguage();
+
+    await i18n.use(initReactI18next).init({
+        lng: storedLanguage,
+        resources,
+        fallbackLng: DEFAULT_LANGUAGE,
+        defaultNS: "general",
+        ns: [
+            "general",
+            "home",
+            "auth",
+            "orders",
+            "profile",
+            "store_category",
+            "branch",
+            "modal",
+            "product",
+            "cart",
+            "addresses",
+        ],
+        interpolation: { escapeValue: false },
+    });
+
+    const isRTL = storedLanguage === 'ar';
+    I18nManager.allowRTL(isRTL);
+    I18nManager.forceRTL(isRTL);
 }
 
-i18n.use(initReactI18next).init({
-    lng: "en",
-    resources: resources,
-    fallbackLng: "en",
-    defaultNS: "general",
-    ns: [
-        "general",
-        "home",
-        "auth",
-        "orders",
-        "profile",
-        "store_category",
-        "branch",
-        "modal",
-        "product",
-        "cart",
-        "addresses",
-    ],
-    interpolation: {
-        escapeValue: false
-    }
-});
+initI18n();
+
 
 export default i18n;

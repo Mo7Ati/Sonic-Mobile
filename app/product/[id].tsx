@@ -20,7 +20,7 @@ import AdditionsSection from "./components/additions-section";
 import CompactHeader from "./components/compact-header";
 import OptionGroupSection from "./components/option-group-section";
 import ProductImageHeader from "./components/product-image-header";
-import { useProductPage } from "./hooks/use-product-page";
+import useProductPage from "./hooks/use-product-page";
 
 export default function ProductScreen() {
     const { colors } = useAppTheme();

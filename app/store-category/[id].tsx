@@ -17,7 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ErrorState from "./components/error-state";
 import FilterChips from "./components/filter-chips";
 import Header from "./components/header";
-import { useStoreCategoryPage } from "./hooks/use-store-category-page";
+import useStoreCategoryPage from "./hooks/use-store-category-page";
 
 export default function StoreCategoryScreen() {
   const { colors } = useAppTheme();

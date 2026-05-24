@@ -13,6 +13,7 @@ import { getToken, removeToken, setToken } from '@/services/secure-store';
 import { clearSessionId } from '@/services/session';
 import { useAddressStore } from '@/stores/address-store';
 import { useCartStore } from '@/stores/cart-store';
+import { useSplashStore } from '@/stores/splash-store';
 import React, {
     createContext,
     useCallback,
@@ -110,6 +111,7 @@ const initialState: AuthState = {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  const splashData = useSplashStore((s) => s.data);
 
   const handleSignOut = useCallback(async () => {
     await removeToken();
@@ -122,26 +124,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   }, [handleSignOut]);
 
+  // Hydrate auth state from the splash payload once Bootstrap has populated it.
   useEffect(() => {
-    async function restoreToken() {
-      try {
-        const storedToken = await getToken();
-        if (!storedToken) {
-          dispatch({ type: 'RESTORE_FAILED' });
-          return;
-        }
-        const user = await getUserApi();
-        dispatch({ type: 'RESTORE_TOKEN', user, token: storedToken });
-      } catch {
-        await removeToken();
+    if (!splashData) return;
+    let cancelled = false;
+
+    (async () => {
+      const storedToken = await getToken();
+      if (cancelled) return;
+
+      if (splashData.user && storedToken) {
+        dispatch({ type: 'RESTORE_TOKEN', user: splashData.user, token: storedToken });
+      } else {
+        if (storedToken) await removeToken();
         dispatch({ type: 'RESTORE_FAILED' });
-      } finally {
-        // Fetch cart for both authenticated users and guests
-        useCartStore.getState().fetchCart();
       }
-    }
-    restoreToken();
-  }, []);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [splashData]);
 
   const login = useCallback(async (email: string, password: string) => {
     // Interceptor sends X-Session-Id automatically (no token yet) so server merges guest cart & addresses

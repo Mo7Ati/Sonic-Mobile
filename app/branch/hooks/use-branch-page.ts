@@ -2,7 +2,7 @@ import { useBranchDetail } from "@/hooks/react-query-hooks/use-branch-detail";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { ScrollView } from "react-native";
 
-export function useBranchPage(branchId: number) {
+export default function useBranchPage(branchId: number) {
     const { data: branch, isPending, error } = useBranchDetail(branchId);
     const [activeTabIndex, setActiveTabIndex] = useState(0);
     const [showCompactHeader, setShowCompactHeader] = useState(false);

@@ -6,7 +6,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, ScrollView } from "react-native";
 
-export function useProductPage(productId: number, branchId: number, editCartItemId?: number) {
+export default function useProductPage(productId: number, branchId: number, editCartItemId?: number) {
     const { data: product, isPending, error } = useProductDetail(productId);
 
     // Resolve edit state from cart store

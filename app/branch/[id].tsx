@@ -21,7 +21,7 @@ import CategoryTabs from "./components/category-tabs";
 import CompactHeader from "./components/compact-header";
 import HeroHeader from "./components/hero-header";
 import StoreInfoCard from "./components/store-info-card";
-import { useBranchPage } from "./hooks/use-branch-page";
+import useBranchPage from "./hooks/use-branch-page";
 
 export default function BranchScreen() {
     const { colors } = useAppTheme();

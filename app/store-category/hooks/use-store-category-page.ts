@@ -21,7 +21,7 @@ function buildBranchFilters(
   };
 }
 
-export function useStoreCategoryPage(storeCategoryId: number) {
+export default function useStoreCategoryPage(storeCategoryId: number) {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearch = useDebouncedValue(searchQuery);
   const [activeSubCategory, setActiveSubCategory] = useState<StoreCategory | null>(null);
