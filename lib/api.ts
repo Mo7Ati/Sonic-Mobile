@@ -35,7 +35,7 @@ api.interceptors.request.use(async (config) => {
     config.headers.Authorization = `Bearer ${token}`;
   } else {
     const sessionId = await getOrCreateSessionId();
-    config.headers['X-Session-Id'] = sessionId;
+    config.headers['X-Session-Id'] = 1234;
   }
   config.headers['Accept-Language'] = i18n.language || 'en';
   return config;

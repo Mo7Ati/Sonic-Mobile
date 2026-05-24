@@ -2,16 +2,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as addressApi from '@/services/addresses/address-service';
 import type { AddressFieldTemplate, Address, StoreAddressPayload, UpdateAddressPayload } from '@/services/addresses/types';
 import Toast from 'react-native-toast-message';
+import { usePlatformStore } from '@/stores/platform-store';
 
 const ADDRESSES_KEY = ['addresses'];
 const ADDRESS_FIELDS_KEY = ['address-fields'];
-
-export function useAddressFields() {
-    return useQuery<AddressFieldTemplate[]>({
-        queryKey: ADDRESS_FIELDS_KEY,
-        queryFn: addressApi.fetchAddressFields,
-    });
-}
 
 export function useAddresses() {
     return useQuery<Address[]>({
@@ -25,8 +19,7 @@ export function useCreateAddress() {
 
     return useMutation({
         mutationFn: (payload: StoreAddressPayload) => addressApi.createAddress(payload),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ADDRESSES_KEY });
+        onSuccess: (address: Address) => {
             Toast.show({
                 text1: 'Address created successfully',
                 type: 'success',

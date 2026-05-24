@@ -13,7 +13,7 @@ import { getToken, removeToken, setToken } from '@/services/secure-store';
 import { clearSessionId } from '@/services/session';
 import { useAddressStore } from '@/stores/address-store';
 import { useCartStore } from '@/stores/cart-store';
-import { useSplashStore } from '@/stores/splash-store';
+import { usePlatformStore } from '@/stores/platform-store';
 import React, {
     createContext,
     useCallback,
@@ -111,7 +111,7 @@ const initialState: AuthState = {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
-  const splashData = useSplashStore((s) => s.data);
+  const splashData = usePlatformStore((s) => s.data);
 
   const handleSignOut = useCallback(async () => {
     await removeToken();
@@ -187,6 +187,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await handleSignOut();
     useCartStore.getState().reset();
     useAddressStore.getState().reset();
+    usePlatformStore.setState({ lastSelectedAddressId: null });
   }, [handleSignOut]);
 
   const forgotPassword = useCallback(async (email: string) => {

@@ -1,31 +1,27 @@
 import { splashApi } from "@/services/splash";
-import { useSplashStore } from "@/stores/splash-store";
-import * as SplashScreen from "expo-splash-screen";
+import { usePlatformStore } from "@/stores/platform-store";
+import { SplashScreen } from "expo-router";
 import { useEffect } from "react";
 
 export default function Bootstrap() {
 
     useEffect(() => {
-        let cancelled = false;
-
         (async () => {
             try {
                 const data = await splashApi();
-                if (cancelled) return;
-                useSplashStore.getState().setData(data);
+
+                usePlatformStore.setState({
+                    customer: data.customer,
+                    addresses: data.addresses,
+                    platformAddressFields: data.platformAddressFields,
+                });
             } catch {
                 // Network or server failure — render whatever is in the persisted store
                 // (or the empty default). The app remains usable; callers can retry.
             } finally {
-                if (!cancelled) {
-                    await SplashScreen.hideAsync().catch(() => { });
-                }
+                SplashScreen.hide();
             }
         })();
-
-        return () => {
-            cancelled = true;
-        };
     }, []);
 
     return null;

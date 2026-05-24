@@ -1,7 +1,5 @@
 import { useAppTheme } from '@/hooks/use-app-theme';
-import { useAddresses } from '@/hooks/react-query-hooks/use-addresses';
 import type { Address } from '@/services/addresses/types';
-import { useAddressStore } from '@/stores/address-store';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +13,8 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BorderRadius, Spacing } from '@/constants/theme';
+import { usePlatformStore } from '@/stores/platform-store';
+import { getAddressSummary } from '@/lib/utils.';
 
 interface AddressSelectorProps {
     visible: boolean;
@@ -27,12 +27,10 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
     const router = useRouter();
     const insets = useSafeAreaInsets();
 
-    const { data: addresses } = useAddresses();
-    const selectedAddress = useAddressStore((s) => s.selectedAddress);
-    const setSelectedAddress = useAddressStore((s) => s.setSelectedAddress);
+    const { addresses, lastSelectedAddress, setLastSelectedAddress } = usePlatformStore();
 
     const handleSelect = (address: Address) => {
-        setSelectedAddress(address);
+        setLastSelectedAddress(address);
         onClose();
     };
 
@@ -41,16 +39,8 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
         router.push('/addresses/add');
     };
 
-    const getAddressSummary = (address: Address) => {
-        return address.fields
-            .map((f) => f.value)
-            .filter(Boolean)
-            .join(', ');
-    };
-
     const renderItem = ({ item }: { item: Address }) => {
-        const isSelected = selectedAddress?.id === item.id;
-
+        const isSelected = lastSelectedAddress?.id === item.id;
         return (
             <Pressable
                 style={[

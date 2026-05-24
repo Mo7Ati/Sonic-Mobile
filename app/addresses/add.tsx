@@ -1,17 +1,12 @@
+import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
-import {
-    useAddressFields,
-    useCreateAddress,
-    useUpdateAddress,
-    useAddresses,
-} from '@/hooks/react-query-hooks/use-addresses';
-import { useAddressStore } from '@/stores/address-store';
+import { useCreateAddress, useUpdateAddress } from '@/hooks/react-query-hooks/use-addresses';
+import { usePlatformAddressFields, usePlatformStore } from '@/stores/platform-store';
+import type { AddressFieldTemplate, StoreAddressPayload } from '@/services/addresses/types';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import i18n from '@/lib/i18n';
 import {
     ActivityIndicator,
     I18nManager,
@@ -25,91 +20,90 @@ import {
     View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BorderRadius, Spacing } from '@/constants/theme';
 
 export default function AddAddressScreen() {
     const { colors, font } = useAppTheme();
-    const { t } = useTranslation(['addresses', 'general']);
+    const { t, i18n } = useTranslation('addresses');
     const router = useRouter();
-    const params = useLocalSearchParams<{ id?: string }>();
-    const editId = params.id ? Number(params.id) : null;
-    const isEditing = editId !== null;
+    const { id } = useLocalSearchParams<{ id?: string }>();
 
-    const { data: fieldTemplates, isPending: fieldsLoading } = useAddressFields();
-    const { data: addresses } = useAddresses();
+    const fields = usePlatformAddressFields();
+    const addresses = usePlatformStore((s) => s.addresses);
+
+    const editing = useMemo(
+        () => (id ? addresses.find((a) => String(a.id) === String(id)) ?? null : null),
+        [id, addresses],
+    );
+
     const createAddress = useCreateAddress();
     const updateAddress = useUpdateAddress();
-    const setSelectedAddress = useAddressStore((s) => s.setSelectedAddress);
 
-    const editingAddress = isEditing
-        ? addresses?.find((a) => a.id === editId)
-        : null;
+    const [name, setName] = useState(editing?.name ?? '');
+    const [values, setValues] = useState<Record<string, string>>(() => {
+        const initial: Record<string, string> = {};
+        editing?.fields.forEach((f) => {
+            initial[f.key] = f.value;
+        });
+        return initial;
+    });
+    const [errors, setErrors] = useState<Record<string, string>>({});
 
-    const {
-        control,
-        handleSubmit,
-        reset,
-        formState: { errors, isSubmitting },
-    } = useForm<Record<string, string>>({ defaultValues: { name: '' } });
+    const lang = i18n.language;
 
-    // Pre-fill form when editing
-    useEffect(() => {
-        if (editingAddress && fieldTemplates) {
-            const values: Record<string, string> = { name: editingAddress.name };
-            for (const field of editingAddress.fields) {
-                values[`field_${field.key}`] = field.value;
-            }
-            reset(values);
-        }
-    }, [editingAddress, fieldTemplates, reset]);
+    const getLabel = (template: AddressFieldTemplate) =>
+        template.label[lang] ?? template.label.en ?? template.label.ar ?? template.key;
 
-    const onSubmit = async (data: Record<string, string>) => {
-        const fields: Record<string, string> = {};
-        for (const key of Object.keys(data)) {
-            if (key.startsWith('field_') && data[key]) {
-                fields[key.replace('field_', '')] = data[key];
-            }
-        }
-
-        const payload = { name: data.name, fields };
-
-        if (isEditing && editId) {
-            updateAddress.mutate(
-                { id: editId, payload },
-                {
-                    onSuccess: (updated) => {
-                        setSelectedAddress(updated);
-                        router.back();
-                    },
-                },
-            );
-        } else {
-            createAddress.mutate(payload, {
-                onSuccess: (created) => {
-                    setSelectedAddress(created);
-                    router.back();
-                },
+    const handleChange = (key: string, value: string) => {
+        setValues((prev) => ({ ...prev, [key]: value }));
+        if (errors[key]) {
+            setErrors((prev) => {
+                const next = { ...prev };
+                delete next[key];
+                return next;
             });
         }
     };
 
-    const getLabel = (label: Record<string, string>) => {
-        return label[i18n.language] || label['en'] || Object.values(label)[0] || '';
+    const validate = () => {
+        const next: Record<string, string> = {};
+        if (!name.trim()) next.__name = t('address_name') + ' *';
+        fields.forEach((f) => {
+            if (f.is_required && !(values[f.key] ?? '').trim()) {
+                next[f.key] = getLabel(f) + ' *';
+            }
+        });
+        setErrors(next);
+        return Object.keys(next).length === 0;
     };
 
-    if (fieldsLoading) {
-        return (
-            <SafeAreaView style={[styles.screen, styles.centered, { backgroundColor: colors.background }]}>
-                <ActivityIndicator size="large" color={colors.primary} />
-            </SafeAreaView>
-        );
-    }
+    const handleSubmit = () => {
+        if (!validate()) return;
 
-    const isSaving = createAddress.isPending || updateAddress.isPending;
+        const payloadFields: Record<string, string> = {};
+        fields.forEach((f) => {
+            const v = (values[f.key] ?? '').trim();
+            if (v) payloadFields[f.key] = v;
+        });
+
+        const payload: StoreAddressPayload = {
+            name: name.trim(),
+            fields: payloadFields,
+        };
+
+        if (editing) {
+            updateAddress.mutate(
+                { id: editing.id, payload },
+                { onSuccess: () => router.back() },
+            );
+        } else {
+            createAddress.mutate(payload, { onSuccess: () => router.back() });
+        }
+    };
+
+    const submitting = createAddress.isPending || updateAddress.isPending;
 
     return (
         <SafeAreaView style={[styles.screen, { backgroundColor: colors.background }]}>
-            {/* Header */}
             <View style={styles.header}>
                 <Pressable
                     onPress={() => router.back()}
@@ -123,100 +117,71 @@ export default function AddAddressScreen() {
                     />
                 </Pressable>
                 <Text style={[styles.headerTitle, { color: colors.foreground, fontFamily: font.bold }]}>
-                    {isEditing ? t('addresses:edit_address') : t('addresses:add_address')}
+                    {editing ? t('edit_address') : t('add_address')}
                 </Text>
-                <View style={{ width: 38 }} />
+                <View style={styles.backButton} />
             </View>
 
             <KeyboardAvoidingView
-                style={{ flex: 1 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                style={styles.flex}
             >
                 <ScrollView
-                    contentContainerStyle={styles.formContent}
+                    contentContainerStyle={styles.scrollContent}
                     keyboardShouldPersistTaps="handled"
                 >
-                    {/* Address Name */}
-                    <View style={styles.fieldContainer}>
-                        <Text style={[styles.label, { color: colors.secondaryForeground, fontFamily: font.semiBold }]}>
-                            {t('addresses:address_name')} *
-                        </Text>
-                        <Controller
-                            control={control}
-                            name="name"
-                            rules={{ required: true }}
-                            render={({ field: { onChange, onBlur, value } }) => (
-                                <TextInput
-                                    style={[
-                                        styles.input,
-                                        {
-                                            color: colors.foreground,
-                                            backgroundColor: colors.muted,
-                                            borderColor: errors.name ? colors.destructive : colors.border,
-                                            fontFamily: font.regular,
-                                        },
-                                    ]}
-                                    placeholder={t('addresses:address_name_placeholder')}
-                                    placeholderTextColor={colors.placeholder}
-                                    value={value}
-                                    onChangeText={onChange}
-                                    onBlur={onBlur}
-                                />
-                            )}
-                        />
-                    </View>
+                    <FieldInput
+                        label={t('address_name')}
+                        placeholder={t('address_name_placeholder')}
+                        value={name}
+                        onChangeText={(v) => {
+                            setName(v);
+                            if (errors.__name) {
+                                setErrors((prev) => {
+                                    const next = { ...prev };
+                                    delete next.__name;
+                                    return next;
+                                });
+                            }
+                        }}
+                        error={errors.__name}
+                        colors={colors}
+                        font={font}
+                    />
 
-                    {/* Dynamic Fields */}
-                    {fieldTemplates?.map((template) => {
-                        const fieldName = `field_${template.key}`;
-                        return (
-                            <View key={template.key} style={styles.fieldContainer}>
-                                <Text style={[styles.label, { color: colors.secondaryForeground, fontFamily: font.semiBold }]}>
-                                    {getLabel(template.label)}{template.is_required ? ' *' : ''}
-                                </Text>
-                                <Controller
-                                    control={control}
-                                    name={fieldName}
-                                    rules={{ required: template.is_required }}
-                                    render={({ field: { onChange, onBlur, value } }) => (
-                                        <TextInput
-                                            style={[
-                                                styles.input,
-                                                {
-                                                    color: colors.foreground,
-                                                    backgroundColor: colors.muted,
-                                                    borderColor: errors[fieldName] ? colors.destructive : colors.border,
-                                                    fontFamily: font.regular,
-                                                },
-                                            ]}
-                                            placeholder={getLabel(template.label)}
-                                            placeholderTextColor={colors.placeholder}
-                                            value={value}
-                                            onChangeText={onChange}
-                                            onBlur={onBlur}
-                                        />
-                                    )}
-                                />
-                            </View>
-                        );
-                    })}
+                    {fields.map((template) => (
+                        <FieldInput
+                            key={template.key}
+                            label={getLabel(template) + (template.is_required ? ' *' : '')}
+                            placeholder={getLabel(template)}
+                            value={values[template.key] ?? ''}
+                            onChangeText={(v) => handleChange(template.key, v)}
+                            error={errors[template.key]}
+                            colors={colors}
+                            font={font}
+                        />
+                    ))}
                 </ScrollView>
 
-                {/* Save Button */}
                 <View style={[styles.footer, { borderTopColor: colors.border }]}>
                     <Pressable
-                        onPress={handleSubmit(onSubmit)}
-                        disabled={isSaving}
+                        onPress={handleSubmit}
+                        disabled={submitting}
                         style={[
-                            styles.saveButton,
-                            { backgroundColor: isSaving ? colors.muted : colors.primary },
+                            styles.submitButton,
+                            { backgroundColor: colors.primary, opacity: submitting ? 0.6 : 1 },
                         ]}
                     >
-                        {isSaving ? (
-                            <ActivityIndicator size="small" color={colors.primaryForeground} />
+                        {submitting ? (
+                            <ActivityIndicator color={colors.primaryForeground} />
                         ) : (
-                            <Text style={[styles.saveButtonText, { color: colors.primaryForeground, fontFamily: font.bold }]}>
-                                {isEditing ? t('addresses:update') : t('addresses:save')}
+                            <Text
+                                style={[
+                                    styles.submitText,
+                                    { color: colors.primaryForeground, fontFamily: font.bold },
+                                ]}
+                            >
+                                {editing ? t('update') : t('save')}
                             </Text>
                         )}
                     </Pressable>
@@ -226,9 +191,49 @@ export default function AddAddressScreen() {
     );
 }
 
+interface FieldInputProps {
+    label: string;
+    placeholder: string;
+    value: string;
+    onChangeText: (value: string) => void;
+    error?: string;
+    colors: ReturnType<typeof useAppTheme>['colors'];
+    font: ReturnType<typeof useAppTheme>['font'];
+}
+
+function FieldInput({ label, placeholder, value, onChangeText, error, colors, font }: FieldInputProps) {
+    return (
+        <View style={styles.fieldGroup}>
+            <Text style={[styles.fieldLabel, { color: colors.secondaryForeground, fontFamily: font.semiBold }]}>
+                {label}
+            </Text>
+            <TextInput
+                value={value}
+                onChangeText={onChangeText}
+                placeholder={placeholder}
+                placeholderTextColor={colors.placeholder}
+                style={[
+                    styles.input,
+                    {
+                        borderColor: error ? colors.destructive : colors.border,
+                        backgroundColor: error ? colors.surfaceError : colors.muted,
+                        color: colors.foreground,
+                        fontFamily: font.regular,
+                    },
+                ]}
+            />
+            {error ? (
+                <Text style={[styles.errorText, { color: colors.destructive, fontFamily: font.regular }]}>
+                    {error}
+                </Text>
+            ) : null}
+        </View>
+    );
+}
+
 const styles = StyleSheet.create({
     screen: { flex: 1 },
-    centered: { alignItems: 'center', justifyContent: 'center' },
+    flex: { flex: 1 },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -245,15 +250,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerTitle: { fontSize: 18 },
-    formContent: {
+    scrollContent: {
         paddingHorizontal: Spacing.gutter,
-        paddingTop: Spacing.md,
+        paddingTop: Spacing.sm,
         paddingBottom: Spacing.lg,
     },
-    fieldContainer: {
-        marginBottom: Spacing.md,
-    },
-    label: {
+    fieldGroup: { marginBottom: Spacing.md },
+    fieldLabel: {
         fontSize: 14,
         marginBottom: Spacing.sm,
     },
@@ -262,22 +265,26 @@ const styles = StyleSheet.create({
         borderRadius: BorderRadius.xl,
         paddingHorizontal: Spacing.md,
         paddingVertical: Spacing.tight,
-        fontSize: 16,
         minHeight: 50,
+        fontSize: 16,
         textAlign: 'auto',
     },
-    footer: {
-        borderTopWidth: StyleSheet.hairlineWidth,
-        paddingHorizontal: Spacing.gutter,
-        paddingTop: Spacing.tight,
-        paddingBottom: Spacing.sm,
+    errorText: {
+        fontSize: 12,
+        marginTop: Spacing.xs,
+        marginStart: 2,
     },
-    saveButton: {
+    footer: {
+        paddingHorizontal: Spacing.gutter,
         paddingVertical: Spacing.tight,
-        borderRadius: BorderRadius.xl,
+        borderTopWidth: 1,
+    },
+    submitButton: {
         alignItems: 'center',
         justifyContent: 'center',
+        paddingVertical: Spacing.tight + 2,
+        borderRadius: BorderRadius.xl,
         minHeight: 50,
     },
-    saveButtonText: { fontSize: 16 },
+    submitText: { fontSize: 16 },
 });

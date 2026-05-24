@@ -31,7 +31,7 @@
         "ils": "₪"
     },
     "deliver_to": "التوصيل إلى",
-    "address_placeholder": "مدينة نصر - مصطفى النجار...",
+    "address_placeholder": "لم يتم تحديد عنوان التوصيل بعد ",
     "validation": {
         "email_required": "البريد الإلكتروني مطلوب",
         "email_invalid": "أدخل عنوان بريد إلكتروني صالح",

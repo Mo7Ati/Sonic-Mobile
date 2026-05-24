@@ -2,13 +2,13 @@ import api, { type ApiResponse } from "@/lib/api";
 import type { Address, AddressFieldTemplate } from "@/services/addresses/types";
 import type { Customer } from "@/services/auth";
 
-export interface SplashData {
-    user: Customer | null;
+export interface PlatformData {
+    customer: Customer | null;
     addresses: Address[];
-    addressFields: AddressFieldTemplate[];
+    platformAddressFields: AddressFieldTemplate[];
 }
 
-export async function splashApi(): Promise<SplashData> {
-    const { data } = await api.get<ApiResponse<SplashData>>("/splash");
+export async function splashApi(): Promise<PlatformData> {
+    const { data } = await api.get<ApiResponse<PlatformData>>("/splash");
     return data.data;
 }

@@ -1,41 +1,40 @@
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
+import { FontFamily } from '@/constants/fonts';
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
-import { FontFamily } from '@/constants/fonts';
 import { selectItemsCount, useCartStore } from '@/stores/cart-store';
+import { useLastSelectedAddress } from '@/stores/platform-store';
+import { AddressSelector } from './AddressSelector';
+import { getAddressSummary } from '@/lib/utils.';
 
-export type DeliverToHeaderProps = {
-  caption?: string;
-  address?: string;
-  onAddressPress?: () => void;
-};
-
-export function DeliverToHeader({
-  caption,
-  address,
-  onAddressPress,
-}: DeliverToHeaderProps) {
-  const { colors } = useAppTheme();
+export function Header() {
   const { t } = useTranslation('general');
+  const { colors } = useAppTheme();
   const router = useRouter();
+
+  const [addressSelectorVisible, setAddressSelectorVisible] = useState(false);
+
+  const address = useLastSelectedAddress();
+  console.log(address);
+  const addressDisplay = getAddressSummary(address) ?? t('address_placeholder');
+
   const itemsCount = useCartStore(selectItemsCount);
-  const resolvedCaption = caption ?? t('deliver_to');
-  const resolvedAddress = address ?? t('address_placeholder');
 
   return (
     <View style={styles.header}>
       <View style={styles.addressContainer}>
-        <Ionicons name="location-outline" size={20} color={colors.primary} />
+        <Ionicons name="location-outline" size={25} color={colors.primary} />
         <View>
-          <Text style={[styles.deliverLabel, { color: colors.mutedForeground }]}>{resolvedCaption}</Text>
-          <Pressable style={styles.addressRow} onPress={onAddressPress}>
-            <Text style={styles.addressText}>{resolvedAddress}</Text>
+          <Text style={[styles.deliverLabel, { color: colors.mutedForeground }]}>{t('deliver_to')}</Text>
+
+          <Pressable style={styles.addressRow} onPress={() => setAddressSelectorVisible(true)}>
+            <Text style={styles.addressText}>{addressDisplay}</Text>
             <Ionicons name="chevron-down" size={14} style={styles.chevron} />
           </Pressable>
         </View>
@@ -51,6 +50,12 @@ export function DeliverToHeader({
           </View>
         )}
       </Pressable>
+
+
+      <AddressSelector
+        visible={addressSelectorVisible}
+        onClose={() => setAddressSelectorVisible(false)}
+      />
     </View>
   );
 }
@@ -75,7 +80,6 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   addressRow: {
-    marginTop: 2,
     flexDirection: 'row',
     alignItems: 'center',
   },

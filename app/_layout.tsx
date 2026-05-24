@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { I18nManager } from 'react-native';
 import 'react-native-reanimated';
 
-// SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
   anchor: '(tabs)',
