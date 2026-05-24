@@ -2,7 +2,7 @@ import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { useCreateAddress, useUpdateAddress } from '@/hooks/react-query-hooks/use-addresses';
 import { usePlatformAddressFields, usePlatformStore } from '@/stores/platform-store';
-import type { AddressFieldTemplate, StoreAddressPayload } from '@/services/addresses/types';
+import type { Address, AddressFieldTemplate, StoreAddressPayload } from '@/services/addresses/types';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
@@ -28,6 +28,7 @@ export default function AddAddressScreen() {
     const { id } = useLocalSearchParams<{ id?: string }>();
 
     const fields = usePlatformAddressFields();
+    const setAddresses = usePlatformStore((s) => s.setAddresses);
     const addresses = usePlatformStore((s) => s.addresses);
 
     const editing = useMemo(
@@ -96,7 +97,11 @@ export default function AddAddressScreen() {
                 { onSuccess: () => router.back() },
             );
         } else {
-            createAddress.mutate(payload, { onSuccess: () => router.back() });
+            createAddress.mutate(payload, {
+                onSuccess: (address: Address) => {
+                    setAddresses([address, ...addresses]);
+                }
+            });
         }
     };
 

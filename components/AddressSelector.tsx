@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { usePlatformStore } from '@/stores/platform-store';
 import { getAddressSummary } from '@/lib/utils.';
+import { useEffect, useMemo, useState } from 'react';
 
 interface AddressSelectorProps {
     visible: boolean;
@@ -28,10 +29,15 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
     const insets = useSafeAreaInsets();
 
     const { addresses, lastSelectedAddress, setLastSelectedAddress } = usePlatformStore();
+    const [currentSelectedAddress, setCurrentSelectedAddress] = useState<Address | null>(lastSelectedAddress);
 
-    const handleSelect = (address: Address) => {
-        setLastSelectedAddress(address);
-        onClose();
+
+    // useEffect(() => {
+    //     if (visible) setCurrentSelectedAddress(lastSelectedAddress);
+    // }, [visible, lastSelectedAddress]);
+
+    const handleChange = (address: Address) => {
+        setCurrentSelectedAddress(address);
     };
 
     const handleAddNew = () => {
@@ -39,8 +45,19 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
         router.push('/addresses/add');
     };
 
+    const handleEdit = (address: Address) => {
+        onClose();
+        router.push({ pathname: '/addresses/add', params: { id: address.id } });
+    };
+
+    const handleSubmit = () => {
+        setLastSelectedAddress(currentSelectedAddress);
+        onClose();
+    };
+
     const renderItem = ({ item }: { item: Address }) => {
-        const isSelected = lastSelectedAddress?.id === item.id;
+        const isSelected = currentSelectedAddress?.id === item.id;
+
         return (
             <Pressable
                 style={[
@@ -50,29 +67,44 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
                         borderColor: isSelected ? colors.primary : colors.border,
                     },
                 ]}
-                onPress={() => handleSelect(item)}
+                onPress={() => handleChange(item)}
             >
-                <View style={styles.itemLeft}>
-                    <Ionicons
-                        name={item.name.toLowerCase() === 'work' ? 'briefcase-outline' : 'home-outline'}
-                        size={20}
-                        color={isSelected ? colors.primary : colors.foreground}
-                    />
-                    <View style={styles.itemText}>
-                        <Text style={[styles.itemName, { color: colors.foreground, fontFamily: font.semiBold }]}>
-                            {item.name}
-                        </Text>
-                        <Text
-                            style={[styles.itemSummary, { color: colors.mutedForeground, fontFamily: font.regular }]}
-                            numberOfLines={1}
-                        >
-                            {getAddressSummary(item)}
-                        </Text>
-                    </View>
+                {/* Radio */}
+                <View
+                    style={[
+                        styles.radioOuter,
+                        { borderColor: isSelected ? colors.primary : colors.border },
+                    ]}
+                >
+                    {isSelected && (
+                        <View style={[styles.radioInner, { backgroundColor: colors.primary }]} />
+                    )}
                 </View>
-                {isSelected && (
-                    <Ionicons name="checkmark-circle" size={22} color={colors.primary} />
-                )}
+
+                {/* Text block */}
+                <View style={styles.itemText}>
+                    <Text style={[styles.itemName, { color: colors.foreground, fontFamily: font.bold }]}>
+                        {item.name}
+                    </Text>
+                    <Text
+                        style={[styles.itemSummary, { color: colors.mutedForeground, fontFamily: font.regular }]}
+                        numberOfLines={2}
+                    >
+                        {getAddressSummary(item)}
+                    </Text>
+                </View>
+
+                {/* Edit action */}
+                <Pressable
+                    hitSlop={8}
+                    onPress={() => handleEdit(item)}
+                    style={styles.editButton}
+                >
+                    <Text style={[styles.editText, { color: colors.primary, fontFamily: font.semiBold }]}>
+                        {t('edit')}
+                    </Text>
+                    <Ionicons name="pencil" size={14} color={colors.primary} />
+                </Pressable>
             </Pressable>
         );
     };
@@ -94,10 +126,24 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
                         <View style={[styles.handle, { backgroundColor: colors.border }]} />
                     </View>
 
-                    {/* Title */}
-                    <Text style={[styles.sheetTitle, { color: colors.foreground, fontFamily: font.bold }]}>
-                        {t('select_address')}
-                    </Text>
+                    {/* Header: title + subtitle + close */}
+                    <View style={styles.headerRow}>
+                        <View style={styles.headerText}>
+                            <Text style={[styles.sheetTitle, { color: colors.foreground, fontFamily: font.bold }]}>
+                                {t('select_delivery_address')}
+                            </Text>
+                            <Text style={[styles.sheetSubtitle, { color: colors.mutedForeground, fontFamily: font.regular }]}>
+                                {t('select_delivery_subtitle')}
+                            </Text>
+                        </View>
+                        <Pressable
+                            onPress={onClose}
+                            hitSlop={8}
+                            style={[styles.closeButton, { backgroundColor: colors.muted }]}
+                        >
+                            <Ionicons name="close" size={20} color={colors.foreground} />
+                        </Pressable>
+                    </View>
 
                     {/* Address List */}
                     <FlatList
@@ -105,6 +151,7 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
                         keyExtractor={(item) => String(item.id)}
                         renderItem={renderItem}
                         contentContainerStyle={styles.listContent}
+                        showsVerticalScrollIndicator={false}
                         ListEmptyComponent={
                             <Text style={[styles.emptyText, { color: colors.mutedForeground, fontFamily: font.regular }]}>
                                 {t('no_addresses')}
@@ -112,14 +159,28 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
                         }
                     />
 
-                    {/* Add New Button */}
+                    {/* Add New Button (dashed outline) */}
                     <Pressable
-                        style={[styles.addNewButton, { backgroundColor: colors.primary }]}
+                        style={[styles.addNewButton, { borderColor: colors.primary }]}
                         onPress={handleAddNew}
                     >
-                        <Ionicons name="add" size={20} color={colors.primaryForeground} />
-                        <Text style={[styles.addNewText, { color: colors.primaryForeground, fontFamily: font.bold }]}>
-                            {t('add_address')}
+                        <Ionicons name="add" size={20} color={colors.primary} />
+                        <Text style={[styles.addNewText, { color: colors.primary, fontFamily: font.semiBold }]}>
+                            {t('add_new_address')}
+                        </Text>
+                    </Pressable>
+
+                    {/* Confirm Button (solid primary) */}
+                    <Pressable
+                        style={[
+                            styles.confirmButton,
+                            { backgroundColor: colors.primary, opacity: currentSelectedAddress ? 1 : 0.6 },
+                        ]}
+                        disabled={!currentSelectedAddress}
+                        onPress={handleSubmit}
+                    >
+                        <Text style={[styles.confirmText, { color: colors.primaryForeground, fontFamily: font.bold }]}>
+                            {t('confirm_address')}
                         </Text>
                     </Pressable>
                 </Pressable>
@@ -137,7 +198,7 @@ const styles = StyleSheet.create({
     sheet: {
         borderTopLeftRadius: BorderRadius['2xl'],
         borderTopRightRadius: BorderRadius['2xl'],
-        maxHeight: '60%',
+        maxHeight: '85%',
     },
     handleRow: {
         alignItems: 'center',
@@ -149,33 +210,77 @@ const styles = StyleSheet.create({
         height: 4,
         borderRadius: BorderRadius.full,
     },
+    headerRow: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        paddingHorizontal: Spacing.gutter,
+        paddingTop: Spacing.sm,
+        paddingBottom: Spacing.tight,
+        gap: Spacing.sm,
+    },
+    headerText: { flex: 1 },
     sheetTitle: {
-        fontSize: 18,
-        textAlign: 'center',
-        paddingVertical: Spacing.tight,
+        fontSize: 22,
+        marginBottom: 4,
+    },
+    sheetSubtitle: {
+        fontSize: 13,
+    },
+    closeButton: {
+        width: 32,
+        height: 32,
+        borderRadius: BorderRadius.full,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     listContent: {
         paddingHorizontal: Spacing.gutter,
-        gap: Spacing.sm,
+        gap: Spacing.tight,
         paddingBottom: Spacing.tight,
     },
     addressItem: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        gap: Spacing.tight,
         borderWidth: 1.5,
         borderRadius: BorderRadius.xl,
         padding: Spacing.tight,
     },
-    itemLeft: {
-        flexDirection: 'row',
+    radioOuter: {
+        width: 22,
+        height: 22,
+        borderRadius: BorderRadius.full,
+        borderWidth: 2,
         alignItems: 'center',
-        gap: Spacing.sm,
-        flex: 1,
+        justifyContent: 'center',
+        marginTop: 2,
+    },
+    radioInner: {
+        width: 10,
+        height: 10,
+        borderRadius: BorderRadius.full,
     },
     itemText: { flex: 1 },
-    itemName: { fontSize: 15 },
-    itemSummary: { fontSize: 13, marginTop: 2 },
+    itemName: { fontSize: 16 },
+    itemSummary: { fontSize: 13, marginTop: 4, lineHeight: 18 },
+    lastUsedBadge: {
+        alignSelf: 'flex-start',
+        marginTop: Spacing.sm,
+        paddingHorizontal: Spacing.sm + 2,
+        paddingVertical: 4,
+        borderRadius: BorderRadius.md,
+    },
+    lastUsedText: { fontSize: 11 },
+    editButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+        paddingHorizontal: Spacing.xs,
+        paddingVertical: 2,
+        marginTop: 2,
+    },
+    editText: { fontSize: 13 },
     emptyText: { textAlign: 'center', paddingVertical: Spacing.lg, fontSize: 14 },
     addNewButton: {
         flexDirection: 'row',
@@ -185,7 +290,19 @@ const styles = StyleSheet.create({
         marginHorizontal: Spacing.gutter,
         paddingVertical: Spacing.tight,
         borderRadius: BorderRadius.xl,
+        borderWidth: 1.5,
+        borderStyle: 'dashed',
         marginTop: Spacing.sm,
     },
-    addNewText: { fontSize: 15 },
+    addNewText: { fontSize: 14 },
+    confirmButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: Spacing.gutter,
+        marginTop: Spacing.tight,
+        paddingVertical: Spacing.tight + 2,
+        borderRadius: BorderRadius.xl,
+        minHeight: 52,
+    },
+    confirmText: { fontSize: 16 },
 });

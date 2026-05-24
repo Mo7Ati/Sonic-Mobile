@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useRouter } from 'expo-router';
@@ -21,9 +21,7 @@ export function Header() {
   const [addressSelectorVisible, setAddressSelectorVisible] = useState(false);
 
   const address = useLastSelectedAddress();
-  console.log(address);
-  const addressDisplay = getAddressSummary(address) ?? t('address_placeholder');
-
+  const addressDisplay = useMemo(() => address ? address.name : t('address_placeholder'), [address]);
   const itemsCount = useCartStore(selectItemsCount);
 
   return (
@@ -31,10 +29,8 @@ export function Header() {
       <View style={styles.addressContainer}>
         <Ionicons name="location-outline" size={25} color={colors.primary} />
         <View>
-          <Text style={[styles.deliverLabel, { color: colors.mutedForeground }]}>{t('deliver_to')}</Text>
-
           <Pressable style={styles.addressRow} onPress={() => setAddressSelectorVisible(true)}>
-            <Text style={styles.addressText}>{addressDisplay}</Text>
+            <Text style={styles.addressText}>{t('deliver_to', { address: addressDisplay })}</Text>
             <Ionicons name="chevron-down" size={14} style={styles.chevron} />
           </Pressable>
         </View>

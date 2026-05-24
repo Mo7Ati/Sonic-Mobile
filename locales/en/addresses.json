@@ -2,6 +2,7 @@
     "title": "My Addresses",
     "add_address": "Add Address",
     "edit_address": "Edit Address",
+    "edit": "Edit",
     "add_delivery_address": "Add delivery address",
     "address_name": "Address Name",
     "address_name_placeholder": "e.g. Home, Work",
@@ -12,5 +13,10 @@
     "delete_confirm_message": "Are you sure you want to delete this address?",
     "cancel": "Cancel",
     "no_addresses": "No saved addresses yet.",
-    "select_address": "Select Address"
+    "select_address": "Select Address",
+    "select_delivery_address": "Select delivery address",
+    "select_delivery_subtitle": "Saved addresses",
+    "last_used": "Last used",
+    "add_new_address": "Add new address",
+    "confirm_address": "Confirm address"
 }
