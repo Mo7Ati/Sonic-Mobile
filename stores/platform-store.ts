@@ -38,7 +38,7 @@ export const usePlatformStore = create<PlatformState>()(
                 }),
         }),
         {
-            name: "splash-store",
+            name: "platform-store",
             storage: createJSONStorage(() => AsyncStorage),
         },
     ),

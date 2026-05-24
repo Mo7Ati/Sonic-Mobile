@@ -1,26 +1,25 @@
 import { parseApiError, setOnUnauthorized } from '@/lib/api';
 import {
-    forgotPasswordApi,
-    getUserApi,
-    loginApi,
-    logoutApi,
-    registerApi,
-    resendVerificationApi,
-    resetPasswordApi,
-    type Customer,
+  forgotPasswordApi,
+  getUserApi,
+  loginApi,
+  logoutApi,
+  registerApi,
+  resendVerificationApi,
+  resetPasswordApi,
+  type Customer,
 } from '@/services/auth';
 import { getToken, removeToken, setToken } from '@/services/secure-store';
 import { clearSessionId } from '@/services/session';
-import { useAddressStore } from '@/stores/address-store';
 import { useCartStore } from '@/stores/cart-store';
 import { usePlatformStore } from '@/stores/platform-store';
 import React, {
-    createContext,
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useReducer,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
 } from 'react';
 
 interface AuthState {
@@ -111,7 +110,7 @@ const initialState: AuthState = {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
-  const splashData = usePlatformStore((s) => s.data);
+  const { addresses, lastSelectedAddress, customer, setLastSelectedAddress } = usePlatformStore();
 
   const handleSignOut = useCallback(async () => {
     await removeToken();
@@ -126,15 +125,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Hydrate auth state from the splash payload once Bootstrap has populated it.
   useEffect(() => {
-    if (!splashData) return;
+    if (!addresses) return;
     let cancelled = false;
 
     (async () => {
       const storedToken = await getToken();
       if (cancelled) return;
 
-      if (splashData.user && storedToken) {
-        dispatch({ type: 'RESTORE_TOKEN', user: splashData.user, token: storedToken });
+      if (addresses && storedToken) {
+        dispatch({ type: 'RESTORE_TOKEN', user: customer!, token: storedToken });
       } else {
         if (storedToken) await removeToken();
         dispatch({ type: 'RESTORE_FAILED' });
@@ -144,7 +143,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [splashData]);
+  }, [addresses, customer]);
 
   const login = useCallback(async (email: string, password: string) => {
     // Interceptor sends X-Session-Id automatically (no token yet) so server merges guest cart & addresses
@@ -155,8 +154,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Clear guest session, then fetch the (possibly merged) cart & addresses
     await clearSessionId();
     useCartStore.getState().fetchCart();
-    useAddressStore.getState().fetchAddresses();
-  }, []);
+  }, [customer]);
 
   const register = useCallback(
     async (params: {
@@ -173,9 +171,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Clear guest session, then fetch the (possibly merged) cart & addresses
       await clearSessionId();
       useCartStore.getState().fetchCart();
-      useAddressStore.getState().fetchAddresses();
     },
-    [],
+    [customer],
   );
 
   const logout = useCallback(async () => {
@@ -186,8 +183,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     await handleSignOut();
     useCartStore.getState().reset();
-    useAddressStore.getState().reset();
-    usePlatformStore.setState({ lastSelectedAddressId: null });
+    usePlatformStore.setState({ lastSelectedAddress: null });
   }, [handleSignOut]);
 
   const forgotPassword = useCallback(async (email: string) => {

@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SplashScreen, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { I18nManager } from 'react-native';
 import 'react-native-reanimated';
 
 SplashScreen.preventAutoHideAsync();

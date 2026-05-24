@@ -30,8 +30,8 @@
         "egp": "EGP",
         "ils": "ILS"
     },
-    "deliver_to": "Deliver to",
-    "address_placeholder": "Nasr City - Mostafa El N...",
+    "deliver_to": "Deliver to {{address}}",
+    "address_placeholder": "( Not selected yet )",
     "validation": {
         "email_required": "Email is required",
         "email_invalid": "Enter a valid email address",

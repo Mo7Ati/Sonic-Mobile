@@ -1,7 +1,6 @@
 import { useAppTheme } from '@/hooks/use-app-theme';
-import { useAddresses, useDeleteAddress } from '@/hooks/react-query-hooks/use-addresses';
+import { useDeleteAddress } from '@/hooks/react-query-hooks/use-addresses';
 import type { Address } from '@/services/addresses/types';
-import { useAddressStore } from '@/stores/address-store';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -17,17 +16,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BorderRadius, Spacing } from '@/constants/theme';
-import i18n from '@/lib/i18n';
+import { usePlatformStore } from '@/stores/platform-store';
 
 export default function AddressListScreen() {
     const { colors, font } = useAppTheme();
     const { t } = useTranslation(['addresses', 'general']);
     const router = useRouter();
 
-    const { data: addresses, isPending, refetch } = useAddresses();
     const deleteAddress = useDeleteAddress();
-    const selectedAddress = useAddressStore((s) => s.selectedAddress);
-    const setSelectedAddress = useAddressStore((s) => s.setSelectedAddress);
+    const { addresses, lastSelectedAddress, setLastSelectedAddress } = usePlatformStore();
 
     const handleDelete = (address: Address) => {
         Alert.alert(
@@ -41,8 +38,8 @@ export default function AddressListScreen() {
                     onPress: () => {
                         deleteAddress.mutate(address.id, {
                             onSuccess: () => {
-                                if (selectedAddress?.id === address.id) {
-                                    setSelectedAddress(null);
+                                if (lastSelectedAddress?.id === address.id) {
+                                    setLastSelectedAddress(null);
                                 }
                             },
                         });
@@ -60,7 +57,7 @@ export default function AddressListScreen() {
     };
 
     const renderItem = ({ item }: { item: Address }) => {
-        const isSelected = selectedAddress?.id === item.id;
+        const isSelected = lastSelectedAddress?.id === item.id;
 
         return (
             <Pressable
@@ -68,7 +65,7 @@ export default function AddressListScreen() {
                     styles.addressCard,
                     { backgroundColor: colors.card, borderColor: isSelected ? colors.primary : colors.border },
                 ]}
-                onPress={() => setSelectedAddress(item)}
+                onPress={() => setLastSelectedAddress(item)}
             >
                 <View style={styles.cardHeader}>
                     <View style={styles.cardTitleRow}>
@@ -135,7 +132,7 @@ export default function AddressListScreen() {
                 </Pressable>
             </View>
 
-            {isPending ? (
+            {deleteAddress.isPending ? (
                 <View style={styles.centered}>
                     <ActivityIndicator size="large" color={colors.primary} />
                 </View>

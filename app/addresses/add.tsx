@@ -1,6 +1,6 @@
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
-import { useCreateAddress, useUpdateAddress } from '@/hooks/react-query-hooks/use-addresses';
+import { useCreateAddress, useDeleteAddress, useUpdateAddress } from '@/hooks/react-query-hooks/use-addresses';
 import { usePlatformAddressFields, usePlatformStore } from '@/stores/platform-store';
 import type { Address, AddressFieldTemplate, StoreAddressPayload } from '@/services/addresses/types';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
     ActivityIndicator,
+    Alert,
     I18nManager,
     KeyboardAvoidingView,
     Platform,
@@ -25,11 +26,10 @@ export default function AddAddressScreen() {
     const { colors, font } = useAppTheme();
     const { t, i18n } = useTranslation('addresses');
     const router = useRouter();
-    const { id } = useLocalSearchParams<{ id?: string }>();
+    const { id, selectOnCreate } = useLocalSearchParams<{ id?: string; selectOnCreate?: string }>();
+    const shouldSelectOnCreate = selectOnCreate === '1';
 
-    const fields = usePlatformAddressFields();
-    const setAddresses = usePlatformStore((s) => s.setAddresses);
-    const addresses = usePlatformStore((s) => s.addresses);
+    const { platformAddressFields: fields, addresses, setAddresses, lastSelectedAddress, setLastSelectedAddress } = usePlatformStore();
 
     const editing = useMemo(
         () => (id ? addresses.find((a) => String(a.id) === String(id)) ?? null : null),
@@ -38,6 +38,7 @@ export default function AddAddressScreen() {
 
     const createAddress = useCreateAddress();
     const updateAddress = useUpdateAddress();
+    const deleteAddress = useDeleteAddress();
 
     const [name, setName] = useState(editing?.name ?? '');
     const [values, setValues] = useState<Record<string, string>>(() => {
@@ -67,10 +68,10 @@ export default function AddAddressScreen() {
 
     const validate = () => {
         const next: Record<string, string> = {};
-        if (!name.trim()) next.__name = t('address_name') + ' *';
+        if (!name.trim()) next.__name = t('address_name');
         fields.forEach((f) => {
             if (f.is_required && !(values[f.key] ?? '').trim()) {
-                next[f.key] = getLabel(f) + ' *';
+                next[f.key] = getLabel(f);
             }
         });
         setErrors(next);
@@ -94,37 +95,83 @@ export default function AddAddressScreen() {
         if (editing) {
             updateAddress.mutate(
                 { id: editing.id, payload },
-                { onSuccess: () => router.back() },
+                {
+                    onSuccess: (address: Address) => {
+                        setAddresses(addresses.map((a) => a.id === address.id ? address : a));
+                        if (lastSelectedAddress?.id === address.id) {
+                            setLastSelectedAddress(address);
+                        }
+                        router.back();
+                    }
+                },
             );
         } else {
             createAddress.mutate(payload, {
                 onSuccess: (address: Address) => {
                     setAddresses([address, ...addresses]);
-                }
+                    if (!lastSelectedAddress || shouldSelectOnCreate) {
+                        setLastSelectedAddress(address);
+                    }
+                    router.back();
+                },
             });
         }
     };
 
+    const handleDelete = () => {
+        if (!editing) return;
+        Alert.alert(
+            t('delete_confirm_title'),
+            t('delete_confirm_message'),
+            [
+                { text: t('cancel'), style: 'cancel' },
+                {
+                    text: t('delete'),
+                    style: 'destructive',
+                    onPress: () => {
+                        deleteAddress.mutate(editing.id, {
+                            onSuccess: () => {
+                                setAddresses(addresses.filter((a) => a.id !== editing.id));
+                                router.back();
+                            },
+                        });
+                    },
+                },
+            ],
+        );
+    };
+
     const submitting = createAddress.isPending || updateAddress.isPending;
+    const deleting = deleteAddress.isPending;
 
     return (
         <SafeAreaView style={[styles.screen, { backgroundColor: colors.background }]}>
+            {/* Header */}
             <View style={styles.header}>
-                <Pressable
-                    onPress={() => router.back()}
-                    hitSlop={8}
-                    style={[styles.backButton, { borderColor: colors.border }]}
-                >
+                <Pressable onPress={() => router.back()} hitSlop={10} style={styles.headerSide}>
                     <Ionicons
-                        name={I18nManager.isRTL ? 'arrow-forward' : 'arrow-back'}
-                        size={20}
+                        name={I18nManager.isRTL ? 'chevron-forward' : 'chevron-back'}
+                        size={26}
                         color={colors.foreground}
                     />
                 </Pressable>
                 <Text style={[styles.headerTitle, { color: colors.foreground, fontFamily: font.bold }]}>
-                    {editing ? t('edit_address') : t('add_address')}
+                    {editing ? t('edit_address') : t('add_new_address')}
                 </Text>
-                <View style={styles.backButton} />
+                <Pressable
+                    onPress={handleSubmit}
+                    disabled={submitting}
+                    hitSlop={10}
+                    style={[styles.headerSide, styles.headerSideEnd]}
+                >
+                    {submitting ? (
+                        <ActivityIndicator color={colors.primary} />
+                    ) : (
+                        <Text style={[styles.saveText, { color: colors.primary, fontFamily: font.semiBold }]}>
+                            {t('save')}
+                        </Text>
+                    )}
+                </Pressable>
             </View>
 
             <KeyboardAvoidingView
@@ -134,10 +181,11 @@ export default function AddAddressScreen() {
                 <ScrollView
                     contentContainerStyle={styles.scrollContent}
                     keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
                 >
+                    {/* Address name */}
                     <FieldInput
-                        label={t('address_name')}
-                        placeholder={t('address_name_placeholder')}
+                        label={`${t('address_name')} (${t('address_name_hint')})`}
                         value={name}
                         onChangeText={(v) => {
                             setName(v);
@@ -149,48 +197,58 @@ export default function AddAddressScreen() {
                                 });
                             }
                         }}
-                        error={errors.__name}
+                        error={!!errors.__name}
                         colors={colors}
                         font={font}
                     />
 
-                    {fields.map((template) => (
-                        <FieldInput
-                            key={template.key}
-                            label={getLabel(template) + (template.is_required ? ' *' : '')}
-                            placeholder={getLabel(template)}
-                            value={values[template.key] ?? ''}
-                            onChangeText={(v) => handleChange(template.key, v)}
-                            error={errors[template.key]}
-                            colors={colors}
-                            font={font}
-                        />
-                    ))}
-                </ScrollView>
+                    {/* Dynamic platform fields */}
+                    {fields.map((template) => {
+                        const label = getLabel(template);
+                        const displayLabel = template.is_required
+                            ? label
+                            : `${label} (${t('optional')})`;
+                        return (
+                            <FieldInput
+                                key={template.key}
+                                label={displayLabel}
+                                value={values[template.key] ?? ''}
+                                onChangeText={(v) => handleChange(template.key, v)}
+                                error={!!errors[template.key]}
+                                colors={colors}
+                                font={font}
+                            />
+                        );
+                    })}
 
-                <View style={[styles.footer, { borderTopColor: colors.border }]}>
-                    <Pressable
-                        onPress={handleSubmit}
-                        disabled={submitting}
-                        style={[
-                            styles.submitButton,
-                            { backgroundColor: colors.primary, opacity: submitting ? 0.6 : 1 },
-                        ]}
-                    >
-                        {submitting ? (
-                            <ActivityIndicator color={colors.primaryForeground} />
-                        ) : (
-                            <Text
-                                style={[
-                                    styles.submitText,
-                                    { color: colors.primaryForeground, fontFamily: font.bold },
-                                ]}
-                            >
-                                {editing ? t('update') : t('save')}
-                            </Text>
-                        )}
-                    </Pressable>
-                </View>
+                    {/* Delete (edit mode only) */}
+                    {editing && (
+                        <Pressable
+                            onPress={handleDelete}
+                            disabled={deleting}
+                            style={[
+                                styles.deleteButton,
+                                { backgroundColor: colors.surfaceError, opacity: deleting ? 0.6 : 1 },
+                            ]}
+                        >
+                            {deleting ? (
+                                <ActivityIndicator color={colors.destructive} />
+                            ) : (
+                                <>
+                                    <Ionicons name="trash-outline" size={18} color={colors.destructive} />
+                                    <Text
+                                        style={[
+                                            styles.deleteText,
+                                            { color: colors.destructive, fontFamily: font.semiBold },
+                                        ]}
+                                    >
+                                        {t('delete_address')}
+                                    </Text>
+                                </>
+                            )}
+                        </Pressable>
+                    )}
+                </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
@@ -198,40 +256,33 @@ export default function AddAddressScreen() {
 
 interface FieldInputProps {
     label: string;
-    placeholder: string;
     value: string;
     onChangeText: (value: string) => void;
-    error?: string;
+    error?: boolean;
     colors: ReturnType<typeof useAppTheme>['colors'];
     font: ReturnType<typeof useAppTheme>['font'];
 }
 
-function FieldInput({ label, placeholder, value, onChangeText, error, colors, font }: FieldInputProps) {
+function FieldInput({ label, value, onChangeText, error, colors, font }: FieldInputProps) {
     return (
         <View style={styles.fieldGroup}>
-            <Text style={[styles.fieldLabel, { color: colors.secondaryForeground, fontFamily: font.semiBold }]}>
+            <Text style={[styles.fieldLabel, { color: colors.mutedForeground, fontFamily: font.regular }]}>
                 {label}
             </Text>
             <TextInput
                 value={value}
                 onChangeText={onChangeText}
-                placeholder={placeholder}
                 placeholderTextColor={colors.placeholder}
                 style={[
                     styles.input,
                     {
                         borderColor: error ? colors.destructive : colors.border,
-                        backgroundColor: error ? colors.surfaceError : colors.muted,
+                        backgroundColor: colors.background,
                         color: colors.foreground,
-                        fontFamily: font.regular,
+                        fontFamily: font.medium,
                     },
                 ]}
             />
-            {error ? (
-                <Text style={[styles.errorText, { color: colors.destructive, fontFamily: font.regular }]}>
-                    {error}
-                </Text>
-            ) : null}
         </View>
     );
 }
@@ -243,53 +294,52 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: Spacing.gutter,
+        paddingHorizontal: Spacing.tight,
         paddingVertical: Spacing.tight,
     },
-    backButton: {
-        width: 38,
-        height: 38,
-        borderRadius: BorderRadius.full,
-        borderWidth: 1,
-        alignItems: 'center',
+    headerSide: {
+        minWidth: 60,
+        height: 32,
+        alignItems: 'flex-start',
         justifyContent: 'center',
     },
-    headerTitle: { fontSize: 18 },
+    headerSideEnd: {
+        alignItems: 'flex-end',
+    },
+    headerTitle: {
+        fontSize: 17,
+        textAlign: 'center',
+        flex: 1,
+    },
+    saveText: { fontSize: 16 },
     scrollContent: {
         paddingHorizontal: Spacing.gutter,
         paddingTop: Spacing.sm,
         paddingBottom: Spacing.lg,
     },
-    fieldGroup: { marginBottom: Spacing.md },
+    fieldGroup: { marginBottom: Spacing.tight },
     fieldLabel: {
-        fontSize: 14,
-        marginBottom: Spacing.sm,
+        fontSize: 13,
+        marginBottom: Spacing.xs + 2,
     },
     input: {
-        borderWidth: 1.5,
-        borderRadius: BorderRadius.xl,
-        paddingHorizontal: Spacing.md,
+        borderWidth: 1,
+        borderRadius: BorderRadius.lg,
+        paddingHorizontal: Spacing.tight,
         paddingVertical: Spacing.tight,
-        minHeight: 50,
-        fontSize: 16,
+        minHeight: 48,
+        fontSize: 15,
         textAlign: 'auto',
     },
-    errorText: {
-        fontSize: 12,
-        marginTop: Spacing.xs,
-        marginStart: 2,
-    },
-    footer: {
-        paddingHorizontal: Spacing.gutter,
-        paddingVertical: Spacing.tight,
-        borderTopWidth: 1,
-    },
-    submitButton: {
+    deleteButton: {
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: Spacing.tight + 2,
-        borderRadius: BorderRadius.xl,
-        minHeight: 50,
+        gap: Spacing.sm,
+        marginTop: Spacing.lg,
+        paddingVertical: Spacing.tight,
+        borderRadius: BorderRadius.lg,
+        minHeight: 48,
     },
-    submitText: { fontSize: 16 },
+    deleteText: { fontSize: 15 },
 });

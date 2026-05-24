@@ -10,8 +10,7 @@ import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { selectItemsCount, useCartStore } from '@/stores/cart-store';
 import { useLastSelectedAddress } from '@/stores/platform-store';
-import { AddressSelector } from './AddressSelector';
-import { getAddressSummary } from '@/lib/utils.';
+import { AddressSelector } from '@/app/addresses/components/AddressSelector';
 
 export function Header() {
   const { t } = useTranslation('general');

@@ -29,34 +29,21 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
     const insets = useSafeAreaInsets();
 
     const { addresses, lastSelectedAddress, setLastSelectedAddress } = usePlatformStore();
-    const [currentSelectedAddress, setCurrentSelectedAddress] = useState<Address | null>(lastSelectedAddress);
-
-
-    // useEffect(() => {
-    //     if (visible) setCurrentSelectedAddress(lastSelectedAddress);
-    // }, [visible, lastSelectedAddress]);
 
     const handleChange = (address: Address) => {
-        setCurrentSelectedAddress(address);
+        setLastSelectedAddress(address);
     };
 
     const handleAddNew = () => {
         onClose();
-        router.push('/addresses/add');
-    };
-
-    const handleEdit = (address: Address) => {
-        onClose();
-        router.push({ pathname: '/addresses/add', params: { id: address.id } });
-    };
-
-    const handleSubmit = () => {
-        setLastSelectedAddress(currentSelectedAddress);
-        onClose();
+        router.push({
+            pathname: '/addresses/add',
+            params: { selectOnCreate: '1' },
+        });
     };
 
     const renderItem = ({ item }: { item: Address }) => {
-        const isSelected = currentSelectedAddress?.id === item.id;
+        const isSelected = lastSelectedAddress?.id === item.id;
 
         return (
             <Pressable
@@ -95,7 +82,7 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
                 </View>
 
                 {/* Edit action */}
-                <Pressable
+                {/* <Pressable
                     hitSlop={8}
                     onPress={() => handleEdit(item)}
                     style={styles.editButton}
@@ -104,7 +91,7 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
                         {t('edit')}
                     </Text>
                     <Ionicons name="pencil" size={14} color={colors.primary} />
-                </Pressable>
+                </Pressable> */}
             </Pressable>
         );
     };
@@ -132,9 +119,16 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
                             <Text style={[styles.sheetTitle, { color: colors.foreground, fontFamily: font.bold }]}>
                                 {t('select_delivery_address')}
                             </Text>
-                            <Text style={[styles.sheetSubtitle, { color: colors.mutedForeground, fontFamily: font.regular }]}>
-                                {t('select_delivery_subtitle')}
-                            </Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <Text style={[styles.sheetSubtitle, { color: colors.mutedForeground, fontFamily: font.regular }]}>
+                                    {t('select_delivery_subtitle')}
+                                </Text>
+
+                                {/* <Text style={[{ color: colors.primary, fontFamily: font.semiBold }]}>
+                                    {t('see_all_addresses')}
+                                    <Ionicons name="chevron-forward" size={14} color={colors.primary} />
+                                </Text> */}
+                            </View>
                         </View>
                         <Pressable
                             onPress={onClose}
@@ -161,17 +155,17 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
 
                     {/* Add New Button (dashed outline) */}
                     <Pressable
-                        style={[styles.addNewButton, { borderColor: colors.primary }]}
+                        style={[styles.addNewButton, { borderColor: colors.primary, backgroundColor: colors.primary }]}
                         onPress={handleAddNew}
                     >
-                        <Ionicons name="add" size={20} color={colors.primary} />
-                        <Text style={[styles.addNewText, { color: colors.primary, fontFamily: font.semiBold }]}>
-                            {t('add_new_address')}
+                        <Ionicons name="add" size={20} color={colors.primaryForeground} />
+                        <Text style={[styles.addNewText, { color: colors.primaryForeground, fontFamily: font.semiBold }]}>
+                            {t('deliver_to_other_address')}
                         </Text>
                     </Pressable>
 
                     {/* Confirm Button (solid primary) */}
-                    <Pressable
+                    {/* <Pressable
                         style={[
                             styles.confirmButton,
                             { backgroundColor: colors.primary, opacity: currentSelectedAddress ? 1 : 0.6 },
@@ -182,7 +176,7 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
                         <Text style={[styles.confirmText, { color: colors.primaryForeground, fontFamily: font.bold }]}>
                             {t('confirm_address')}
                         </Text>
-                    </Pressable>
+                    </Pressable> */}
                 </Pressable>
             </Pressable>
         </Modal>
@@ -291,7 +285,7 @@ const styles = StyleSheet.create({
         paddingVertical: Spacing.tight,
         borderRadius: BorderRadius.xl,
         borderWidth: 1.5,
-        borderStyle: 'dashed',
+        borderStyle: 'solid',
         marginTop: Spacing.sm,
     },
     addNewText: { fontSize: 14 },

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Image, Dimensions, StyleSheet, Pressable } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import type { Section, SectionItem } from '@/services/home/home-types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('window');
 
@@ -12,6 +13,13 @@ interface MainBannerProps {
 export const MainBanner: React.FC<MainBannerProps> = ({ section }) => {
   const items = section.data as SectionItem[];
   if (!items.length) return null;
+
+  // useEffect(() => {
+  //   (async () => {
+  //     await AsyncStorage.removeItem('@platform_splash');
+
+  //   })();
+  // }, []);
 
   const multipleSlides = items.length > 1;
 
