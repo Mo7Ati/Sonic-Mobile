@@ -18,7 +18,7 @@ import { useHomeSections } from '@/hooks/react-query-hooks/use-home-sections';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { parseApiError } from '@/lib/api';
 import type { Section } from '@/services/home/home-types';
-import { useLastSelectedAddress } from '@/stores/platform-store';
+import { useLastSelectedAddress } from '@/stores/ui-prefs-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SectionRenderer } from '@/components/home/SectionRenderer';
 import { HomePageSkeleton } from '@/components/home/HomePageSkeleton';

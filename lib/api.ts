@@ -1,8 +1,8 @@
 import axios, { AxiosError } from 'axios';
 import { ENV } from '@/config/env';
 import i18n from '@/lib/i18n';
-import { getToken, removeToken } from '@/services/secure-store';
 import { getOrCreateSessionId } from '@/services/session';
+import { useAuthStore } from '@/stores/auth-store';
 
 export interface ApiError {
   message: string;
@@ -29,7 +29,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  const token = await getToken();
+  const token = useAuthStore.getState().token;
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -41,18 +41,14 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
-let onUnauthorized: (() => void) | null = null;
-
-export function setOnUnauthorized(callback: () => void) {
-  onUnauthorized = callback;
-}
-
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     if (error.response?.status === 401) {
-      await removeToken();
-      onUnauthorized?.();
+      // Dynamic import avoids a circular dep: auth-actions imports parseApiError
+      // from this module.
+      const { logoutLocal } = await import('@/services/auth-actions');
+      await logoutLocal();
     }
     return Promise.reject(error);
   },

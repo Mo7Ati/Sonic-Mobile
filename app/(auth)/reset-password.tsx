@@ -16,7 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AuthInput } from '@/components/ui/auth-input';
 import { AuthButton } from '@/components/ui/auth-button';
 import { Colors, Spacing } from '@/constants/theme';
-import { useAuth } from '@/contexts/auth-context';
+import { useAuth } from '@/hooks/use-auth';
 import { parseApiError, type ApiError } from '@/lib/api';
 
 interface ResetForm {

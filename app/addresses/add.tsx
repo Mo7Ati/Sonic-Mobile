@@ -1,7 +1,9 @@
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { useCreateAddress, useDeleteAddress, useUpdateAddress } from '@/hooks/react-query-hooks/use-addresses';
-import { usePlatformAddressFields, usePlatformStore } from '@/stores/platform-store';
+import { useAddressesStore } from '@/stores/addresses-store';
+import { useAddressFieldTemplates } from '@/stores/platform-config-store';
+import { useUiPrefsStore } from '@/stores/ui-prefs-store';
 import type { Address, AddressFieldTemplate, StoreAddressPayload } from '@/services/addresses/types';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -29,16 +31,23 @@ export default function AddAddressScreen() {
     const { id, selectOnCreate } = useLocalSearchParams<{ id?: string; selectOnCreate?: string }>();
     const shouldSelectOnCreate = selectOnCreate === '1';
 
-    const { platformAddressFields: fields, addresses, setAddresses, lastSelectedAddress, setLastSelectedAddress } = usePlatformStore();
+    // Address field templates
+    const fields = useAddressFieldTemplates();
+
+    // Addresses
+    const { addresses, addAddress, updateAddress, removeAddress } = useAddressesStore();
+    
+    // Last selected address
+    const { lastSelectedAddress, setLastSelectedAddress } = useUiPrefsStore();
 
     const editing = useMemo(
         () => (id ? addresses.find((a) => String(a.id) === String(id)) ?? null : null),
         [id, addresses],
     );
 
-    const createAddress = useCreateAddress();
-    const updateAddress = useUpdateAddress();
-    const deleteAddress = useDeleteAddress();
+    const createAddressMutation = useCreateAddress();
+    const updateAddressMutation = useUpdateAddress();
+    const deleteAddressMutation = useDeleteAddress();
 
     const [name, setName] = useState(editing?.name ?? '');
     const [values, setValues] = useState<Record<string, string>>(() => {
@@ -93,11 +102,11 @@ export default function AddAddressScreen() {
         };
 
         if (editing) {
-            updateAddress.mutate(
+            updateAddressMutation.mutate(
                 { id: editing.id, payload },
                 {
                     onSuccess: (address: Address) => {
-                        setAddresses(addresses.map((a) => a.id === address.id ? address : a));
+                        updateAddress(address);
                         if (lastSelectedAddress?.id === address.id) {
                             setLastSelectedAddress(address);
                         }
@@ -106,9 +115,9 @@ export default function AddAddressScreen() {
                 },
             );
         } else {
-            createAddress.mutate(payload, {
+            createAddressMutation.mutate(payload, {
                 onSuccess: (address: Address) => {
-                    setAddresses([address, ...addresses]);
+                    addAddress(address);
                     if (!lastSelectedAddress || shouldSelectOnCreate) {
                         setLastSelectedAddress(address);
                     }
@@ -129,9 +138,9 @@ export default function AddAddressScreen() {
                     text: t('delete'),
                     style: 'destructive',
                     onPress: () => {
-                        deleteAddress.mutate(editing.id, {
+                        deleteAddressMutation.mutate(editing.id, {
                             onSuccess: () => {
-                                setAddresses(addresses.filter((a) => a.id !== editing.id));
+                                removeAddress(editing.id);
                                 router.back();
                             },
                         });
@@ -141,8 +150,8 @@ export default function AddAddressScreen() {
         );
     };
 
-    const submitting = createAddress.isPending || updateAddress.isPending;
-    const deleting = deleteAddress.isPending;
+    const submitting = createAddressMutation.isPending || updateAddressMutation.isPending;
+    const deleting = deleteAddressMutation.isPending;
 
     return (
         <SafeAreaView style={[styles.screen, { backgroundColor: colors.background }]}>

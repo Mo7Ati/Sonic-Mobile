@@ -13,7 +13,8 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BorderRadius, Spacing } from '@/constants/theme';
-import { usePlatformStore } from '@/stores/platform-store';
+import { useAddressesStore } from '@/stores/addresses-store';
+import { useUiPrefsStore } from '@/stores/ui-prefs-store';
 import { getAddressSummary } from '@/lib/utils.';
 
 interface AddressSelectorProps {
@@ -27,7 +28,11 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
     const router = useRouter();
     const insets = useSafeAreaInsets();
 
-    const { addresses, lastSelectedAddress, setLastSelectedAddress } = usePlatformStore();
+    // Addresses
+    const { addresses } = useAddressesStore();
+
+    // Last selected address
+    const { lastSelectedAddress, setLastSelectedAddress } = useUiPrefsStore();
 
     const handleChange = (address: Address) => {
         setLastSelectedAddress(address);
