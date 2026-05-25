@@ -17,6 +17,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { usePlatformStore } from '@/stores/platform-store';
+import { getAddressSummary } from '@/lib/utils.';
 
 export default function AddressListScreen() {
     const { colors, font } = useAppTheme();
@@ -49,39 +50,20 @@ export default function AddressListScreen() {
         );
     };
 
-    const getAddressSummary = (address: Address) => {
-        return address.fields
-            .map((f) => f.value)
-            .filter(Boolean)
-            .join(', ');
-    };
-
     const renderItem = ({ item }: { item: Address }) => {
-        const isSelected = lastSelectedAddress?.id === item.id;
-
         return (
             <Pressable
                 style={[
                     styles.addressCard,
-                    { backgroundColor: colors.card, borderColor: isSelected ? colors.primary : colors.border },
+                    { backgroundColor: colors.card, borderColor: colors.border },
                 ]}
                 onPress={() => setLastSelectedAddress(item)}
             >
                 <View style={styles.cardHeader}>
                     <View style={styles.cardTitleRow}>
-                        <Ionicons
-                            name={item.name.toLowerCase() === 'work' ? 'briefcase-outline' : 'home-outline'}
-                            size={20}
-                            color={isSelected ? colors.primary : colors.foreground}
-                        />
                         <Text style={[styles.cardTitle, { color: colors.foreground, fontFamily: font.semiBold }]}>
                             {item.name}
                         </Text>
-                        {isSelected && (
-                            <View style={[styles.selectedBadge, { backgroundColor: colors.primary }]}>
-                                <Ionicons name="checkmark" size={12} color={colors.primaryForeground} />
-                            </View>
-                        )}
                     </View>
                     <View style={styles.cardActions}>
                         <Pressable

@@ -1,7 +1,6 @@
 import { Address, AddressFieldTemplate } from "@/services/addresses/types";
 import { Customer } from "@/services/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useMemo } from "react";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -50,4 +49,5 @@ export const useAddresses = () => usePlatformStore((state) => state.addresses);
 
 export const usePlatformAddressFields = () => usePlatformStore((state) => state.platformAddressFields);
 
-export const useLastSelectedAddress = () => usePlatformStore((state) => state.lastSelectedAddress ?? state.addresses.reverse()[0] ?? null);
+export const useLastSelectedAddress = () =>
+    usePlatformStore((state) => state.lastSelectedAddress ?? state.addresses[state.addresses.length - 1] ?? null);

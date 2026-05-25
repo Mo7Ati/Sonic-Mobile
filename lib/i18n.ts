@@ -25,6 +25,8 @@ import arCart from "@/locales/ar/cart.json";
 import enAddresses from "@/locales/en/addresses.json";
 import arAddresses from "@/locales/ar/addresses.json";
 import { I18nManager } from "react-native";
+import * as Updates from 'expo-updates';
+
 
 export type AppLanguage = "ar" | "en";
 
@@ -60,8 +62,6 @@ const resources = {
     },
 };
 
-
-
 const getStoredLanguage = async () => {
     const stored = await AsyncStorage.getItem('appLanguage');
     if (stored) return stored;
@@ -94,9 +94,11 @@ const initI18n = async () => {
     });
 
     const isRTL = storedLanguage === 'ar';
+
     I18nManager.allowRTL(isRTL);
     I18nManager.forceRTL(isRTL);
 }
+
 
 initI18n();
 

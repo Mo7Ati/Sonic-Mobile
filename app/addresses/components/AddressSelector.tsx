@@ -15,7 +15,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { usePlatformStore } from '@/stores/platform-store';
 import { getAddressSummary } from '@/lib/utils.';
-import { useEffect, useMemo, useState } from 'react';
 
 interface AddressSelectorProps {
     visible: boolean;
@@ -32,6 +31,7 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
 
     const handleChange = (address: Address) => {
         setLastSelectedAddress(address);
+        onClose();
     };
 
     const handleAddNew = () => {

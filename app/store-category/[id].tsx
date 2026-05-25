@@ -1,11 +1,11 @@
-import BranchCard from "@/components/branches/branch-card";
-import BranchesListSkeleton from "@/components/branches/branches-list-skeleton";
-import { SearchSection } from "@/components/home/SearchSection";
-import SubCategoriesList from "@/components/store-categories/sub-categories-list";
-import SubCategoriesSkeleton from "@/components/store-categories/sub-categories-skeleton";
-import { Branch } from "@/services/branch/types";
+import BranchCard from "@/app/branch/components/branch-card";
+import BranchesListSkeleton from "@/app/branch/components/branches-list-skeleton";
+import { SearchSection } from "@/components/home/sections/SearchSection";
+import SubCategoriesList from "@/app/store-category/components/sub-categories-list";
+import SubCategoriesSkeleton from "@/app/store-category/components/sub-categories-skeleton";
 import { Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { Branch } from "@/services/branch/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { useLocalSearchParams, useRouter } from "expo-router";

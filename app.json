@@ -10,10 +10,6 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "infoPlist": {
-        "ExpoLocalization_supportsRTL": true,
-        "ExpoLocalization_forcesRTL": true
-      }
     },
     "android": {
       "adaptiveIcon": {
@@ -27,14 +23,15 @@
       "package": "com.anonymous.Sonic"
     },
     "extra": {
-      "supportsRTL": true,
       "router": {},
+      "supportsRTL": true,
       "eas": {
         "projectId": "f911490c-2f33-44cb-940c-b65003cf9a4b"
       }
     },
     "plugins": [
       "expo-router",
+      "expo-secure-store",
       [
         "expo-splash-screen",
         {
@@ -47,8 +44,21 @@
           }
         }
       ],
-      "expo-secure-store",
-      "expo-localization"
+      [
+        "expo-localization",
+        {
+          "supportedLocales": {
+            "ios": [
+              "en",
+              "ar"
+            ],
+            "android": [
+              "en",
+              "ar"
+            ]
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

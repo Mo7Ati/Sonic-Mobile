@@ -11,8 +11,6 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 
@@ -126,7 +124,6 @@ function SectionHeaderSkeleton({
 }
 
 export const HomePageSkeleton: React.FC = () => {
-  const insets = useSafeAreaInsets();
   const { colors } = useAppTheme();
   const shine = useRef(new Animated.Value(0)).current;
 
@@ -161,52 +158,10 @@ export const HomePageSkeleton: React.FC = () => {
 
   return (
     <View
-      style={[styles.screen, { paddingTop: insets.top, backgroundColor: colors.background }]}
+      style={styles.screen}
       accessibilityRole="progressbar"
       accessibilityLabel="Loading"
     >
-      {/* Deliver-to header */}
-      <View style={styles.deliverRow}>
-        <ShimmerBone
-          height={22}
-          width={22}
-          borderRadius={BorderRadius.full}
-          baseColor={boneMuted}
-          highlight={highlight}
-          translateX={translateX}
-        />
-        <View style={styles.deliverTextCol}>
-          <ShimmerBone
-            height={10}
-            width={72}
-            borderRadius={BorderRadius.md}
-            baseColor={bone}
-            highlight={highlight}
-            translateX={translateX}
-          />
-          <View style={{ height: 6 }} />
-          <View style={styles.addressRow}>
-            <ShimmerBone
-              height={15}
-              width={168}
-              borderRadius={BorderRadius.md}
-              baseColor={bone}
-              highlight={highlight}
-              translateX={translateX}
-            />
-            <ShimmerBone
-              height={12}
-              width={12}
-              borderRadius={BorderRadius.sm}
-              baseColor={boneMuted}
-              highlight={highlight}
-              translateX={translateX}
-              style={{ marginStart: Spacing.xs }}
-            />
-          </View>
-        </View>
-      </View>
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
@@ -425,22 +380,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: Spacing.lg,
     paddingTop: Spacing.sm,
-  },
-  deliverRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: Spacing.gutter,
-    paddingTop: Spacing.sm,
-    paddingBottom: Spacing.sm,
-    gap: 10,
-  },
-  deliverTextCol: {
-    flex: 1,
-    minWidth: 0,
-  },
-  addressRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   searchWrap: {
     marginBottom: Spacing.tight,

@@ -4,10 +4,10 @@ import {
   View,
 } from 'react-native';
 
-import { SectionHeader } from './SectionHeader';
 import { Branch } from '@/services/branch/types';
 import { Section } from '@/services/home/home-types';
-import BranchesList from '../branches/branches-list';
+import BranchesList from '@/app/branch/components/branches-list';
+import { SectionHeader } from './SectionHeader';
 
 
 export function ListItems({

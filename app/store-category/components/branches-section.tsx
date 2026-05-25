@@ -1,5 +1,5 @@
-import BranchesList from "@/components/branches/branches-list";
-import BranchesListSkeleton from "@/components/branches/branches-list-skeleton";
+import BranchesList from "@/app/branch/components/branches-list";
+import BranchesListSkeleton from "@/app/branch/components/branches-list-skeleton";
 import { Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { type Branch } from "@/services/branch/types";
