@@ -44,7 +44,7 @@ export default function AddAddressScreen() {
 
     // Addresses
     const { addresses, addAddress, updateAddress, removeAddress } = useAddressesStore();
-    
+
     // Last selected address
     const { lastSelectedAddress, setLastSelectedAddress } = useAppPrefsStore();
 

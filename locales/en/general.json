@@ -30,7 +30,7 @@
         "egp": "EGP",
         "ils": "ILS"
     },
-    "deliver_to": "Deliver to {{address}}",
+    "deliver_to": "Deliver to",
     "address_placeholder": "( Not selected yet )",
     "validation": {
         "email_required": "Email is required",

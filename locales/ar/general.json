@@ -30,7 +30,7 @@
         "egp": "ج.م",
         "ils": "₪"
     },
-    "deliver_to": "التوصيل إلى {{address}}",
+    "deliver_to": "التوصيل إلى",
     "address_placeholder": "( لم يتم التحديد بعد )",
     "validation": {
         "email_required": "البريد الإلكتروني مطلوب",

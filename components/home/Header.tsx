@@ -11,6 +11,7 @@ import { useAppTheme } from '@/hooks/use-app-theme';
 import { selectItemsCount, useCartStore } from '@/stores/cart-store';
 import { useLastSelectedAddress } from '@/stores/app-prefs-store';
 import { AddressSelector } from '@/app/addresses/components/AddressSelector';
+import { getHeaderAddressSummary } from '@/lib/utils.';
 
 export function Header() {
   const { t } = useTranslation('general');
@@ -20,16 +21,22 @@ export function Header() {
   const [addressSelectorVisible, setAddressSelectorVisible] = useState(false);
 
   const address = useLastSelectedAddress();
-  const addressDisplay = useMemo(() => address ? address.name : t('address_placeholder'), [address]);
+  const addressDisplay = getHeaderAddressSummary(address) ?? t('address_placeholder');
   const itemsCount = useCartStore(selectItemsCount);
 
   return (
     <View style={styles.header}>
       <View style={styles.addressContainer}>
+        {/* icon for location */}
         <Ionicons name="location-outline" size={20} color={colors.primary} />
-        <View>
+
+        {/* deliver to label and address */}
+        <View style={styles.addressTextContainer}>
+          <Text style={styles.deliverLabel}>{t('deliver_to')}</Text>
+
+          {/* address row */}
           <Pressable style={styles.addressRow} onPress={() => setAddressSelectorVisible(true)}>
-            <Text style={styles.addressText}>{t('deliver_to', { address: addressDisplay })}</Text>
+            <Text style={styles.addressText}>{addressDisplay}</Text>
             <Ionicons name="chevron-down" size={14} style={styles.chevron} />
           </Pressable>
         </View>
@@ -67,12 +74,18 @@ const styles = StyleSheet.create({
   addressContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 10,
+  },
+  addressTextContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 5,
   },
   deliverLabel: {
-    fontSize: 11,
-    fontWeight: '500',
+    fontSize: 16,
     textAlign: 'left',
+    fontFamily: FontFamily.semiBold
   },
   addressRow: {
     flexDirection: 'row',
@@ -80,6 +93,7 @@ const styles = StyleSheet.create({
   },
   addressText: {
     fontSize: 14,
+    marginTop: 1.7,
     fontFamily: FontFamily.regular,
   },
   chevron: {

@@ -18,7 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAddressesStore } from '@/stores/addresses-store';
 import { useAppPrefsStore } from '@/stores/app-prefs-store';
-import { getAddressSummary } from '@/lib/utils.';
+import { getAddressFieldsSummary } from '@/lib/utils.';
 
 export default function AddressListScreen() {
     const { colors, font } = useAppTheme();
@@ -87,7 +87,7 @@ export default function AddressListScreen() {
                     style={[styles.cardSummary, { color: colors.mutedForeground, fontFamily: font.regular }]}
                     numberOfLines={2}
                 >
-                    {getAddressSummary(item)}
+                    {getAddressFieldsSummary(item)}
                 </Text>
             </Pressable>
         );

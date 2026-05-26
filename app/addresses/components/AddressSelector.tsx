@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAddressesStore } from '@/stores/addresses-store';
 import { useAppPrefsStore } from '@/stores/app-prefs-store';
-import { getAddressSummary } from '@/lib/utils.';
+import { getAddressFieldsSummary } from '@/lib/utils.';
 
 interface AddressSelectorProps {
     visible: boolean;
@@ -55,24 +55,12 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
                 style={[
                     styles.addressItem,
                     {
-                        backgroundColor: isSelected ? colors.accent : colors.card,
+                        backgroundColor: isSelected ? colors.background : colors.card,
                         borderColor: isSelected ? colors.primary : colors.border,
                     },
                 ]}
                 onPress={() => handleChange(item)}
             >
-                {/* Radio */}
-                <View
-                    style={[
-                        styles.radioOuter,
-                        { borderColor: isSelected ? colors.primary : colors.border },
-                    ]}
-                >
-                    {isSelected && (
-                        <View style={[styles.radioInner, { backgroundColor: colors.primary }]} />
-                    )}
-                </View>
-
                 {/* Text block */}
                 <View style={styles.itemText}>
                     <Text style={[styles.itemName, { color: colors.foreground, fontFamily: font.bold }]}>
@@ -82,21 +70,9 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
                         style={[styles.itemSummary, { color: colors.mutedForeground, fontFamily: font.regular }]}
                         numberOfLines={2}
                     >
-                        {getAddressSummary(item)}
+                        {getAddressFieldsSummary(item)}
                     </Text>
                 </View>
-
-                {/* Edit action */}
-                {/* <Pressable
-                    hitSlop={8}
-                    onPress={() => handleEdit(item)}
-                    style={styles.editButton}
-                >
-                    <Text style={[styles.editText, { color: colors.primary, fontFamily: font.semiBold }]}>
-                        {t('edit')}
-                    </Text>
-                    <Ionicons name="pencil" size={14} color={colors.primary} />
-                </Pressable> */}
             </Pressable>
         );
     };
@@ -105,7 +81,7 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
         <Modal
             visible={visible}
             transparent
-            animationType="slide"
+            animationType="fade"
             onRequestClose={onClose}
         >
             <Pressable style={styles.overlay} onPress={onClose}>
@@ -128,11 +104,6 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
                                 <Text style={[styles.sheetSubtitle, { color: colors.mutedForeground, fontFamily: font.regular }]}>
                                     {t('select_delivery_subtitle')}
                                 </Text>
-
-                                {/* <Text style={[{ color: colors.primary, fontFamily: font.semiBold }]}>
-                                    {t('see_all_addresses')}
-                                    <Ionicons name="chevron-forward" size={14} color={colors.primary} />
-                                </Text> */}
                             </View>
                         </View>
                         <Pressable
@@ -165,23 +136,9 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
                     >
                         <Ionicons name="add" size={20} color={colors.primaryForeground} />
                         <Text style={[styles.addNewText, { color: colors.primaryForeground, fontFamily: font.semiBold }]}>
-                            {t('deliver_to_other_address')}
+                            {addresses.length > 0 ? t('deliver_to_other_address') : t('add_delivery_address')}
                         </Text>
                     </Pressable>
-
-                    {/* Confirm Button (solid primary) */}
-                    {/* <Pressable
-                        style={[
-                            styles.confirmButton,
-                            { backgroundColor: colors.primary, opacity: currentSelectedAddress ? 1 : 0.6 },
-                        ]}
-                        disabled={!currentSelectedAddress}
-                        onPress={handleSubmit}
-                    >
-                        <Text style={[styles.confirmText, { color: colors.primaryForeground, fontFamily: font.bold }]}>
-                            {t('confirm_address')}
-                        </Text>
-                    </Pressable> */}
                 </Pressable>
             </Pressable>
         </Modal>

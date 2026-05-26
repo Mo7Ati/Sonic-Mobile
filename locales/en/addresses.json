@@ -23,5 +23,6 @@
     "select_delivery_subtitle": "Saved addresses",
     "last_used": "Last used",
     "add_new_address": "Add new address",
-    "confirm_address": "Confirm address"
+    "confirm_address": "Confirm address",
+    "deliver_to_other_address": "Deliver to other address"
 }

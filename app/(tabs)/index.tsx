@@ -34,8 +34,6 @@ export default function HomeScreen() {
     refetch();
   }, [lastSelectedAddress]);
 
-  const { setOnboardingCompleted } = useAppPrefsStore();
-
   const {
     data: sections,
     isPending,
@@ -49,7 +47,8 @@ export default function HomeScreen() {
       <>
         <SectionRenderer section={item} />
         <Button title="clear storage" onPress={async () => {
-          setOnboardingCompleted(false);
+          // setOnboardingCompleted(false);
+          await AsyncStorage.clear();
         }} />
       </>
     ),
@@ -57,8 +56,11 @@ export default function HomeScreen() {
   );
 
   const renderContent = () => {
-    if (isPending) {
-      return <HomePageSkeleton />;
+    if (isPending || isRefetching) {
+      return <>
+        <Header />
+        <HomePageSkeleton />
+      </>
     }
 
     if (error) {
