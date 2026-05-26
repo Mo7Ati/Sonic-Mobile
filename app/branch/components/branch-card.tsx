@@ -1,93 +1,88 @@
 import { Branch } from "@/services/branch/types";
 import { BorderRadius, Spacing } from "@/constants/theme";
-import { useAppTheme } from "@/hooks/use-app-theme";
-import { Pressable, View, Image, StyleSheet } from "react-native";
+import { Pressable, View, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
+import { Colors } from "@/constants/theme";
+import { Image } from "expo-image";
 
 
-const CARD_WIDTH = 300;
+const CARD_WIDTH = 325;
 
-const BranchCard = ({
-  item,
-  onPress,
-  fullWidth = false,
-}: {
-  item: Branch;
-  onPress?: () => void;
-  fullWidth?: boolean;
+const BranchCard = ({ item, onPress }: {
+  item: Branch; onPress?: () => void;
 }) => {
-  const { colors } = useAppTheme();
-
   const cardShadow = {
-    shadowColor: colors.shadow,
-    shadowOffset: { width: 0, height: 2 },
+    shadowColor: Colors.shadow,
+    shadowOffset: { width: 3, height: 3 },
     shadowOpacity: 0.06,
     shadowRadius: 8,
     elevation: 3,
   };
 
-  const feeLabel = 15;
-  // item.delivery_fee === undefined || item.delivery_fee === null
-  //   ? null
-  //   : item.delivery_fee === 0
-  //     ? 'Free'
-  //     : `$${item.delivery_fee.toFixed(2)}`;
-
   const ratingText = "4.5";
-  // item.rating != null
-  //     ? item.ratings_count != null
-  //         ? `${item.rating.toFixed(1)} (${item.ratings_count})`
-  //         : item.rating.toFixed(1)
-  //     : null;
 
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }) => [
         styles.card,
-        fullWidth && styles.cardFullWidth,
-        { backgroundColor: colors.card, borderColor: colors.border },
+        { backgroundColor: Colors.card, borderColor: Colors.border },
         cardShadow,
         pressed && styles.cardPressed,
       ]}>
       <View style={styles.cardRow}>
-        <View style={[styles.logoWrap, { backgroundColor: colors.muted }]}>
+
+        {/* Logo */}
+        <View style={[styles.logoWrap, { backgroundColor: Colors.muted }]}>
           {item.logo ? (
             <Image source={{ uri: item.logo }} style={styles.logo} resizeMode="cover" />
           ) : (
-            <Ionicons name="storefront-outline" size={22} color={colors.mutedForeground} />
+            <Ionicons name="storefront-outline" size={22} color={Colors.mutedForeground} />
           )}
         </View>
+
+
+        {/*  Branch Name */}
         <View style={styles.cardTextCol}>
-          <Text style={[styles.storeName, { color: colors.foreground }]} numberOfLines={1}>
+          <Text style={[styles.storeName, { color: Colors.foreground }]} numberOfLines={1}>
             {item.name}
           </Text>
-          <Text style={[styles.branchName, { color: colors.mutedForeground }]} numberOfLines={1}>
-            {item.name}
+          <Text style={[styles.branchName, { color: Colors.mutedForeground }]} numberOfLines={2}>
+            {item.description}
           </Text>
         </View>
       </View>
 
-      <View style={[styles.metaRow, { borderTopColor: colors.border }]}>
+      {/*  Meta Row */}
+      <View style={[styles.metaRow, { borderTopColor: Colors.border }]}>
+        {/* Rating */}
         {ratingText ? (
           <View style={styles.metaItem}>
-            <Ionicons name="star" size={12} color={colors.primary} />
-            <Text style={[styles.metaText, { color: colors.foreground }]}>{ratingText}</Text>
+            <Ionicons name="star" size={12} color={Colors.primary} />
+            <Text style={[styles.metaText, { color: Colors.foreground }]}>{ratingText}</Text>
           </View>
         ) : null}
-        {item.delivery_time ? (
-          <View style={styles.metaItem}>
-            <Ionicons name="time-outline" size={12} color={colors.primary} />
-            <Text style={[styles.metaText, { color: colors.mutedForeground }]} numberOfLines={1}>
-              {item.delivery_time}
+
+        {/* prepare time */}
+        <View style={styles.metaItem}>
+          <Ionicons name="time-outline" size={12} color={Colors.primary} />
+          <Text style={[styles.metaText, { color: Colors.foreground }]}>20-30 min</Text>
+        </View>
+
+        {/* delivery type */}
+        <View style={styles.metaItem}>
+          <Ionicons name="bicycle-outline" size={12} color={Colors.primary} />
+          <Text style={[styles.metaText, { color: Colors.foreground }]}>حمامة</Text>
+        </View>
+
+        {/* Status */}
+        {item.status ? (
+          <View style={[styles.metaItem, { backgroundColor: item.status.backgroundColor, paddingHorizontal: Spacing.sm }]}>
+            {/* <Ionicons name="time-outline" size={12} /> */}
+            <Text style={[styles.metaText, { color: item.status.textColor }]} numberOfLines={1}>
+              {item.status.label}
             </Text>
-          </View>
-        ) : null}
-        {feeLabel ? (
-          <View style={styles.metaItem}>
-            <Ionicons name="bicycle-outline" size={12} color={colors.primary} />
-            <Text style={[styles.metaText, { color: colors.mutedForeground }]}>{feeLabel}</Text>
           </View>
         ) : null}
       </View>
@@ -163,6 +158,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
+    justifyContent: 'space-between',
     gap: Spacing.sm + Spacing.xs,
     marginTop: Spacing.sm + Spacing.xs,
     paddingTop: Spacing.sm + Spacing.xs,
@@ -171,6 +167,8 @@ const styles = StyleSheet.create({
   metaItem: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingVertical: Spacing.xs,
+    borderRadius: BorderRadius["2xl"],
     gap: Spacing.xs,
   },
   metaText: {

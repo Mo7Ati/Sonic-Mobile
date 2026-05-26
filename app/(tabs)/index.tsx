@@ -46,10 +46,10 @@ export default function HomeScreen() {
     ({ item }: { item: Section }) => (
       <>
         <SectionRenderer section={item} />
-        <Button title="clear storage" onPress={async () => {
+        {/* <Button title="clear storage" onPress={async () => {
           // setOnboardingCompleted(false);
           await AsyncStorage.clear();
-        }} />
+        }} /> */}
       </>
     ),
     [],

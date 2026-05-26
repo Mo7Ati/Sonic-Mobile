@@ -23,7 +23,7 @@ export function ListItems({
 
   return (
     <View style={styles.section}>
-      <SectionHeader title={section.title} description={section.description} onSeeAll={onSeeAll} />
+      <SectionHeader title={section.title} description={section.description} />
       <BranchesList branches={items} />
     </View>
   );

@@ -23,6 +23,8 @@ export interface Branch {
     status: {
         label: string;
         value: BranchStatus;
+        textColor: string;
+        backgroundColor: string;
     };
     categories?: Category[];
     products?: Record<Category['name'], Product[]>;
