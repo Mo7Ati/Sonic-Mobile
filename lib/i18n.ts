@@ -10,8 +10,8 @@ import enAuth from "@/locales/en/auth.json";
 import arAuth from "@/locales/ar/auth.json";
 import enOrders from "@/locales/en/orders.json";
 import arOrders from "@/locales/ar/orders.json";
-import enProfile from "@/locales/en/profile.json";
-import arProfile from "@/locales/ar/profile.json";
+import enSettings from "@/locales/en/settings.json";
+import arSettings from "@/locales/ar/settings.json";
 import enStoreCategory from "@/locales/en/store_category.json";
 import arStoreCategory from "@/locales/ar/store_category.json";
 import enBranch from "@/locales/en/branch.json";
@@ -40,7 +40,7 @@ const resources = {
         home: enHome,
         auth: enAuth,
         orders: enOrders,
-        profile: enProfile,
+        settings: enSettings,
         store_category: enStoreCategory,
         branch: enBranch,
         modal: enModal,
@@ -54,7 +54,7 @@ const resources = {
         home: arHome,
         auth: arAuth,
         orders: arOrders,
-        profile: arProfile,
+        settings: arSettings,
         store_category: arStoreCategory,
         branch: arBranch,
         modal: arModal,
@@ -85,7 +85,7 @@ const initI18n = async () => {
             "home",
             "auth",
             "orders",
-            "profile",
+            "settings",
             "store_category",
             "branch",
             "modal",

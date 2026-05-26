@@ -24,7 +24,6 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Toast />
       <Bootstrap fontsReady={fontsReady} />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -38,6 +37,7 @@ export default function RootLayout() {
         <Stack.Screen name="addresses/add" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
+      <Toast />
     </QueryClientProvider>
   );
 }

@@ -1,0 +1,29 @@
+{
+    "sections": {
+        "account": "Account"
+    },
+    "header": {
+        "title": "Settings",
+        "subtitle": "Manage your settings and preferences."
+    },
+    "guest": {
+        "title": "Welcome",
+        "subtitle": "Sign in to manage your orders and addresses.",
+        "login": "Sign in",
+        "register": "Create account"
+    },
+    "logout": {
+        "action": "Log out",
+        "confirm_title": "Log out",
+        "confirm_message": "Are you sure you want to log out?",
+        "confirm": "Log out",
+        "cancel": "Cancel"
+    },
+    "language": {
+        "loading": "Applying language…",
+        "title": "Language",
+        "description": "Choose your preferred language. The app will reload.",
+        "english": "English",
+        "arabic": "Arabic"
+    }
+}

@@ -16,7 +16,7 @@
     "tab_bar": {
         "home": "Home",
         "orders": "Orders",
-        "profile": "Profile"
+        "settings": "Settings"
     },
     "labels": {
         "free": "Free",

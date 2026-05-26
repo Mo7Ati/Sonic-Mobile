@@ -16,7 +16,7 @@
     "tab_bar": {
         "home": "الرئيسية",
         "orders": "الطلبات",
-        "profile": "الحساب"
+        "settings": "الإعدادات"
     },
     "labels": {
         "free": "مجاني",

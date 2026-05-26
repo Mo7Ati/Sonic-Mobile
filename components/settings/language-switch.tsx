@@ -10,20 +10,20 @@ import i18n from "@/lib/i18n";
 
 export default function LanguageSwitch() {
     const { colors, font } = useAppTheme();
-    const { t } = useTranslation("profile");
+    const { t } = useTranslation("settings");
     const { setLanguage } = useLanguage();
 
     const options: { value: AppLanguage; label: string }[] = [
-        { value: "ar", label: t("language.arabic") },
-        { value: "en", label: t("language.english") },
+        { value: "ar", label: t("settings:language.arabic") },
+        { value: "en", label: t("settings:language.english") },
     ];
 
     const handlePress = (next: AppLanguage) => {
         if (next === i18n.language) return;
-        Alert.alert(t("language.title"), t("language.description"), [
-            { text: t("language.cancel", { defaultValue: "Cancel" }), style: "cancel" },
+        Alert.alert(t("settings:language.title"), t("settings:language.description"), [
+            { text: t("settings:language.cancel", { defaultValue: "Cancel" }), style: "cancel" },
             {
-                text: t("language.confirm", { defaultValue: "OK" }),
+                text: t("settings:language.confirm", { defaultValue: "OK" }),
                 onPress: () => {
                     setLanguage(next);
                 },
@@ -34,7 +34,7 @@ export default function LanguageSwitch() {
     return (
         <View style={styles.container}>
             <Text style={[styles.title, { color: colors.mutedForeground, fontFamily: font.medium }]}>
-                {t("language.title")}
+                {t("settings:language.title")}
             </Text>
             <View style={[styles.group, { borderColor: colors.border }]}>
                 {options.map((option, index) => {

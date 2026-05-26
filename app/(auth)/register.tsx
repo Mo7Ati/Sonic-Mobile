@@ -77,6 +77,7 @@ export default function RegisterScreen() {
         ...(form.phone_number ? { phone_number: form.phone_number } : {}),
       };
       await register(params);
+      router.replace('/');
     } catch (error) {
       const apiError = parseApiError(error);
       if (apiError.status === 422) {

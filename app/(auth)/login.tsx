@@ -60,6 +60,7 @@ export default function LoginScreen() {
 
     try {
       await login(form.email, form.password);
+      router.replace('/');
     } catch (error) {
       const apiError = parseApiError(error);
 

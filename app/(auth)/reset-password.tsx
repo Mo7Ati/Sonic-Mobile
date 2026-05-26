@@ -71,6 +71,7 @@ export default function ResetPasswordScreen() {
     try {
       await resetPassword(form);
       setSuccess(true);
+      router.replace('/');
     } catch (error) {
       const apiError = parseApiError(error);
       if (apiError.status === 422) {

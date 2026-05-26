@@ -1,224 +1,4 @@
-// // app/onboarding.tsx
-// import { AuthButton } from "@/components/ui/auth-button";
-// import {
-//     BorderRadius,
-//     Colors,
-//     Spacing,
-// } from "@/constants/theme";
-// import { FontFamily } from "@/constants/fonts";
-// import { useOnboardingSlides } from "@/stores/platform-config-store";
-// import { Image } from "expo-image";
-// import { useRouter } from "expo-router";
-// import { useRef, useState } from "react";
-// import { useTranslation } from "react-i18next";
-// import {
-//     ActivityIndicator,
-//     Button,
-//     I18nManager,
-//     Pressable,
-//     StyleSheet,
-//     Text,
-//     useWindowDimensions,
-//     View,
-// } from "react-native";
-// import Carousel, { type ICarouselInstance } from "react-native-reanimated-carousel";
-// import { SafeAreaView } from "react-native-safe-area-context";
-
-// export default function OnboardingSlidesScreen() {
-//     const { t } = useTranslation("onboarding");
-//     const router = useRouter();
-//     const carouselRef = useRef<ICarouselInstance>(null);
-//     const [activeIndex, setActiveIndex] = useState(0);
-//     const { width, height } = useWindowDimensions();
-
-//     const slides = useOnboardingSlides();
-//     const isRTL = I18nManager.isRTL;
-
-//     if (slides.length === 0) {
-//         return (
-//             <View style={styles.center}>
-//                 <ActivityIndicator size="large" color={Colors.primary} />
-//             </View>
-//         );
-//     }
-
-//     const isLast = activeIndex === slides.length - 1;
-//     const currentSlide = slides[activeIndex];
-//     const screenBg = currentSlide.background_color || Colors.background;
-
-//     const goNext = () => {
-//         if (isLast) {
-//             router.replace("/login");
-//             return;
-//         }
-
-//         carouselRef.current?.next();
-//     };
-
-//     const skip = () => {
-//         router.replace("/login");
-//     };
-
-//     return (
-//         <SafeAreaView style={[styles.safe, { backgroundColor: screenBg }]}>
-//             <Carousel
-//                 ref={carouselRef}
-//                 width={width}
-//                 height={height * 0.62}
-//                 data={slides}
-//                 loop={false}
-//                 pagingEnabled
-//                 snapEnabled
-//                 onSnapToItem={setActiveIndex}
-//                 renderItem={({ item }) => (
-//                     <View style={styles.slide}>
-//                         <Image
-//                             source={{ uri: item.image }}
-//                             style={styles.image}
-//                             contentFit="contain"
-//                             transition={200}
-//                         />
-
-//                         <Text style={[styles.title, isRTL && styles.rtlText]}>
-//                             {item.title}
-//                         </Text>
-
-//                         <Text style={[styles.description, isRTL && styles.rtlText]}>
-//                             {item.description}
-//                         </Text>
-//                     </View>
-//                 )}
-//             />
-
-//             <View style={styles.footer}>
-//                 <View style={styles.dotsContainer}>
-//                     {slides.map((_, index) => (
-//                         <View
-//                             key={index}
-//                             style={[
-//                                 styles.dot,
-//                                 activeIndex === index && styles.activeDot,
-//                             ]}
-//                         />
-//                     ))}
-//                 </View>
-//             </View>
-//         </SafeAreaView>
-//     );
-// }
-
-// const styles = StyleSheet.create({
-//     safe: {
-//         flex: 1,
-//     },
-
-//     topBar: {
-//         height: 44,
-//         alignItems: "flex-end",
-//         justifyContent: "center",
-//         paddingHorizontal: Spacing.gutter,
-//     },
-
-//     skipButton: {
-//         paddingVertical: Spacing.xs,
-//         paddingHorizontal: Spacing.sm,
-//     },
-
-//     skipText: {
-//         fontSize: 15,
-//         fontFamily: FontFamily.semiBold,
-//         color: Colors.foreground,
-//     },
-
-//     slide: {
-//         width: "100%",
-//         flex: 1,
-//         alignItems: "center",
-//         justifyContent: "center",
-//         paddingHorizontal: Spacing.gutter,
-//     },
-
-//     image: {
-//         width: "88%",
-//         height: "58%",
-//         marginBottom: Spacing.lg,
-//     },
-
-//     title: {
-//         fontSize: 34,
-//         lineHeight: 42,
-//         fontFamily: FontFamily.bold,
-//         color: "#1F2937",
-//         textAlign: "center",
-//         marginBottom: Spacing.sm,
-//     },
-
-//     description: {
-//         fontSize: 16,
-//         lineHeight: 26,
-//         fontFamily: FontFamily.regular,
-//         color: "#6B7280",
-//         textAlign: "center",
-//         paddingHorizontal: Spacing.sm,
-//     },
-
-//     rtlText: {
-//         writingDirection: "rtl",
-//     },
-
-//     footer: {
-//         marginTop: "auto",
-//         paddingHorizontal: Spacing.gutter,
-//         paddingBottom: Spacing.lg,
-//         paddingTop: Spacing.md,
-//     },
-
-//     dotsContainer: {
-//         flexDirection: "row",
-//         justifyContent: "center",
-//         alignItems: "center",
-//         gap: Spacing.sm,
-//         marginBottom: Spacing.lg,
-//     },
-
-//     dot: {
-//         width: 8,
-//         height: 8,
-//         borderRadius: BorderRadius.full,
-//         backgroundColor: Colors.border,
-//     },
-
-//     activeDot: {
-//         width: 28,
-//         backgroundColor: Colors.primary,
-//     },
-
-//     cta: {
-//         // alignItems: "center",
-//         backgroundColor: Colors.primary,
-//         marginTop: Spacing.xs,
-//         paddingVertical: Spacing.sm,
-//         paddingHorizontal: Spacing.md,
-//         borderRadius: BorderRadius.full,
-//     },
-
-//     ctaButtonText: {
-//         fontSize: 16,
-//         fontFamily: FontFamily.semiBold,
-//         color: "#FFFFFF",
-//     },
-
-//     center: {
-//         flex: 1,
-//         alignItems: "center",
-//         justifyContent: "center",
-//         backgroundColor: Colors.background,
-//     },
-// });
-
-
-
-// app/onboarding.tsx
+import Svg, { Path } from 'react-native-svg';
 import { BorderRadius, Colors, Spacing } from "@/constants/theme";
 import { FontFamily } from "@/constants/fonts";
 import { useOnboardingSlides } from "@/stores/platform-config-store";
@@ -297,6 +77,24 @@ export default function OnboardingSlidesScreen() {
 
     return (
         <SafeAreaView style={[styles.safe, { backgroundColor: screenBg }]}>
+            <Svg
+                width="100%"
+                height={180}
+                viewBox="0 0 1440 320"
+                style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                }}
+                preserveAspectRatio="none"
+            >
+                <Path
+                    fill={Colors.primary}
+                    fillOpacity={0.6}
+                    d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,250.7C1248,256,1344,288,1392,304L1440,320L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+                />
+            </Svg>
             <Carousel
                 ref={carouselRef}
                 width={width}
@@ -317,7 +115,6 @@ export default function OnboardingSlidesScreen() {
                             contentFit="contain"
                             transition={200}
                         />
-
                         <Text style={[styles.title, isRTL && styles.rtlText]}>
                             {item.title}
                         </Text>
@@ -477,7 +274,8 @@ const styles = StyleSheet.create({
     nextButton: {
         minWidth: 72,
         height: 30,
-        paddingHorizontal: Spacing.lg,
+        paddingVertical: Spacing.xs,
+        paddingHorizontal: Spacing.sm,
         shadowColor: Colors.primary,
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.28,
