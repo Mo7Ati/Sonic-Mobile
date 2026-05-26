@@ -139,7 +139,7 @@ export default function LoginScreen() {
             <Link href="/(auth)/forgot-password" asChild>
               <AuthButton
                 title={t('login.forgot_password')}
-                onPress={() => {}}
+                onPress={() => { }}
                 variant="text"
                 style={styles.forgotButton}
               />
@@ -156,7 +156,7 @@ export default function LoginScreen() {
           <View style={styles.footer}>
             <Text style={styles.footerText}>{t('login.no_account')}</Text>
             <Link href="/(auth)/register" asChild>
-              <AuthButton title={t('shared.sign_up')} onPress={() => {}} variant="text" />
+              <AuthButton title={t('shared.sign_up')} onPress={() => { }} variant="text" />
             </Link>
           </View>
         </ScrollView>

@@ -3,7 +3,7 @@ import { useAppTheme } from '@/hooks/use-app-theme';
 import { useCreateAddress, useDeleteAddress, useUpdateAddress } from '@/hooks/react-query-hooks/use-addresses';
 import { useAddressesStore } from '@/stores/addresses-store';
 import { useAddressFieldTemplates } from '@/stores/platform-config-store';
-import { useUiPrefsStore } from '@/stores/ui-prefs-store';
+import { useAppPrefsStore } from '@/stores/app-prefs-store';
 import type { Address, AddressFieldTemplate, StoreAddressPayload } from '@/services/addresses/types';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -28,8 +28,16 @@ export default function AddAddressScreen() {
     const { colors, font } = useAppTheme();
     const { t, i18n } = useTranslation('addresses');
     const router = useRouter();
-    const { id, selectOnCreate } = useLocalSearchParams<{ id?: string; selectOnCreate?: string }>();
+    const { id, selectOnCreate, next } = useLocalSearchParams<{ id?: string; selectOnCreate?: string; next?: string }>();
     const shouldSelectOnCreate = selectOnCreate === '1';
+
+    // When invoked with a `next` param (e.g. from onboarding), leaving this
+    // screen should replace into that route rather than popping back to a
+    // screen the user shouldn't see again.
+    const leave = () => {
+        if (next) router.replace(next as any);
+        else router.back();
+    };
 
     // Address field templates
     const fields = useAddressFieldTemplates();
@@ -38,7 +46,7 @@ export default function AddAddressScreen() {
     const { addresses, addAddress, updateAddress, removeAddress } = useAddressesStore();
     
     // Last selected address
-    const { lastSelectedAddress, setLastSelectedAddress } = useUiPrefsStore();
+    const { lastSelectedAddress, setLastSelectedAddress } = useAppPrefsStore();
 
     const editing = useMemo(
         () => (id ? addresses.find((a) => String(a.id) === String(id)) ?? null : null),
@@ -110,7 +118,7 @@ export default function AddAddressScreen() {
                         if (lastSelectedAddress?.id === address.id) {
                             setLastSelectedAddress(address);
                         }
-                        router.back();
+                        leave();
                     }
                 },
             );
@@ -121,7 +129,7 @@ export default function AddAddressScreen() {
                     if (!lastSelectedAddress || shouldSelectOnCreate) {
                         setLastSelectedAddress(address);
                     }
-                    router.back();
+                    leave();
                 },
             });
         }
@@ -157,7 +165,7 @@ export default function AddAddressScreen() {
         <SafeAreaView style={[styles.screen, { backgroundColor: colors.background }]}>
             {/* Header */}
             <View style={styles.header}>
-                <Pressable onPress={() => router.back()} hitSlop={10} style={styles.headerSide}>
+                <Pressable onPress={leave} hitSlop={10} style={styles.headerSide}>
                     <Ionicons
                         name={I18nManager.isRTL ? 'chevron-forward' : 'chevron-back'}
                         size={26}

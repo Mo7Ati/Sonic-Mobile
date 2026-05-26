@@ -12,7 +12,7 @@ import { clearSessionId } from "@/services/session";
 import { useAddressesStore } from "@/stores/addresses-store";
 import { useAuthStore } from "@/stores/auth-store";
 import { useCartStore } from "@/stores/cart-store";
-import { useUiPrefsStore } from "@/stores/ui-prefs-store";
+import { useAppPrefsStore } from "@/stores/app-prefs-store";
 import { parseApiError } from "@/lib/api";
 
 export async function login(email: string, password: string) {
@@ -60,7 +60,7 @@ export async function logoutLocal() {
     useAuthStore.setState({ user: null, token: null, status: "guest" });
     useAddressesStore.getState().reset();
     useCartStore.getState().reset();
-    useUiPrefsStore.getState().reset();
+    useAppPrefsStore.getState().reset();
 }
 
 export async function refreshUser() {

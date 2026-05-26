@@ -18,7 +18,7 @@ import { useHomeSections } from '@/hooks/react-query-hooks/use-home-sections';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { parseApiError } from '@/lib/api';
 import type { Section } from '@/services/home/home-types';
-import { useLastSelectedAddress } from '@/stores/ui-prefs-store';
+import { useAppPrefsStore, useLastSelectedAddress } from '@/stores/app-prefs-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SectionRenderer } from '@/components/home/SectionRenderer';
 import { HomePageSkeleton } from '@/components/home/HomePageSkeleton';
@@ -34,6 +34,7 @@ export default function HomeScreen() {
     refetch();
   }, [lastSelectedAddress]);
 
+  const { setOnboardingCompleted } = useAppPrefsStore();
 
   const {
     data: sections,
@@ -48,8 +49,7 @@ export default function HomeScreen() {
       <>
         <SectionRenderer section={item} />
         <Button title="clear storage" onPress={async () => {
-          await AsyncStorage.clear();
-          console.log(await AsyncStorage.getItem('appLanguage'));
+          setOnboardingCompleted(false);
         }} />
       </>
     ),

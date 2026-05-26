@@ -28,6 +28,7 @@ export async function bootstrap() {
 
         // Sync platform config from the API to the store
         usePlatformConfigStore.getState().setAddressFieldTemplates(data.platformAddressFields);
+        usePlatformConfigStore.getState().setOnboardingSlides(data.onboardingSlides ?? []);
 
         // If the token is present and the customer is null, the token is stale — wipe it and downgrade to guest.
         if (token && !data.customer) {

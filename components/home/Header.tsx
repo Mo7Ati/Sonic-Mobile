@@ -9,7 +9,7 @@ import { FontFamily } from '@/constants/fonts';
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { selectItemsCount, useCartStore } from '@/stores/cart-store';
-import { useLastSelectedAddress } from '@/stores/ui-prefs-store';
+import { useLastSelectedAddress } from '@/stores/app-prefs-store';
 import { AddressSelector } from '@/app/addresses/components/AddressSelector';
 
 export function Header() {

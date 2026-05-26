@@ -24,8 +24,9 @@ import enCart from "@/locales/en/cart.json";
 import arCart from "@/locales/ar/cart.json";
 import enAddresses from "@/locales/en/addresses.json";
 import arAddresses from "@/locales/ar/addresses.json";
+import enOnboarding from "@/locales/en/onboarding.json";
+import arOnboarding from "@/locales/ar/onboarding.json";
 import { I18nManager } from "react-native";
-import * as Updates from 'expo-updates';
 
 
 export type AppLanguage = "ar" | "en";
@@ -46,6 +47,7 @@ const resources = {
         product: enProduct,
         cart: enCart,
         addresses: enAddresses,
+        onboarding: enOnboarding,
     },
     ar: {
         general: arGeneral,
@@ -59,6 +61,7 @@ const resources = {
         product: arProduct,
         cart: arCart,
         addresses: arAddresses,
+        onboarding: arOnboarding,
     },
 };
 
@@ -89,6 +92,7 @@ const initI18n = async () => {
             "product",
             "cart",
             "addresses",
+            "onboarding",
         ],
         interpolation: { escapeValue: false },
     });

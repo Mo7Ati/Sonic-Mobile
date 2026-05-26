@@ -1,22 +1,22 @@
 import {
-  Outfit_400Regular,
-  Outfit_500Medium,
-  Outfit_600SemiBold,
-  Outfit_700Bold,
-} from '@expo-google-fonts/outfit';
+  Cairo_400Regular,
+  Cairo_500Medium,
+  Cairo_600SemiBold,
+  Cairo_700Bold,
+} from "@expo-google-fonts/cairo";
 
 /** Pass to `useFonts` from `expo-font`. */
-export const outfitFontsToLoad = {
-  Outfit_400Regular,
-  Outfit_500Medium,
-  Outfit_600SemiBold,
-  Outfit_700Bold,
+export const CairoFontsToLoad = {
+  Cairo_400Regular,
+  Cairo_500Medium,
+  Cairo_600SemiBold,
+  Cairo_700Bold,
 };
 
-/** Post-load `fontFamily` names (match `useFonts` keys). */
+/** Post-load fontFamily names */
 export const FontFamily = {
-  regular: 'Outfit_400Regular',
-  medium: 'Outfit_500Medium',
-  semiBold: 'Outfit_600SemiBold',
-  bold: 'Outfit_700Bold',
+  regular: "Cairo_400Regular",
+  medium: "Cairo_500Medium",
+  semiBold: "Cairo_600SemiBold",
+  bold: "Cairo_700Bold",
 } as const;

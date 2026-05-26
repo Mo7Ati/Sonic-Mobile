@@ -47,7 +47,7 @@ export const Colors = {
 
   // derived (not explicitly provided but aligned)
   tint: '#f59e0b',
-  icon: '#262626',
+  icon: "#F59E0B",
   tabIconDefault: '#6b7280',
   tabIconSelected: '#f59e0b',
 

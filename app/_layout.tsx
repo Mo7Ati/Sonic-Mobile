@@ -1,7 +1,10 @@
 import Bootstrap from '@/components/bootstrap';
-import i18n from '@/lib/i18n';
+import { CairoFontsToLoad } from '@/constants/fonts';
+import '@/lib/i18n';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SplashScreen, Stack } from 'expo-router';
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import 'react-native-reanimated';
@@ -14,12 +17,16 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   const [queryClient] = useState(() => new QueryClient());
+  const [fontsLoaded, fontsError] = useFonts(CairoFontsToLoad);
+  const fontsReady = fontsLoaded || !!fontsError;
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Bootstrap />
+      <Bootstrap fontsReady={fontsReady} />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(onboarding)" options={{ headerShown: false, gestureEnabled: false }} />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="store-category/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="branch/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="product/[id]" options={{ headerShown: false, presentation: "modal" }} />

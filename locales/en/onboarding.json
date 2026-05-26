@@ -1,0 +1,20 @@
+{
+    "slides": {
+        "skip": "Skip",
+        "next": "Next",
+        "get_started": "Get Started"
+    },
+    "auth_choice": {
+        "title": "Sign in to get the best of Sonic",
+        "subtitle": "Save your addresses, track orders, and pick up where you left off — on any device.",
+        "sign_in": "Sign in",
+        "create_account": "Create account",
+        "continue_as_guest": "Continue as guest"
+    },
+    "address_prompt": {
+        "title": "Where should we deliver?",
+        "subtitle": "Add a delivery address so we can show you nearby stores and accurate delivery times. You can change this anytime.",
+        "add_address": "Add address",
+        "skip": "Skip for now"
+    }
+}
