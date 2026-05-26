@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { View, Image, Dimensions, StyleSheet, Pressable } from 'react-native';
+import { View, Dimensions, StyleSheet, Pressable } from 'react-native';
+import { Image } from 'expo-image';
 import Carousel from 'react-native-reanimated-carousel';
 import type { Section, SectionItem } from '@/services/home/home-types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { IMAGE_BLURHASH } from '@/constants/placeholders';
 
 const { width } = Dimensions.get('window');
 
@@ -13,13 +14,6 @@ interface MainBannerProps {
 export const MainBanner: React.FC<MainBannerProps> = ({ section }) => {
   const items = section.data as SectionItem[];
   if (!items.length) return null;
-
-  // useEffect(() => {
-  //   (async () => {
-  //     await AsyncStorage.removeItem('@platform_splash');
-
-  //   })();
-  // }, []);
 
   const multipleSlides = items.length > 1;
 
@@ -36,13 +30,13 @@ export const MainBanner: React.FC<MainBannerProps> = ({ section }) => {
         scrollAnimationDuration={800}
         {...(multipleSlides
           ? {
-              mode: 'parallax',
-              modeConfig: {
-                parallaxScrollingOffset: 48,
-                parallaxScrollingScale: 0.94,
-                parallaxAdjacentItemScale: 0.9,
-              },
-            }
+            mode: 'parallax',
+            modeConfig: {
+              parallaxScrollingOffset: 48,
+              parallaxScrollingScale: 0.94,
+              parallaxAdjacentItemScale: 0.9,
+            },
+          }
           : {})}
         renderItem={({ item }) => (
           <Pressable
@@ -50,9 +44,15 @@ export const MainBanner: React.FC<MainBannerProps> = ({ section }) => {
             onPress={() => console.log('Banner pressed:', item.id)}
           >
             <Image
-              source={{ uri: item.data.image ?? '' }}
+              source={item.data.image}
               style={styles.image}
-              resizeMode="cover"
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              transition={200}
+              priority="high"
+              recyclingKey={String(item.id)}
+              placeholder={{ blurhash: IMAGE_BLURHASH }}
+              placeholderContentFit="cover"
             />
           </Pressable>
         )}

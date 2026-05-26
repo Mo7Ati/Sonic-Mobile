@@ -1,7 +1,9 @@
 import React from 'react';
-import { FlatList, Image, Pressable, StyleSheet, View, Dimensions } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View, Dimensions } from 'react-native';
+import { Image } from 'expo-image';
 import { SectionHeader } from './SectionHeader';
 import type { Section, SectionItem } from '@/services/home/home-types';
+import { IMAGE_BLURHASH } from '@/constants/placeholders';
 
 const { width } = Dimensions.get('window');
 const ITEM_HEIGHT = 140;
@@ -26,9 +28,14 @@ export const RectangleBanners: React.FC<RectangleBannersProps> = ({ section }) =
             style={styles.card}
           >
             <Image
-              source={{ uri: item.data.image ?? '' }}
+              source={item.data.image}
               style={styles.image}
-              resizeMode="cover"
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              transition={150}
+              recyclingKey={String(item.id)}
+              placeholder={{ blurhash: IMAGE_BLURHASH }}
+              placeholderContentFit="cover"
             />
           </Pressable>
         )}

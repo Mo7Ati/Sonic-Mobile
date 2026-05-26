@@ -1,8 +1,10 @@
 import React from 'react';
-import { FlatList, Image, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { Image } from 'expo-image';
 
 import type { Section, SectionItem } from '@/services/home/home-types';
 import { SectionHeader } from './SectionHeader';
+import { IMAGE_BLURHASH } from '@/constants/placeholders';
 
 interface SquareBannersProps {
   section: Section;
@@ -30,7 +32,16 @@ export const SquareBanners: React.FC<SquareBannersProps> = ({
               { width: ITEM_SIZE, height: ITEM_SIZE },
               pressed && styles.cardPressed,
             ]}>
-            <Image source={{ uri: item.data.image ?? '' }} style={styles.fill} resizeMode="cover" />
+            <Image
+              source={item.data.image}
+              style={styles.fill}
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              transition={150}
+              recyclingKey={String(item.id)}
+              placeholder={{ blurhash: IMAGE_BLURHASH }}
+              placeholderContentFit="cover"
+            />
           </Pressable>
         )}
         keyExtractor={(item) => item.id.toString()}

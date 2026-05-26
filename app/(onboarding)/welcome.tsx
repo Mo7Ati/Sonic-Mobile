@@ -1,7 +1,7 @@
 import Svg, { Path } from 'react-native-svg';
 import { BorderRadius, Colors, Spacing } from "@/constants/theme";
 import { FontFamily } from "@/constants/fonts";
-import { useOnboardingSlides } from "@/stores/platform-config-store";
+import { useOnboardingSlides, usePlatformConfigStore } from "@/stores/platform-config-store";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
@@ -16,6 +16,7 @@ import Animated, {
 } from "react-native-reanimated";
 import Carousel, { type ICarouselInstance } from "react-native-reanimated-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAppPrefsStore } from '@/stores/app-prefs-store';
 
 export default function OnboardingSlidesScreen() {
     const { t } = useTranslation("onboarding");
@@ -24,6 +25,8 @@ export default function OnboardingSlidesScreen() {
     const [activeIndex, setActiveIndex] = useState(0);
     const progress = useSharedValue(0);
     const { width, height } = useWindowDimensions();
+
+    const { setOnboardingCompleted } = useAppPrefsStore();
 
     const slides = useOnboardingSlides();
     const isRTL = I18nManager.isRTL;
@@ -53,12 +56,14 @@ export default function OnboardingSlidesScreen() {
     });
 
     const skip = () => {
+        setOnboardingCompleted(true);
         router.replace("/login");
     };
 
     const goNext = () => {
         const lastIndex = slides.length - 1;
         if (progress.value >= lastIndex - 0.3) {
+            setOnboardingCompleted(true);
             router.replace("/login");
             return;
         }

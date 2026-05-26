@@ -26,7 +26,7 @@ export function Header() {
   return (
     <View style={styles.header}>
       <View style={styles.addressContainer}>
-        <Ionicons name="location-outline" size={25} color={colors.primary} />
+        <Ionicons name="location-outline" size={20} color={colors.primary} />
         <View>
           <Pressable style={styles.addressRow} onPress={() => setAddressSelectorVisible(true)}>
             <Text style={styles.addressText}>{t('deliver_to', { address: addressDisplay })}</Text>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   addressContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 5,
   },
   deliverLabel: {
     fontSize: 11,
@@ -79,9 +79,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addressText: {
-    fontSize: 16,
-    // fontWeight: '700',
-    fontFamily: FontFamily.medium,
+    fontSize: 14,
+    fontFamily: FontFamily.regular,
   },
   chevron: {
     marginStart: Spacing.xs,

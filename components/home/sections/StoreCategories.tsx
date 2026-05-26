@@ -1,12 +1,14 @@
 import { useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
-import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Image } from 'expo-image';
 
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { SectionHeader } from './SectionHeader';
 import type { Section } from '@/services/home/home-types';
 import { StoreCategory } from '@/services/store-categories/types';
+import { IMAGE_BLURHASH } from '@/constants/placeholders';
 
 const CATEGORY_GAP = Spacing.sm;
 const CATEGORY_COLUMNS = 3;
@@ -51,7 +53,16 @@ export const StoreCategories: React.FC<StoreCategoriesProps> = ({
               pressed && styles.categoryPressed,
             ]}>
             <View style={[styles.iconWrap, { width: iconSize, height: iconSize }]}>
-              <Image source={{ uri: item.image ?? '' }} style={styles.fill} resizeMode="cover" />
+              <Image
+                source={item.image}
+                style={styles.fill}
+                contentFit="cover"
+                cachePolicy="memory-disk"
+                transition={150}
+                recyclingKey={String(item.id)}
+                placeholder={{ blurhash: IMAGE_BLURHASH }}
+                placeholderContentFit="cover"
+              />
             </View>
             <Text
               style={[styles.label, { color: colors.foreground, maxWidth: tileWidth }]}
