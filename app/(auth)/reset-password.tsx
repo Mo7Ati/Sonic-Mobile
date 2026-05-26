@@ -13,8 +13,9 @@ import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { AuthInput } from '@/components/ui/auth-input';
+import { AuthBackButton } from '@/components/ui/auth-back-button';
 import { AuthButton } from '@/components/ui/auth-button';
+import { AuthInput } from '@/components/ui/auth-input';
 import { Colors, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { parseApiError, type ApiError } from '@/lib/api';
@@ -89,6 +90,9 @@ export default function ResetPasswordScreen() {
   if (success) {
     return (
       <SafeAreaView style={styles.safe}>
+        <View style={styles.backRow}>
+          <AuthBackButton onPress={() => router.replace('/(auth)/login')} />
+        </View>
         <ScrollView contentContainerStyle={styles.successScroll}>
           <View style={styles.successIcon}>
             <Ionicons name="checkmark-circle-outline" size={64} color={Colors.successBright} />
@@ -109,6 +113,9 @@ export default function ResetPasswordScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <View style={styles.backRow}>
+        <AuthBackButton />
+      </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
@@ -238,6 +245,10 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+  backRow: {
+    paddingHorizontal: Spacing.lg,
+    paddingTop: Spacing.sm,
   },
   flex: {
     flex: 1,

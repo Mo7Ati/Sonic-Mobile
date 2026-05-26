@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  Pressable,
-  Text,
   ActivityIndicator,
+  Pressable,
   StyleSheet,
+  Text,
   type ViewStyle,
 } from 'react-native';
 
+import { FontFamily } from '@/constants/fonts';
 import { BorderRadius, Colors, Spacing } from '@/constants/theme';
 
 interface AuthButtonProps {
@@ -44,7 +45,7 @@ export function AuthButton({
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === 'primary' ? Colors.inverseForeground : Colors.link}
+          color={variant === 'primary' ? Colors.primaryForeground : Colors.primary}
           size="small"
         />
       ) : (
@@ -66,19 +67,20 @@ export function AuthButton({
 
 const styles = StyleSheet.create({
   base: {
-    minHeight: 50,
+    minHeight: 52,
     borderRadius: BorderRadius.xl,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: Spacing.lg,
   },
   primary: {
-    backgroundColor: Colors.link,
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
   },
   outline: {
     backgroundColor: 'transparent',
     borderWidth: 1.5,
-    borderColor: Colors.link,
+    borderColor: Colors.primary,
   },
   text: {
     backgroundColor: 'transparent',
@@ -92,18 +94,18 @@ const styles = StyleSheet.create({
   },
   baseText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: FontFamily.semiBold,
   },
   primaryText: {
-    color: Colors.inverseForeground,
+    color: Colors.background,
   },
   outlineText: {
-    color: Colors.link,
+    color: Colors.primary,
   },
   textText: {
-    color: Colors.link,
+    color: Colors.primary,
   },
   disabledText: {
-    color: Colors.inverseForeground,
+    color: Colors.primaryForeground,
   },
 });

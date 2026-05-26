@@ -7,13 +7,14 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AuthInput } from '@/components/ui/auth-input';
+import { AuthBackButton } from '@/components/ui/auth-back-button';
 import { AuthButton } from '@/components/ui/auth-button';
+import { AuthInput } from '@/components/ui/auth-input';
 import { Colors, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { parseApiError, type ApiError } from '@/lib/api';
@@ -94,6 +95,9 @@ export default function RegisterScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <View style={styles.backRow}>
+        <AuthBackButton />
+      </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
@@ -104,12 +108,12 @@ export default function RegisterScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-            <Text style={styles.brand}>{t('shared.brand')}</Text>
             <Text style={styles.title}>{t('register.title')}</Text>
             <Text style={styles.subtitle}>{t('register.subtitle')}</Text>
           </View>
 
           <View style={styles.form}>
+            {/* Full Name Input */}
             <Controller
               control={control}
               name="name"
@@ -128,6 +132,7 @@ export default function RegisterScreen() {
               )}
             />
 
+            {/* Email Input */}
             <Controller
               control={control}
               name="email"
@@ -153,24 +158,7 @@ export default function RegisterScreen() {
               )}
             />
 
-            <Controller
-              control={control}
-              name="phone_number"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <AuthInput
-                  label={t('register.phone_optional')}
-                  icon="call-outline"
-                  placeholder={t('register.phone_placeholder')}
-                  keyboardType="phone-pad"
-                  autoComplete="tel"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  error={errors.phone_number?.message}
-                />
-              )}
-            />
-
+            {/* Password Input */}
             <Controller
               control={control}
               name="password"
@@ -193,6 +181,7 @@ export default function RegisterScreen() {
               )}
             />
 
+            {/* Confirm Password Input */}
             <Controller
               control={control}
               name="password_confirmation"
@@ -216,6 +205,7 @@ export default function RegisterScreen() {
               )}
             />
 
+            {/* Create Account Button */}
             <AuthButton
               title={t('register.create_account')}
               onPress={handleSubmit(onSubmit)}
@@ -224,11 +214,10 @@ export default function RegisterScreen() {
             />
           </View>
 
+          {/* Have Account Text */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>{t('register.have_account')}</Text>
-            <Link href="/(auth)/login" asChild>
-              <AuthButton title={t('shared.sign_in')} onPress={() => {}} variant="text" />
-            </Link>
+            <AuthButton title={t('shared.sign_in')} onPress={() => { router.push('/login') }} variant="text" />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -240,6 +229,10 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+  backRow: {
+    paddingHorizontal: Spacing.lg,
+    paddingTop: Spacing.sm,
   },
   flex: {
     flex: 1,
@@ -281,7 +274,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: Spacing.lg,
-    gap: Spacing.xs,
   },
   footerText: {
     fontSize: 15,

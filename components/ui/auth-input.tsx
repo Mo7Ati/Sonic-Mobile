@@ -32,7 +32,7 @@ export function AuthInput({
   const iconColor = error
     ? Colors.destructive
     : focused
-      ? Colors.link
+      ? Colors.foreground
       : Colors.placeholder;
 
   return (
@@ -102,14 +102,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1.5,
-    borderColor: Colors.border,
+    borderColor: Colors.secondary,
     borderRadius: BorderRadius.xl,
     backgroundColor: Colors.muted,
     paddingHorizontal: Spacing.md,
     minHeight: 50,
   },
   inputWrapperFocused: {
-    borderColor: Colors.link,
+    borderColor: Colors.primary,
     backgroundColor: Colors.background,
   },
   inputWrapperError: {

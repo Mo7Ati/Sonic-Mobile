@@ -1,9 +1,11 @@
 import { AuthButton } from '@/components/ui/auth-button';
 import { AuthInput } from '@/components/ui/auth-input';
-import { Colors, Spacing } from '@/constants/theme';
+import { FontFamily } from '@/constants/fonts';
+import { BorderRadius, Colors, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { parseApiError, type ApiError } from '@/lib/api';
-import { Link } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { Link, router } from 'expo-router';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +15,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -34,14 +37,19 @@ export default function LoginScreen() {
     setError,
     formState: { errors },
   } = useForm<LoginForm>({
-    defaultValues: { email: '', password: '' },
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
 
   function applyServerErrors(apiError: ApiError) {
     if (apiError.errors) {
       for (const [field, messages] of Object.entries(apiError.errors)) {
         if (field === 'email' || field === 'password') {
-          setError(field, { message: messages[0] });
+          setError(field, {
+            message: messages[0],
+          });
         }
       }
     }
@@ -49,10 +57,12 @@ export default function LoginScreen() {
 
   async function onSubmit(form: LoginForm) {
     setLoading(true);
+
     try {
       await login(form.email, form.password);
     } catch (error) {
       const apiError = parseApiError(error);
+
       if (apiError.status === 422) {
         applyServerErrors(apiError);
       } else if (apiError.status === 403) {
@@ -77,8 +87,8 @@ export default function LoginScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <ScrollView
           contentContainerStyle={styles.scroll}
@@ -86,12 +96,13 @@ export default function LoginScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-            <Text style={styles.brand}>{t('shared.brand')}</Text>
             <Text style={styles.title}>{t('login.title')}</Text>
+
             <Text style={styles.subtitle}>{t('login.subtitle')}</Text>
           </View>
 
           <View style={styles.form}>
+            {/* Email Input */}
             <Controller
               control={control}
               name="email"
@@ -106,7 +117,7 @@ export default function LoginScreen() {
                 <AuthInput
                   label={t('shared.email')}
                   icon="mail-outline"
-                  placeholder={t('shared.email_placeholder')}
+                  placeholder={t('login.email_placeholder')}
                   keyboardType="email-address"
                   autoComplete="email"
                   value={value}
@@ -117,10 +128,13 @@ export default function LoginScreen() {
               )}
             />
 
+            {/* Password Input */}
             <Controller
               control={control}
               name="password"
-              rules={{ required: t('general:validation.password_required') }}
+              rules={{
+                required: t('general:validation.password_required'),
+              }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
                   label={t('shared.password')}
@@ -136,27 +150,76 @@ export default function LoginScreen() {
               )}
             />
 
+            {/* Forgot Password Link */}
             <Link href="/(auth)/forgot-password" asChild>
-              <AuthButton
-                title={t('login.forgot_password')}
-                onPress={() => { }}
-                variant="text"
-                style={styles.forgotButton}
-              />
+              <TouchableOpacity>
+                <Text style={styles.forgotPassword}>
+                  {t('login.forgot_password')}
+                </Text>
+              </TouchableOpacity>
             </Link>
 
             <AuthButton
-              title={t('shared.sign_in')}
+              title={t('login.submit')}
               onPress={handleSubmit(onSubmit)}
               loading={loading}
               style={styles.submitButton}
             />
+
+            <View style={styles.dividerContainer}>
+              <View style={styles.divider} />
+
+              <Text style={styles.dividerText}>
+                {t('login.or_continue_with')}
+              </Text>
+
+              <View style={styles.divider} />
+            </View>
+
+            <View style={styles.socialButtons}>
+              <TouchableOpacity style={styles.socialButton}>
+                <Ionicons
+                  name="logo-google"
+                  size={20}
+                  color={Colors.foreground}
+                />
+
+                <Text style={styles.socialButtonText}>
+                  {t('login.social_google')}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.socialButton}>
+                <Ionicons
+                  name="logo-apple"
+                  size={20}
+                  color={Colors.foreground}
+                />
+
+                <Text style={styles.socialButtonText}>
+                  {t('login.social_apple')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Continue as Guest Button */}
+            <TouchableOpacity style={styles.guestButton} onPress={() => router.push('/')}>
+              <Text style={styles.guestButtonText}>
+                {t('login.continue_as_guest')}
+              </Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>{t('login.no_account')}</Text>
+
+            {/* Register Link */}
             <Link href="/(auth)/register" asChild>
-              <AuthButton title={t('shared.sign_up')} onPress={() => { }} variant="text" />
+              <TouchableOpacity>
+                <Text style={styles.registerText}>
+                  {t('shared.register')}
+                </Text>
+              </TouchableOpacity>
             </Link>
           </View>
         </ScrollView>
@@ -170,55 +233,123 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
   },
+
   flex: {
     flex: 1,
   },
+
   scroll: {
     flexGrow: 1,
-    paddingHorizontal: Spacing.lg,
     justifyContent: 'center',
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.xl,
   },
+
   header: {
-    alignItems: 'center',
     marginBottom: Spacing.hero,
   },
-  brand: {
-    fontSize: 36,
-    fontWeight: '800',
-    color: Colors.link,
-    marginBottom: Spacing.sm,
-    letterSpacing: -0.5,
-  },
+
   title: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: 32,
+    fontFamily: FontFamily.bold,
     color: Colors.foreground,
-    marginBottom: Spacing.xs,
+    marginBottom: Spacing.sm,
   },
+
   subtitle: {
     fontSize: 15,
+    lineHeight: 22,
+    fontFamily: FontFamily.regular,
     color: Colors.mutedForeground,
   },
+
   form: {
     width: '100%',
   },
-  forgotButton: {
+
+  forgotPassword: {
     alignSelf: 'flex-end',
+    color: Colors.primary,
+    fontFamily: FontFamily.semiBold,
+    fontSize: 14,
     marginBottom: Spacing.sm,
-    minHeight: 32,
   },
+
   submitButton: {
-    marginTop: Spacing.sm,
+    marginTop: Spacing.xs,
   },
-  footer: {
+
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: Spacing.lg,
+  },
+
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: Colors.border,
+  },
+
+  dividerText: {
+    marginHorizontal: Spacing.tight,
+    color: Colors.mutedForeground,
+    fontSize: 13,
+    fontFamily: FontFamily.medium,
+  },
+
+  socialButtons: {
+    flexDirection: 'row',
+    gap: Spacing.tight,
+  },
+
+  socialButton: {
+    flex: 1,
+    height: 52,
+    borderRadius: BorderRadius.xl,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    backgroundColor: Colors.background,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: Spacing.xl,
-    gap: Spacing.xs,
+    gap: Spacing.sm,
   },
+
+  socialButtonText: {
+    fontSize: 15,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.foreground,
+  },
+
+  guestButton: {
+    alignItems: 'center',
+    marginTop: Spacing.lg,
+  },
+
+  guestButtonText: {
+    fontSize: 15,
+    fontFamily: FontFamily.semiBold,
+    color: Colors.primary,
+  },
+
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: Spacing.hero,
+    gap: Spacing.narrow,
+  },
+
   footerText: {
     fontSize: 15,
+    fontFamily: FontFamily.regular,
     color: Colors.mutedForeground,
+  },
+
+  registerText: {
+    fontSize: 15,
+    fontFamily: FontFamily.bold,
+    color: Colors.primary,
   },
 });

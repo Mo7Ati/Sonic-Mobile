@@ -1,3 +1,4 @@
+import { AuthBackButton } from '@/components/ui/auth-back-button';
 import { AuthButton } from '@/components/ui/auth-button';
 import { AuthInput } from '@/components/ui/auth-input';
 import { Colors, Spacing } from '@/constants/theme';
@@ -9,12 +10,12 @@ import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
@@ -69,6 +70,9 @@ export default function ForgotPasswordScreen() {
   if (sent) {
     return (
       <SafeAreaView style={styles.safe}>
+        <View style={styles.backRow}>
+          <AuthBackButton onPress={() => router.replace('/(auth)/login')} />
+        </View>
         <ScrollView contentContainerStyle={styles.successScroll}>
           <View style={styles.successIcon}>
             <Ionicons name="mail-open-outline" size={64} color={Colors.link} />
@@ -96,6 +100,9 @@ export default function ForgotPasswordScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
+      <View style={styles.backRow}>
+        <AuthBackButton />
+      </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.flex}
@@ -106,9 +113,6 @@ export default function ForgotPasswordScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-            <View style={styles.iconCircle}>
-              <Ionicons name="key-outline" size={32} color={Colors.link} />
-            </View>
             <Text style={styles.title}>{t('forgot_password.title')}</Text>
             <Text style={styles.subtitle}>
               {t('forgot_password.subtitle')}
@@ -165,6 +169,10 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: Colors.background,
+  },
+  backRow: {
+    paddingHorizontal: Spacing.lg,
+    paddingTop: Spacing.sm,
   },
   flex: {
     flex: 1,

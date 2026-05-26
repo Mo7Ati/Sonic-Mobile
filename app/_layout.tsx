@@ -8,6 +8,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import 'react-native-reanimated';
+import Toast, { ToastProps } from 'react-native-toast-message';
+
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,6 +24,7 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <Toast />
       <Bootstrap fontsReady={fontsReady} />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
