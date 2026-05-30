@@ -1,17 +1,17 @@
+import RemoteImage from "@/components/ui/remote-image";
 import { Branch } from "@/services/branch/types";
 import { BorderRadius, Spacing } from "@/constants/theme";
 import { Pressable, View, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { Colors } from "@/constants/theme";
-import { Image } from "expo-image";
-
+import { memo } from "react";
 
 const CARD_WIDTH = 325;
 
-const BranchCard = ({ item, onPress }: {
-  item: Branch; onPress?: () => void;
-}) => {
+function BranchCard({ item, onPress, fullWidth }: {
+  item: Branch; onPress?: () => void; fullWidth?: boolean;
+}) {
   const cardShadow = {
     shadowColor: Colors.shadow,
     shadowOffset: { width: 3, height: 3 },
@@ -27,19 +27,21 @@ const BranchCard = ({ item, onPress }: {
       onPress={onPress}
       style={({ pressed }) => [
         styles.card,
+        fullWidth ? styles.cardFullWidth : styles.cardFixedWidth,
         { backgroundColor: Colors.card, borderColor: Colors.border },
         cardShadow,
         pressed && styles.cardPressed,
       ]}>
       <View style={styles.cardRow}>
 
-        {/* Logo */}
         <View style={[styles.logoWrap, { backgroundColor: Colors.muted }]}>
-          {item.logo ? (
-            <Image source={{ uri: item.logo }} style={styles.logo} resizeMode="cover" />
-          ) : (
-            <Ionicons name="storefront-outline" size={22} color={Colors.mutedForeground} />
-          )}
+          <RemoteImage
+            uri={item.logo}
+            recyclingKey={`branch-logo-${item.id}`}
+            style={styles.logo}
+            placeholderIcon="storefront-outline"
+            priority="low"
+          />
         </View>
 
 
@@ -88,9 +90,9 @@ const BranchCard = ({ item, onPress }: {
       </View>
     </Pressable>
   );
-};
+}
 
-export default BranchCard;
+export default memo(BranchCard);
 
 const styles = StyleSheet.create({
   section: {
@@ -101,16 +103,17 @@ const styles = StyleSheet.create({
     paddingEnd: Spacing.sm,
   },
   card: {
-    width: CARD_WIDTH,
-    marginEnd: Spacing.tight,
     borderRadius: BorderRadius["2xl"],
     borderWidth: 1,
     padding: Spacing.sm + Spacing.xs,
     overflow: 'hidden',
   },
+  cardFixedWidth: {
+    width: CARD_WIDTH,
+    marginEnd: Spacing.tight,
+  },
   cardFullWidth: {
     width: '100%',
-    marginEnd: 0,
   },
   cardPressed: {
     opacity: 0.92,

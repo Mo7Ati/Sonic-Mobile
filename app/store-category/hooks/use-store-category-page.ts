@@ -3,8 +3,9 @@ import { useStoreCategoryById } from "@/hooks/react-query-hooks/use-store-catego
 import { useDebouncedValue } from "@/hooks/use-debounce";
 import { BranchFilters } from "@/services/branch/branch-service";
 import { StoreCategory } from "@/services/store-categories/types";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { DEFAULT_FILTERS, Filters } from "../components/filter-chips";
+
 
 function buildBranchFilters(
   storeCategoryId: number,
@@ -13,25 +14,28 @@ function buildBranchFilters(
 ): BranchFilters {
   return {
     store_category_id: storeCategoryId,
-    search: search || undefined,
+    search: search,
     sort_by: filters.sort !== "default" ? filters.sort : undefined,
-    offers: filters.offers || undefined,
-    rating_4_plus: filters.rating4Plus || undefined,
-    fast_delivery: filters.fastDelivery || undefined,
   };
 }
 
 export default function useStoreCategoryPage(storeCategoryId: number) {
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearch = useDebouncedValue(searchQuery);
+  const debouncedSearch = useDebouncedValue(searchQuery, 1500);
+
   const [activeSubCategory, setActiveSubCategory] = useState<StoreCategory | null>(null);
+
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
+
 
   const {
     data: storeCategory,
     isPending: isCategoryPending,
+    isRefetching: isCategoryRefetching,
     error: storeCategoryError,
   } = useStoreCategoryById(storeCategoryId);
+
+  const isCategoryLoading = isCategoryPending || isCategoryRefetching;
 
   const activeCategoryId = activeSubCategory?.id ?? storeCategoryId;
 
@@ -42,19 +46,28 @@ export default function useStoreCategoryPage(storeCategoryId: number) {
 
   const {
     data,
-    fetchNextPage,
     hasNextPage,
-    isFetchingNextPage,
     isFetching,
-    isPending: isBranchesPending,
-    isPlaceholderData,
+    isFetchingNextPage,
     error: branchesError,
+    fetchNextPage,
   } = useBranches(branchFilters);
 
-  const branches = useMemo(
-    () => data?.pages.flatMap((page) => page.data) ?? [],
-    [data]
-  );
+  const isBranchesLoading = isFetching && !isFetchingNextPage;
+
+  const branches = useMemo(() => {
+    if (isBranchesLoading) {
+      return [];
+    }
+
+    return data?.pages.flatMap((page) => page.data) ?? [];
+  }, [data, isBranchesLoading]);
+
+  // useEffect(() => {
+  //   setActiveSubCategory(null);
+  //   setSearchQuery("");
+  //   setFilters(DEFAULT_FILTERS);
+  // }, [storeCategoryId]);
 
   const handleSubCategoryPress = useCallback((sub: StoreCategory) => {
     setActiveSubCategory((prev) => (prev?.id === sub.id ? null : sub));
@@ -66,8 +79,6 @@ export default function useStoreCategoryPage(storeCategoryId: number) {
     }
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const isInitialLoading =
-    isBranchesPending || (isFetching && !isPlaceholderData && !isFetchingNextPage);
 
   return {
     searchQuery,
@@ -76,12 +87,11 @@ export default function useStoreCategoryPage(storeCategoryId: number) {
     filters,
     setFilters,
     storeCategory,
-    isCategoryPending,
+    isCategoryLoading,
     activeSubCategory,
     handleSubCategoryPress,
     branches,
-    isInitialLoading,
-    isPlaceholderData,
+    isBranchesLoading,
     isFetchingNextPage,
     handleEndReached,
     error: storeCategoryError || branchesError,

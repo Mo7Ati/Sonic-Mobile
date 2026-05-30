@@ -43,11 +43,6 @@ api.interceptors.request.use(async (config) => {
 
 api.interceptors.response.use(
   (response) => {
-    console.log('API Response:', {
-      url: response.config.url,
-      status: response.status,
-      data: response.data,
-    });
     return response;
   },
   async (error: AxiosError) => {

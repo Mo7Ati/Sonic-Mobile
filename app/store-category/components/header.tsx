@@ -1,5 +1,7 @@
 import { BorderRadius, Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { getHeaderAddressSummary } from "@/lib/utils.";
+import { useAppPrefsStore } from "@/stores/app-prefs-store";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { useRouter } from "expo-router";
@@ -10,6 +12,7 @@ export default function Header() {
   const router = useRouter();
   const { colors } = useAppTheme();
   const { t } = useTranslation("store_category");
+  const { lastSelectedAddress } = useAppPrefsStore();
 
   return (
     <View style={styles.header}>
@@ -25,7 +28,7 @@ export default function Header() {
         <Text style={[styles.deliverLabel, { color: colors.mutedForeground }]}>
           {t("header.deliver_prefix")}{" "}
           <Text style={[styles.address, { color: colors.foreground }]} numberOfLines={1}>
-            {t("header.address_placeholder")}
+            {getHeaderAddressSummary(lastSelectedAddress) ?? t("header.address_placeholder")}
           </Text>
         </Text>
       </View>

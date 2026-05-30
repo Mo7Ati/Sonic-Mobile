@@ -1,8 +1,10 @@
+import RemoteImage from '@/components/ui/remote-image'
+import { BorderRadius, Spacing } from '@/constants/theme'
 import { useAppTheme } from '@/hooks/use-app-theme'
 import { StoreCategory } from '@/services/store-categories/types'
 import { Text } from '@react-navigation/elements'
-import React from 'react'
-import { FlatList, Image, Pressable, StyleSheet, View } from 'react-native'
+import React, { memo } from 'react'
+import { FlatList, Pressable, StyleSheet, View } from 'react-native'
 
 function SubCategoryItem({
     item,
@@ -22,11 +24,13 @@ function SubCategoryItem({
         >
             <View style={[styles.imageRing, isActive && { borderColor: colors.primary }]}>
                 <View style={[styles.imageWrap, { backgroundColor: colors.muted }]}>
-                    {item.image ? (
-                        <Image source={{ uri: item.image }} style={styles.image} resizeMode="cover" />
-                    ) : (
-                        <View style={[styles.image, { backgroundColor: colors.muted }]} />
-                    )}
+                    <RemoteImage
+                        uri={item.image}
+                        recyclingKey={`sub-category-${item.id}`}
+                        style={styles.image}
+                        placeholderIcon="grid-outline"
+                        priority="low"
+                    />
                 </View>
             </View>
             <Text
@@ -51,6 +55,8 @@ const SubCategoriesList = ({
     onPress: (subCategory: StoreCategory) => void
     activeSubCategory: StoreCategory | null
 }) => {
+
+
     return (
         <FlatList
             data={subCategories}
@@ -71,9 +77,9 @@ const SubCategoriesList = ({
 
 const styles = StyleSheet.create({
     listContent: {
-        paddingHorizontal: 20,
-        gap: 16,
-        marginBottom: 14,
+        paddingHorizontal: Spacing.tight,
+        gap: Spacing.tight,
+        marginBottom: Spacing.md,
     },
     itemContainer: {
         alignItems: 'center',
@@ -81,7 +87,7 @@ const styles = StyleSheet.create({
     imageRing: {
         width: 72,
         height: 72,
-        borderRadius: 36,
+        borderRadius: BorderRadius.full,
         borderWidth: 2,
         borderColor: 'transparent',
         alignItems: 'center',
@@ -108,4 +114,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default SubCategoriesList
+export default memo(SubCategoriesList)

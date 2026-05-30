@@ -1,9 +1,9 @@
+import { BackButton } from "@/components/ui/back-button";
 import { Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
-import { I18nManager, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface HeroHeaderProps {
@@ -14,7 +14,6 @@ const HERO_HEIGHT = 200;
 
 export default function HeroHeader({ coverImage }: HeroHeaderProps) {
     const { colors } = useAppTheme();
-    const router = useRouter();
     const insets = useSafeAreaInsets();
 
     return (
@@ -30,16 +29,7 @@ export default function HeroHeader({ coverImage }: HeroHeaderProps) {
                 <View style={[styles.coverImage, { backgroundColor: colors.muted }]} />
             )}
             <View style={[styles.overlay, { paddingTop: insets.top + Spacing.sm }]}>
-                <Pressable
-                    onPress={() => router.back()}
-                    style={({ pressed }) => [
-                        styles.iconButton,
-                        { backgroundColor: colors.card, shadowColor: colors.shadow },
-                        pressed && styles.pressed,
-                    ]}
-                >
-                    <Ionicons name={I18nManager.isRTL ? "arrow-forward" : "arrow-back"} size={22} color={colors.foreground} />
-                </Pressable>
+                <BackButton />
 
                 <View style={styles.rightActions}>
                     <Pressable

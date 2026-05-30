@@ -12,10 +12,10 @@ import { selectItemsCount, useCartStore } from '@/stores/cart-store';
 import { useLastSelectedAddress } from '@/stores/app-prefs-store';
 import { AddressSelector } from '@/app/addresses/components/AddressSelector';
 import { getHeaderAddressSummary } from '@/lib/utils.';
+import { Colors } from '@/constants/theme';
 
-export function Header() {
+export function Header({ canSelectOtherAddress = true, showCartButton = true, showIcon = true }: { canSelectOtherAddress?: boolean, showCartButton?: boolean, showIcon?: boolean }) {
   const { t } = useTranslation('general');
-  const { colors } = useAppTheme();
   const router = useRouter();
 
   const [addressSelectorVisible, setAddressSelectorVisible] = useState(false);
@@ -28,7 +28,7 @@ export function Header() {
     <View style={styles.header}>
       <View style={styles.addressContainer}>
         {/* icon for location */}
-        <Ionicons name="location-outline" size={20} color={colors.primary} />
+        {showIcon && <Ionicons name="location-outline" size={20} color={Colors.primary} />}
 
         {/* deliver to label and address */}
         <View style={styles.addressTextContainer}>
@@ -42,16 +42,18 @@ export function Header() {
         </View>
       </View>
 
-      <Pressable onPress={() => router.push('/cart')} hitSlop={8} style={styles.cartButton}>
-        <Ionicons name="cart-outline" size={24} color={colors.foreground} />
-        {itemsCount > 0 && (
-          <View style={[styles.badge, { backgroundColor: colors.primary }]}>
-            <Text style={[styles.badgeText, { color: colors.primaryForeground }]}>
-              {itemsCount > 99 ? '99+' : itemsCount}
-            </Text>
-          </View>
-        )}
-      </Pressable>
+      {
+        showCartButton && <Pressable onPress={() => router.push('/cart')} hitSlop={8} style={styles.cartButton}>
+          <Ionicons name="cart-outline" size={24} color={Colors.foreground} />
+          {itemsCount > 0 && (
+            <View style={[styles.badge, { backgroundColor: Colors.primary }]}>
+              <Text style={[styles.badgeText, { color: Colors.primaryForeground }]}>
+                {itemsCount > 99 ? '99+' : itemsCount}
+              </Text>
+            </View>
+          )}
+        </Pressable>
+      }
 
 
       <AddressSelector

@@ -12,6 +12,6 @@ export function useBranches(filters: BranchFilters) {
                 ? lastPage.current_page + 1
                 : undefined,
         enabled: !!filters.store_category_id,
-        placeholderData: keepPreviousData,
+        // placeholderData: keepPreviousData,
     });
 }

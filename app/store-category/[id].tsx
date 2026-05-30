@@ -1,23 +1,29 @@
 import BranchCard from "@/app/branch/components/branch-card";
 import BranchesListSkeleton from "@/app/branch/components/branches-list-skeleton";
 import { SearchSection } from "@/components/home/sections/SearchSection";
-import SubCategoriesList from "@/app/store-category/components/sub-categories-list";
-import SubCategoriesSkeleton from "@/app/store-category/components/sub-categories-skeleton";
+import SubCategoriesList from "@/app/store-category/components/sub-categories/sub-categories-list";
+import SubCategoriesSkeleton from "@/app/store-category/components/sub-categories/sub-categories-skeleton";
 import { Spacing } from "@/constants/theme";
+import { FontFamily } from "@/constants/fonts";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { Branch } from "@/services/branch/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback } from "react";
+import { Suspense, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import ErrorState from "./components/error-state";
 import FilterChips from "./components/filter-chips";
-import Header from "./components/header";
 import useStoreCategoryPage from "./hooks/use-store-category-page";
+import { Header } from "@/components/home/Header";
+import Search from "./components/Search";
+import { BackButton } from "@/components/ui/back-button";
+
+const keyExtractor = (item: Branch) => item.id.toString();
+const ItemSeparator = () => <View style={styles.separator} />;
 
 export default function StoreCategoryScreen() {
   const { colors } = useAppTheme();
@@ -28,11 +34,13 @@ export default function StoreCategoryScreen() {
 
   const renderItem = useCallback(
     ({ item }: { item: Branch }) => (
-      <BranchCard
-        item={item}
-        fullWidth
-        onPress={() => router.push({ pathname: "/branch/[id]", params: { id: item.id } })}
-      />
+      <View style={styles.cardWrapper}>
+        <BranchCard
+          item={item}
+          fullWidth
+          onPress={() => router.push({ pathname: "/branch/[id]", params: { id: item.id } })}
+        />
+      </View>
     ),
     [router]
   );
@@ -43,40 +51,48 @@ export default function StoreCategoryScreen() {
 
   const hasSubCategories = (page.storeCategory?.sub_categories?.length ?? 0) > 0;
 
+  const listHeader = (
+    <>
+      <View style={styles.headerWrapper}>
+        <BackButton />
+        <Header showCartButton={false} showIcon={false} />
+      </View>
+
+      <Search
+        value={page.searchQuery}
+        onChangeText={page.setSearchQuery}
+        onClear={() => page.setSearchQuery('')}
+        placeholder={t("list.search_placeholder")}
+        style={styles.search}
+      />
+
+      <Text style={[styles.pageTitle, { color: colors.foreground }]}>
+        {page.pageTitle}
+      </Text>
+
+      {page.isCategoryLoading ? (
+        <SubCategoriesSkeleton />
+      ) : hasSubCategories ? (
+        <SubCategoriesList
+          subCategories={page.storeCategory!.sub_categories!}
+          onPress={page.handleSubCategoryPress}
+          activeSubCategory={page.activeSubCategory}
+        />
+      ) : null}
+
+      {page.isBranchesLoading && <BranchesListSkeleton />}
+    </>
+  );
+
   return (
     <SafeAreaView style={[styles.screen, { backgroundColor: colors.background }]}>
-      <Header />
-
       <FlatList
-        data={page.isInitialLoading ? [] : page.branches}
+        data={page.branches}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        ListHeaderComponent={
-          <>
-            <SearchSection
-              placeholder={t("list.search_placeholder")}
-              editable
-              value={page.searchQuery}
-              onChangeText={page.setSearchQuery}
-            />
-            <Text style={[styles.pageTitle, { color: colors.foreground }]}>
-              {page.pageTitle}
-            </Text>
-            {page.isCategoryPending ? (
-              <SubCategoriesSkeleton />
-            ) : hasSubCategories ? (
-              <SubCategoriesList
-                subCategories={page.storeCategory!.sub_categories!}
-                onPress={page.handleSubCategoryPress}
-                activeSubCategory={page.activeSubCategory}
-              />
-            ) : null}
-            <FilterChips filters={page.filters} onFiltersChange={page.setFilters} />
-            {page.isInitialLoading && <BranchesListSkeleton />}
-          </>
-        }
+        keyExtractor={keyExtractor}
+        ListHeaderComponent={listHeader}
         ListEmptyComponent={
-          !page.isInitialLoading ? (
+          !page.isBranchesLoading ? (
             <View style={styles.emptyContainer}>
               <Ionicons name="storefront-outline" size={48} color={colors.mutedForeground} />
               <Text style={[styles.emptyText, { color: colors.mutedForeground }]}>
@@ -92,13 +108,16 @@ export default function StoreCategoryScreen() {
             <ActivityIndicator style={styles.loadingMore} size="small" color={colors.primary} />
           ) : null
         }
-        ItemSeparatorComponent={() => <View style={{ height: Spacing.tight }} />}
+        ItemSeparatorComponent={ItemSeparator}
         contentContainerStyle={styles.scrollContent}
-        style={page.isPlaceholderData ? styles.placeholderOpacity : undefined}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         onEndReached={page.handleEndReached}
         onEndReachedThreshold={0.5}
+        initialNumToRender={4}
+        maxToRenderPerBatch={4}
+        windowSize={7}
+        removeClippedSubviews
       />
     </SafeAreaView>
   );
@@ -108,15 +127,32 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
   },
+  headerWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingHorizontal: Spacing.md,
+    marginBottom: Spacing.md,
+
+  },
   scrollContent: {
     paddingBottom: Spacing.xl,
-    paddingHorizontal: Spacing.gutter,
+  },
+  cardWrapper: {
+    paddingHorizontal: Spacing.tight,
+  },
+  separator: {
+    height: Spacing.tight,
+  },
+  search: {
+    marginHorizontal: Spacing.md,
+    marginTop: Spacing.xs,
   },
   pageTitle: {
     fontSize: 24,
-    fontWeight: "800",
-    marginTop: Spacing.sm,
-    marginBottom: Spacing.md,
+    fontFamily: FontFamily.bold,
+    paddingHorizontal: Spacing.md,
+    marginTop: Spacing.md,
     textAlign: 'left',
   },
   emptyContainer: {
