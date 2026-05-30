@@ -10,6 +10,9 @@
     "lint": "expo lint"
   },
   "dependencies": {
+    "@buoy-gg/core": "^3.0.1",
+    "@buoy-gg/react-query": "^3.0.1",
+    "@buoy-gg/zustand": "^3.0.1",
     "@expo-google-fonts/cairo": "^0.4.2",
     "@expo-google-fonts/outfit": "^0.4.3",
     "@expo/vector-icons": "^15.0.3",

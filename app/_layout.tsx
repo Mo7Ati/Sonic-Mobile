@@ -1,6 +1,11 @@
 import Bootstrap from '@/components/bootstrap';
 import { CairoFontsToLoad } from '@/constants/fonts';
 import '@/lib/i18n';
+import { useAddressesStore } from '@/stores/addresses-store';
+import { useAppPrefsStore } from '@/stores/app-prefs-store';
+import { useAuthStore } from '@/stores/auth-store';
+import { useCartStore } from '@/stores/cart-store';
+import { FloatingDevTools } from '@buoy-gg/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -22,9 +27,18 @@ export default function RootLayout() {
   const [fontsLoaded, fontsError] = useFonts(CairoFontsToLoad);
   const fontsReady = fontsLoaded || !!fontsError;
 
+  const stores = {
+    authStore: useAuthStore,
+    cartStore: useCartStore,
+    addressStore: useAddressesStore,
+    appPrefsStore: useAppPrefsStore,
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <Bootstrap fontsReady={fontsReady} />
+      <FloatingDevTools zustandStores={stores} />
+
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(onboarding)" options={{ headerShown: false, gestureEnabled: false }} />
