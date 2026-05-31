@@ -22,7 +22,7 @@ export default function useProductPage(productId: number, branchId: number, edit
         if (!editItem?.options_data) return {};
         const map: Record<number, number> = {};
         for (const opt of editItem.options_data) {
-            map[opt.group_id] = opt.item_id;
+            map[opt.group_id] = opt.id;
         }
         return map;
     });
@@ -113,32 +113,16 @@ export default function useProductPage(productId: number, branchId: number, edit
 
         const options = product.options
             .filter((g) => selectedOptions[g.group_id] !== undefined)
-            .map((g) => {
-                const item = g.items.find(
-                    (i) => i.id === selectedOptions[g.group_id],
-                )!;
-                return {
-                    group_id: g.group_id,
-                    group_name: g.group,
-                    item_id: item.id,
-                    item_name: item.name,
-                    price: Number(item.price),
-                };
-            });
+            .map((g) => selectedOptions[g.group_id]);
 
         const additions = product.additions
             .filter((a) => selectedAdditions.has(a.id))
-            .map((a) => ({
-                id: a.id,
-                name: a.name,
-                price: Number(a.price),
-            }));
+            .map((a) => a.id);
 
         return {
             branch_id: branchId,
             product_id: product.id,
             quantity,
-            unit_price: Number(product.price),
             options: options.length > 0 ? options : undefined,
             additions: additions.length > 0 ? additions : undefined,
         };

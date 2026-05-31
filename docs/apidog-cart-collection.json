@@ -1,0 +1,159 @@
+{
+  "info": {
+    "name": "Sonic — Cart Workflow",
+    "description": "Customer cart workflow for the Sonic API. Works for guests via the X-Session-Id header, or for authenticated customers via a Bearer token. Import into Apidog (File > Import > Postman). Set the collection variables (or override per-environment): base_url, session_id, branch_id, product_id, and optionally token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://192.168.1.158:8000/api/customer",
+      "type": "string"
+    },
+    {
+      "key": "session_id",
+      "value": "apidog-test-session-0001",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "branch_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "product_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "item_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Get Cart",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Accept-Language", "value": "en" },
+          { "key": "X-Session-Id", "value": "{{session_id}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/cart",
+          "host": ["{{base_url}}"],
+          "path": ["cart"]
+        },
+        "description": "Returns the current cart (or data: null when empty). Resolved by the customer when authenticated, otherwise by the X-Session-Id header."
+      }
+    },
+    {
+      "name": "2. Add Item",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Capture the most recently added item id so Update/Remove requests can reuse it.",
+              "try {",
+              "  const res = pm.response.json();",
+              "  const items = res && res.data && res.data.items;",
+              "  if (items && items.length) {",
+              "    pm.collectionVariables.set('item_id', String(items[items.length - 1].id));",
+              "    console.log('Captured item_id =', items[items.length - 1].id);",
+              "  }",
+              "} catch (e) {",
+              "  console.log('Could not capture item_id:', e.message);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Accept-Language", "value": "en" },
+          { "key": "X-Session-Id", "value": "{{session_id}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"branch_id\": {{branch_id}},\n  \"product_id\": {{product_id}},\n  \"quantity\": 2,\n  \"unit_price\": 50,\n  \"options\": [\n    {\n      \"group_id\": 1,\n      \"group_name\": \"Size\",\n      \"item_id\": 10,\n      \"item_name\": \"Large\",\n      \"price\": 15\n    }\n  ],\n  \"additions\": [\n    {\n      \"id\": 5,\n      \"name\": \"Extra Cheese\",\n      \"price\": 10\n    }\n  ],\n  \"force_replace\": false\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/cart/items",
+          "host": ["{{base_url}}"],
+          "path": ["cart", "items"]
+        },
+        "description": "Adds an item to the cart. options[] and additions[] are optional. If the cart already belongs to a different branch_id you get a 409 branch_conflict — resend with force_replace: true to clear the old cart and switch branches. total_price is computed server-side as (unit_price + options + additions) * quantity."
+      }
+    },
+    {
+      "name": "3. Update Item Quantity",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Accept-Language", "value": "en" },
+          { "key": "X-Session-Id", "value": "{{session_id}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"quantity\": 3\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/cart/items/{{item_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["cart", "items", "{{item_id}}"]
+        },
+        "description": "Updates the quantity of a cart item (item_id is auto-filled from the Add Item response). The server recalculates total_price."
+      }
+    },
+    {
+      "name": "4. Remove Item",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Accept-Language", "value": "en" },
+          { "key": "X-Session-Id", "value": "{{session_id}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/cart/items/{{item_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["cart", "items", "{{item_id}}"]
+        },
+        "description": "Removes a single cart item. If it was the last item, the whole cart is deleted and data: null is returned."
+      }
+    },
+    {
+      "name": "5. Clear Cart",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Accept-Language", "value": "en" },
+          { "key": "X-Session-Id", "value": "{{session_id}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/cart",
+          "host": ["{{base_url}}"],
+          "path": ["cart"]
+        },
+        "description": "Deletes all items and the cart itself. Always returns success even if there was no cart."
+      }
+    }
+  ]
+}

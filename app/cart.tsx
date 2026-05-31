@@ -29,8 +29,7 @@ export default function CartScreen() {
     const { t } = useTranslation(["cart", "general"]);
     const router = useRouter();
 
-    const cart = useCartStore((s) => s.cart);
-    const isLoading = useCartStore((s) => s.isLoading);
+    const { cart, isLoading } = useCartStore();
     const itemsCount = useCartStore(selectItemsCount);
     const subtotal = useCartStore(selectSubtotal);
     const [notes, setNotes] = useState("");
@@ -316,7 +315,7 @@ function CartItemRow({
         item.compare_price > item.unit_price;
 
     const optionsText = item.options_data
-        ?.map((o) => o.item_name)
+        ?.map((o) => o.name)
         .join(", ");
     const additionsText = item.additions_data
         ?.map((a) => a.name)

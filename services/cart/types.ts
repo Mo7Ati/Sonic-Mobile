@@ -6,10 +6,9 @@ export interface CartBranch {
 }
 
 export interface CartItemOption {
+    id: number;
     group_id: number;
-    group_name: string;
-    item_id: number;
-    item_name: string;
+    name: string;
     price: number;
 }
 
@@ -46,8 +45,7 @@ export interface AddCartItemPayload {
     branch_id: number;
     product_id: number;
     quantity: number;
-    unit_price: number;
-    options?: CartItemOption[];
-    additions?: CartItemAddition[];
+    options?: number[];
+    additions?: number[];
     force_replace?: boolean;
 }

@@ -9,7 +9,10 @@
       "Bash(git *)",
       "Bash(npm *)",
       "Bash(npx *)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(php artisan *)",
+      "Bash(php -l \"Modules/Customer/app/Http/Controllers/CartController.php\")",
+      "Bash(php -l \"Modules/Customer/app/Http/Requests/Cart/AddCartItemRequest.php\")"
     ]
   }
 }
