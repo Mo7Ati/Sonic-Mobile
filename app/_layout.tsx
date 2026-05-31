@@ -26,6 +26,7 @@ export default function RootLayout() {
   const [queryClient] = useState(() => new QueryClient());
   const [fontsLoaded, fontsError] = useFonts(CairoFontsToLoad);
   const fontsReady = fontsLoaded || !!fontsError;
+  const { status } = useAuthStore();
 
   const stores = {
     authStore: useAuthStore,
@@ -49,6 +50,10 @@ export default function RootLayout() {
         <Stack.Screen name="cart" options={{ headerShown: false }} />
         <Stack.Screen name="addresses/index" options={{ headerShown: false }} />
         <Stack.Screen name="addresses/add" options={{ headerShown: false }} />
+
+        <Stack.Protected guard={status === "authenticated"}>
+          <Stack.Screen name="checkout" options={{ headerShown: false }} />
+        </Stack.Protected>
       </Stack>
       <StatusBar style="auto" />
       <Toast />

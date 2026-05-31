@@ -2,6 +2,7 @@ import { getToken, removeToken } from "@/services/secure-store";
 import { splashApi } from "@/services/splash";
 import { useAddressesStore } from "@/stores/addresses-store";
 import { useAuthStore } from "@/stores/auth-store";
+import { useCartStore } from "@/stores/cart-store";
 import { usePlatformConfigStore } from "@/stores/platform-config-store";
 
 /**
@@ -15,6 +16,7 @@ import { usePlatformConfigStore } from "@/stores/platform-config-store";
  *      is stale — wipe it and downgrade to guest.
  *   4. On network failure, fall back to whatever is already persisted: trust
  *      the token if present, otherwise mark as guest.
+ *   5. Whatever the outcome, hydrate the cart for the resolved identity.
  */
 export async function bootstrap() {
     const token = await getToken();
@@ -52,5 +54,12 @@ export async function bootstrap() {
         useAuthStore.setState({
             status: token ? "authenticated" : "guest",
         });
+    } finally {
+        // Hydrate the cart once identity is resolved. Runs on every path —
+        // user, guest, and the stale-token downgrade above — so a returning
+        // user or guest opens the app with their server cart already loaded.
+        // The API interceptor picks the bearer token or guest session id based
+        // on the auth state we just set; fetchCart swallows its own errors.
+        useCartStore.getState().fetchCart();
     }
 }

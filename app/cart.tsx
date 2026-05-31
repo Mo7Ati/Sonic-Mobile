@@ -226,7 +226,11 @@ export default function CartScreen() {
                 <View style={styles.buttonsRow}>
                     <Pressable
                         onPress={() => {
-                            
+                            console.log("going to checkout");
+
+                            router.push({
+                                pathname: "/checkout",
+                            });
                         }}
                         style={[
                             styles.checkoutButton,
