@@ -4,7 +4,8 @@ import { useCartStore } from "@/stores/cart-store";
 import { useRouter } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, ScrollView } from "react-native";
+import { AppDialog } from "@/components/ui/app-dialog";
+import { ScrollView } from "react-native";
 
 export default function useProductPage(productId: number, branchId: number, editCartItemId?: number) {
     const { data: product, isPending, error } = useProductDetail(productId);
@@ -138,6 +139,7 @@ export default function useProductPage(productId: number, branchId: number, edit
         }
 
         const result = await addItem(payload);
+        
 
         if (result.success) {
             router.back();
@@ -145,7 +147,7 @@ export default function useProductPage(productId: number, branchId: number, edit
         }
 
         if (result.conflict) {
-            Alert.alert(
+            AppDialog.alert(
                 t("cart:branch_conflict_title"),
                 t("cart:branch_conflict_message"),
                 [

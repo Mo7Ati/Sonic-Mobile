@@ -1,4 +1,5 @@
 import Bootstrap from '@/components/bootstrap';
+import { AppDialogHost } from '@/components/ui/app-dialog';
 import { CairoFontsToLoad } from '@/constants/fonts';
 import '@/lib/i18n';
 import { useAddressesStore } from '@/stores/addresses-store';
@@ -57,6 +58,7 @@ export default function RootLayout() {
         </Stack.Protected>
       </Stack>
       <StatusBar style="auto" />
+      <AppDialogHost />
       <Toast />
     </QueryClientProvider>
   );

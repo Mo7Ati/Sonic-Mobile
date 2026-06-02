@@ -12,7 +12,20 @@
       "Bash(grep:*)",
       "Bash(php artisan *)",
       "Bash(php -l \"Modules/Customer/app/Http/Controllers/CartController.php\")",
-      "Bash(php -l \"Modules/Customer/app/Http/Requests/Cart/AddCartItemRequest.php\")"
+      "Bash(php -l \"Modules/Customer/app/Http/Requests/Cart/AddCartItemRequest.php\")",
+      "WebFetch(domain:api.anthropic.com)",
+      "Read(//c/c/Users/Dawly/projects/Laravel/Sonic/Modules/Cashier/app/Http/Controllers/**)",
+      "Read(//c/c/Users/Dawly/projects/Laravel/Sonic/Modules/Cashier/app/Http/Resources/**)",
+      "Read(//c/c/Users/Dawly/projects/Laravel/Sonic/Modules/Cashier/routes/**)",
+      "Read(//c/c/Users/Dawly/projects/Laravel/Sonic/app/Enums/**)",
+      "Read(//c/c/Users/Dawly/projects/Laravel/Sonic/app/**)",
+      "Read(//c/c/Users/Dawly/projects/Laravel/Sonic/Modules/Cashier/app/Http/Requests/Orders/**)",
+      "Read(//c/c/Users/Dawly/projects/Laravel/Sonic/Modules/Cashier/app/Providers/**)",
+      "Read(//c/c/Users/Dawly/projects/Laravel/**)",
+      "Read(//c/c/Users/Dawly/projects/Laravel/Sonic/**)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:5181/__TRACKED_VAR__)",
+      "Read(//tmp/**)",
+      "Bash(pkill -f \"vite\")"
     ]
   }
 }
