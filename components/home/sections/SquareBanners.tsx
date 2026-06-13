@@ -5,6 +5,7 @@ import { Image } from 'expo-image';
 import type { Section, SectionItem } from '@/services/home/home-types';
 import { SectionHeader } from './SectionHeader';
 import { IMAGE_BLURHASH } from '@/constants/placeholders';
+import { useBanner } from '@/hooks/use-banner';
 
 interface SquareBannersProps {
   section: Section;
@@ -18,6 +19,7 @@ export const SquareBanners: React.FC<SquareBannersProps> = ({
   section,
 }) => {
   const items = section.data as SectionItem[];
+  const { openBanner } = useBanner();
   if (items.length === 0) return null;
 
   return (
@@ -27,6 +29,7 @@ export const SquareBanners: React.FC<SquareBannersProps> = ({
         data={items}
         renderItem={({ item }) => (
           <Pressable
+            onPress={() => openBanner(item)}
             style={({ pressed }) => [
               styles.card,
               { width: ITEM_SIZE, height: ITEM_SIZE },

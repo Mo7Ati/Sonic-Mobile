@@ -4,6 +4,7 @@ import { Image } from 'expo-image';
 import Carousel from 'react-native-reanimated-carousel';
 import type { Section, SectionItem } from '@/services/home/home-types';
 import { IMAGE_BLURHASH } from '@/constants/placeholders';
+import { useBanner } from '@/hooks/use-banner';
 
 const { width } = Dimensions.get('window');
 
@@ -13,6 +14,7 @@ interface MainBannerProps {
 
 export const MainBanner: React.FC<MainBannerProps> = ({ section }) => {
   const items = section.data as SectionItem[];
+  const { openBanner } = useBanner();
   if (!items.length) return null;
 
   const multipleSlides = items.length > 1;
@@ -41,7 +43,7 @@ export const MainBanner: React.FC<MainBannerProps> = ({ section }) => {
         renderItem={({ item }) => (
           <Pressable
             style={styles.item}
-            onPress={() => console.log('Banner pressed:', item.id)}
+            onPress={() => openBanner(item)}
           >
             <Image
               source={item.data.image}

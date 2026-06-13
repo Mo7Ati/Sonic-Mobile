@@ -1,7 +1,7 @@
 import { Address } from "@/services/addresses/types";
 import { useTranslation } from "react-i18next";
 
-
+// addresses utils
 
 export const getHeaderAddressSummary = (address: Address | null): string | null => {
     if (!address) return null;

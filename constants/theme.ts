@@ -11,7 +11,7 @@ export const Colors = {
   popover: '#ffffff',
   popoverForeground: '#262626',
 
-  primary: '#1B998B',
+  primary: '#F59E0B',
   primaryForeground: '#ffffff',
 
   secondary: '#f3f4f6',

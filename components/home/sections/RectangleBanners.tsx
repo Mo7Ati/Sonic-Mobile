@@ -4,6 +4,7 @@ import { Image } from 'expo-image';
 import { SectionHeader } from './SectionHeader';
 import type { Section, SectionItem } from '@/services/home/home-types';
 import { IMAGE_BLURHASH } from '@/constants/placeholders';
+import { useBanner } from '@/hooks/use-banner';
 
 const { width } = Dimensions.get('window');
 const ITEM_HEIGHT = 140;
@@ -14,6 +15,7 @@ interface RectangleBannersProps {
 
 export const RectangleBanners: React.FC<RectangleBannersProps> = ({ section }) => {
   const items = section.data as SectionItem[];
+  const { openBanner } = useBanner();
   if (!items.length) return null;
 
   return (
@@ -24,7 +26,7 @@ export const RectangleBanners: React.FC<RectangleBannersProps> = ({ section }) =
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <Pressable
-            onPress={() => console.log('Banner pressed:', item.id)}
+            onPress={() => openBanner(item)}
             style={styles.card}
           >
             <Image
