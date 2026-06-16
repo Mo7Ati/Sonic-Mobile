@@ -1,5 +1,5 @@
 import Header from '@/components/settings/header';
-import LanguageSwitch from '@/components/settings/language-switch';
+import { LanguageSelector } from '@/components/settings/language-selector';
 import { MenuGroup, type MenuItem } from '@/components/settings/menu-group';
 import { UserCard } from '@/components/settings/user-card';
 import { BorderRadius, Colors, Spacing } from '@/constants/theme';
@@ -8,7 +8,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from '@react-navigation/elements';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,6 +21,7 @@ export default function SettingsScreen() {
     const router = useRouter();
     const { isAuthenticated, logout } = useAuth();
     const [loggingOut, setLoggingOut] = useState(false);
+    const [languageVisible, setLanguageVisible] = useState(false);
 
     const accountItems: MenuItem[] = [
         {
@@ -34,6 +35,12 @@ export default function SettingsScreen() {
             label: t('addresses:title'),
             icon: 'location-outline',
             onPress: () => router.push('/addresses'),
+        },
+        {
+            key: 'language',
+            label: t('general:language'),
+            icon: 'globe-outline',
+            onPress: () => setLanguageVisible(true),
         },
     ];
 
@@ -74,25 +81,27 @@ export default function SettingsScreen() {
                 <Header />
 
                 {/* User Card */}
-                <UserCard />
+                {/* <UserCard /> */}
 
                 {/* Account Menu Group */}
-                <MenuGroup title={t('settings:sections.account')} items={accountItems} />
-
-                {/* Language Switch */}
-                <LanguageSwitch />
+                <MenuGroup items={accountItems} />
 
 
                 {/* Logout Button */}
-                {isAuthenticated && (
+                {/* {isAuthenticated && (
                     <Pressable style={styles.logoutButton} onPress={confirmLogout}>
                         <Text style={styles.logoutButtonText}>{t('settings:logout.action')}</Text>
                     </Pressable>
-                )}
+                )} */}
 
 
                 <View style={styles.footerSpacer} />
             </ScrollView>
+
+            <LanguageSelector
+                visible={languageVisible}
+                onClose={() => setLanguageVisible(false)}
+            />
         </SafeAreaView >
     );
 }

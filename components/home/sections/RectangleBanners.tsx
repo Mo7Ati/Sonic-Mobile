@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Pressable, StyleSheet, View, Dimensions } from 'react-native';
+import { Pressable, StyleSheet, View, Dimensions } from 'react-native';
 import { Image } from 'expo-image';
 import { SectionHeader } from './SectionHeader';
 import type { Section, SectionItem } from '@/services/home/home-types';
@@ -21,28 +21,24 @@ export const RectangleBanners: React.FC<RectangleBannersProps> = ({ section }) =
   return (
     <View style={styles.section}>
       <SectionHeader title={section.title} description={section.description} />
-      <FlatList
-        data={items}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <Pressable
-            onPress={() => openBanner(item)}
-            style={styles.card}
-          >
-            <Image
-              source={item.data.image}
-              style={styles.image}
-              contentFit="cover"
-              cachePolicy="memory-disk"
-              transition={150}
-              recyclingKey={String(item.id)}
-              placeholder={{ blurhash: IMAGE_BLURHASH }}
-              placeholderContentFit="cover"
-            />
-          </Pressable>
-        )}
-        showsVerticalScrollIndicator={false}
-      />
+      {items.map((item) => (
+        <Pressable
+          key={item.id.toString()}
+          onPress={() => openBanner(item)}
+          style={styles.card}
+        >
+          <Image
+            source={item.data.image}
+            style={styles.image}
+            contentFit="cover"
+            cachePolicy="memory-disk"
+            transition={150}
+            recyclingKey={String(item.id)}
+            // placeholder={{ blurhash: IMAGE_BLURHASH }}
+            // placeholderContentFit="cover"
+          />
+        </Pressable>
+      ))}
     </View>
   );
 };

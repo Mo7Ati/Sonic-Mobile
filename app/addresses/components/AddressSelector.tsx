@@ -64,7 +64,7 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
                 {/* Text block */}
                 <View style={styles.itemText}>
                     <Text style={[styles.itemName, { color: colors.foreground, fontFamily: font.bold }]}>
-                        {item.name}
+                        {item.name.length > 25 ? item.name.slice(0, 25) + '...' : item.name}
                     </Text>
                     <Text
                         style={[styles.itemSummary, { color: colors.mutedForeground, fontFamily: font.regular }]}

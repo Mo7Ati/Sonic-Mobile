@@ -29,17 +29,17 @@ export default function RootLayout() {
   const fontsReady = fontsLoaded || !!fontsError;
   const { status } = useAuthStore();
 
-  const stores = {
-    authStore: useAuthStore,
-    cartStore: useCartStore,
-    addressStore: useAddressesStore,
-    appPrefsStore: useAppPrefsStore,
-  };
+  // const stores = {
+  //   authStore: useAuthStore,
+  //   cartStore: useCartStore,
+  //   addressStore: useAddressesStore,
+  //   appPrefsStore: useAppPrefsStore,
+  // };
 
   return (
     <QueryClientProvider client={queryClient}>
       <Bootstrap fontsReady={fontsReady} />
-      <FloatingDevTools zustandStores={stores} />
+      {/* <FloatingDevTools zustandStores={stores} /> */}
 
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

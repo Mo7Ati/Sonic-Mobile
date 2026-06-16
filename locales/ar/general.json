@@ -1,4 +1,5 @@
 {
+    "language": "اللغة",
     "actions": {
         "retry": "إعادة المحاولة",
         "go_back": "رجوع",

@@ -1,27 +1,24 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import {
-  Button,
   FlatList,
   Pressable,
   RefreshControl,
   StyleSheet,
   Text,
-  View,
+  View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTranslation } from 'react-i18next';
 
 import { Header } from '@/components/home/Header';
+import { HomePageSkeleton } from '@/components/home/HomePageSkeleton';
+import { SectionRenderer } from '@/components/home/SectionRenderer';
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useHomeSections } from '@/hooks/react-query-hooks/use-home-sections';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { parseApiError } from '@/lib/api';
-import type { Section } from '@/services/home/home-types';
-import { useAppPrefsStore, useLastSelectedAddress } from '@/stores/app-prefs-store';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SectionRenderer } from '@/components/home/SectionRenderer';
-import { HomePageSkeleton } from '@/components/home/HomePageSkeleton';
+import { useLastSelectedAddress } from '@/stores/app-prefs-store';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -30,33 +27,16 @@ export default function HomeScreen() {
 
   const lastSelectedAddress = useLastSelectedAddress();
 
-  useEffect(() => {
-    refetch();
-  }, [lastSelectedAddress]);
-
   const {
     data: sections,
-    isPending,
-    isRefetching,
+    isFetching,
     error,
     refetch,
-  } = useHomeSections();
+  } = useHomeSections(lastSelectedAddress?.id);
 
-  const renderSection = useCallback(
-    ({ item }: { item: Section }) => (
-      <>
-        <SectionRenderer section={item} />
-        {/* <Button title="clear storage" onPress={async () => {
-          // setOnboardingCompleted(false);
-          await AsyncStorage.clear();
-        }} /> */}
-      </>
-    ),
-    [],
-  );
 
   const renderContent = () => {
-    if (isPending || isRefetching) {
+    if (isFetching) {
       return <>
         <Header />
         <HomePageSkeleton />
@@ -77,20 +57,19 @@ export default function HomeScreen() {
     return (
       <FlatList
         data={sections}
-        renderItem={renderSection}
+        renderItem={({ item }) => <SectionRenderer section={item} />}
         keyExtractor={(item) => item.id.toString()}
-        showsVerticalScrollIndicator={true}
-        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={<Header />}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefetching}
-            onRefresh={() => void refetch()}
-            tintColor={colors.primary}
-            progressBackgroundColor={colors.background}
-            progressViewOffset={insets.top}
-          />
-        }
+        // refreshControl={
+        //   <RefreshControl
+        //     refreshing={isFetching}
+        //     onRefresh={() => void refetch()}
+        //     tintColor={colors.primary}
+        //     progressBackgroundColor={colors.background}
+        //     progressViewOffset={insets.top}
+        //   />
+        // }
         ListEmptyComponent={<Text style={[styles.emptyText, { color: colors.mutedForeground }]}>{t('general:empty.nothing_to_show')}</Text>}
       />
     );
@@ -106,10 +85,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-  },
-  listContent: {
-    paddingBottom: Spacing.lg,
-    paddingTop: Spacing.sm,
   },
   errorBox: {
     flex: 1,

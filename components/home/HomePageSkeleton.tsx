@@ -1,142 +1,54 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useMemo, useRef } from 'react';
 import {
   Animated,
   Dimensions,
   Easing,
   I18nManager,
-  ScrollView,
   StyleSheet,
   View,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { BorderRadius, Spacing } from '@/constants/theme';
+import { LinearGradient } from 'expo-linear-gradient';
+
+import { BorderRadius, Colors, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const WIN_W = Dimensions.get('window').width;
+// Width of the moving highlight strip; shared between the gradient and the
+// translate range so the sweep lines up with the bone edges.
+const STRIP_WIDTH = WIN_W * 0.42;
 
-const CATEGORY_GRID_GAP = Spacing.sm;
-const CATEGORY_GRID_COLS = 3;
+// Dimensions mirrored from the real home sections so the skeleton settles into
+// place without a layout jump once content arrives.
+const BANNER_HEIGHT = 160;
+const CATEGORY_ICON = 80;
+const CATEGORY_TILE = 88;
+const SQUARE_SIZE = 130;
+const RECTANGLE_HEIGHT = 140;
 
-function getCategoryGridMetrics(screenWidth: number) {
-  const inner = screenWidth - Spacing.gutter * 2;
-  const tileW = (inner - CATEGORY_GRID_GAP * (CATEGORY_GRID_COLS - 1)) / CATEGORY_GRID_COLS;
-  const icon = Math.min(100, Math.floor(tileW) - 4);
-  return { tileW, icon };
-}
-
-type ShimmerBoneProps = {
-  height: number;
-  width?: number | `${number}%`;
-  borderRadius?: number;
-  baseColor: string;
+type Shimmer = {
+  bone: string;
+  boneMuted: string;
   highlight: string;
   translateX: Animated.AnimatedInterpolation<number>;
-  style?: StyleProp<ViewStyle>;
-  children?: React.ReactNode;
 };
 
-function ShimmerBone({
-  height,
-  width = '100%',
-  borderRadius = BorderRadius.xl,
-  baseColor,
-  highlight,
-  translateX,
-  style,
-  children,
-}: ShimmerBoneProps) {
-  return (
-    <View
-      style={[{ height, width, borderRadius, backgroundColor: baseColor, overflow: 'hidden' }, style]}
-    >
-      {children}
-      <Animated.View
-        pointerEvents="none"
-        style={[StyleSheet.absoluteFillObject, { transform: [{ translateX }] }]}
-      >
-        <LinearGradient
-          colors={['transparent', highlight, 'transparent']}
-          locations={[0.25, 0.5, 0.75]}
-          start={{ x: 0, y: 0.5 }}
-          end={{ x: 1, y: 0.5 }}
-          style={{ width: WIN_W * 0.42, height: '100%' }}
-        />
-      </Animated.View>
-    </View>
-  );
-}
-
-function SectionHeaderSkeleton({
-  baseColor,
-  mutedColor,
-  highlight,
-  translateX,
-}: {
-  baseColor: string;
-  mutedColor: string;
-  highlight: string;
-  translateX: Animated.AnimatedInterpolation<number>;
-}) {
-  return (
-    <View style={styles.sectionHeaderRow}>
-      <View style={styles.titleBlock}>
-        <ShimmerBone
-          height={16}
-          width={148}
-          borderRadius={BorderRadius.md}
-          baseColor={baseColor}
-          highlight={highlight}
-          translateX={translateX}
-        />
-        <View style={{ height: Spacing.xs / 2 }} />
-        <ShimmerBone
-          height={11}
-          width={104}
-          borderRadius={BorderRadius.md}
-          baseColor={mutedColor}
-          highlight={highlight}
-          translateX={translateX}
-        />
-      </View>
-      <View style={styles.seeAllBone}>
-        <ShimmerBone
-          height={12}
-          width={52}
-          borderRadius={BorderRadius.sm}
-          baseColor={baseColor}
-          highlight={highlight}
-          translateX={translateX}
-        />
-        <ShimmerBone
-          height={14}
-          width={14}
-          borderRadius={BorderRadius.sm}
-          baseColor={baseColor}
-          highlight={highlight}
-          translateX={translateX}
-          style={{ marginStart: Spacing.xs / 2 }}
-        />
-      </View>
-    </View>
-  );
-}
-
-export const HomePageSkeleton: React.FC = () => {
+/** Drives a single looping shine that every bone shares. */
+function useShimmer(): Shimmer {
   const { colors } = useAppTheme();
   const shine = useRef(new Animated.Value(0)).current;
-
-  const bone = colors.border;
-  const boneMuted = colors.muted;
-  const highlight = 'rgba(255,255,255,0.55)';
 
   useEffect(() => {
     const loop = Animated.loop(
       Animated.timing(shine, {
         toValue: 1,
-        duration: 1350,
-        easing: Easing.inOut(Easing.quad),
+        duration: 1200,
+        // Linear keeps the highlight moving at a steady pace the whole cycle.
+        // ease-in/out parked it off-screen for ~half the cycle, which read as
+        // "frozen" on fast loads (e.g. a warm refetch after an address change).
+        easing: Easing.linear,
         useNativeDriver: true,
       }),
     );
@@ -144,342 +56,236 @@ export const HomePageSkeleton: React.FC = () => {
     return () => loop.stop();
   }, [shine]);
 
-  const sweep = WIN_W * 1.15;
   const translateX = useMemo(
     () =>
       shine.interpolate({
         inputRange: [0, 1],
-        outputRange: I18nManager.isRTL ? [sweep * 0.35, -sweep] : [-sweep, sweep * 0.35],
+        // Start just off the leading edge (strip's trailing edge at 0) and
+        // sweep fully past the widest bone, so motion is visible from frame 1.
+        outputRange: I18nManager.isRTL ? [WIN_W, -STRIP_WIDTH] : [-STRIP_WIDTH, WIN_W],
       }),
-    [shine, sweep],
+    [shine],
   );
 
-  const { tileW: categoryTileW, icon: categoryIconSize } = getCategoryGridMetrics(WIN_W);
+  return {
+    bone: colors.border,
+    boneMuted: colors.muted,
+    highlight: 'rgba(255,255,255,0.55)',
+    translateX,
+  };
+}
 
+type ShimmerBoneProps = {
+  shimmer: Shimmer;
+  height: number;
+  width?: number | `${number}%`;
+  borderRadius?: number;
+  /** Use the lighter `boneMuted` tone (for image-like blocks). */
+  muted?: boolean;
+  style?: StyleProp<ViewStyle>;
+};
+
+function ShimmerBone({
+  shimmer,
+  height,
+  width = '100%',
+  borderRadius = BorderRadius.xl,
+  muted,
+  style,
+}: ShimmerBoneProps) {
   return (
     <View
-      style={styles.screen}
-      accessibilityRole="progressbar"
-      accessibilityLabel="Loading"
+      style={[
+        {
+          height,
+          width,
+          borderRadius,
+          backgroundColor: muted ? shimmer.boneMuted : shimmer.bone,
+          overflow: 'hidden',
+        },
+        style,
+      ]}
     >
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+      <Animated.View
+        pointerEvents="none"
+        style={[StyleSheet.absoluteFillObject, { transform: [{ translateX: shimmer.translateX }] }]}
       >
-        {/* Search (matches SearchSection) */}
-        {/* <View style={styles.searchWrap}>
-          <View style={[styles.searchBar, { borderColor: colors.border }]}>
-            <ShimmerBone
-              height={18}
-              width={18}
-              borderRadius={BorderRadius.full}
-              baseColor={boneMuted}
-              highlight={highlight}
-              translateX={translateX}
-            />
-            <View style={styles.searchInputSlot}>
-              <ShimmerBone
-                height={14}
-                width="100%"
-                borderRadius={BorderRadius.md}
-                baseColor={boneMuted}
-                highlight={highlight}
-                translateX={translateX}
-              />
-            </View>
-            <View style={[styles.searchDivider, { backgroundColor: colors.border }]} />
-            <ShimmerBone
-              height={18}
-              width={18}
-              borderRadius={BorderRadius.full}
-              baseColor={boneMuted}
-              highlight={highlight}
-              translateX={translateX}
-            />
-          </View>
-        </View> */}
-
-        {/* Hero banner (matches MainBanner carousel item) */}
-        <View style={styles.bannerSection}>
-          <ShimmerBone
-            height={160}
-            width="100%"
-            borderRadius={BorderRadius['2xl']}
-            baseColor={boneMuted}
-            highlight={highlight}
-            translateX={translateX}
-            style={styles.bannerInner}
-          />
-        </View>
-
-        {/* Categories row */}
-        <View style={styles.sectionBlock}>
-          <SectionHeaderSkeleton
-            baseColor={bone}
-            mutedColor={boneMuted}
-            highlight={highlight}
-            translateX={translateX}
-          />
-          <View style={[styles.categoryGridWrap, { paddingHorizontal: Spacing.gutter }]}>
-            {[0, 1, 2, 3, 4, 5].map((i) => (
-              <View key={i} style={[styles.categoryItem, { width: categoryTileW }]}>
-                <ShimmerBone
-                  height={categoryIconSize}
-                  width={categoryIconSize}
-                  borderRadius={BorderRadius['2xl']}
-                  baseColor={boneMuted}
-                  highlight={highlight}
-                  translateX={translateX}
-                />
-                <ShimmerBone
-                  height={11}
-                  width="78%"
-                  borderRadius={BorderRadius.md}
-                  baseColor={bone}
-                  highlight={highlight}
-                  translateX={translateX}
-                  style={{ marginTop: Spacing.sm }}
-                />
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {/* Promo tiles */}
-        <View style={styles.sectionBlock}>
-          <SectionHeaderSkeleton
-            baseColor={bone}
-            mutedColor={boneMuted}
-            highlight={highlight}
-            translateX={translateX}
-          />
-          <View style={styles.gridRow}>
-            {[0, 1, 2].map((i) => (
-              <ShimmerBone
-                key={i}
-                height={96}
-                width="100%"
-                borderRadius={BorderRadius.xl}
-                baseColor={boneMuted}
-                highlight={highlight}
-                translateX={translateX}
-                style={styles.gridCell}
-              />
-            ))}
-          </View>
-        </View>
-
-        {/* Branch cards (horizontal, matches BranchCard width) */}
-        <View style={styles.sectionBlock}>
-          <SectionHeaderSkeleton
-            baseColor={bone}
-            mutedColor={boneMuted}
-            highlight={highlight}
-            translateX={translateX}
-          />
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.branchListContent}
-          >
-            {[0, 1, 2].map((i) => (
-              <View key={i} style={[styles.branchCard, { borderColor: colors.border }]}>
-                <View style={styles.branchTop}>
-                  <ShimmerBone
-                    height={48}
-                    width={48}
-                    borderRadius={BorderRadius.xl}
-                    baseColor={boneMuted}
-                    highlight={highlight}
-                    translateX={translateX}
-                  />
-                  <View style={styles.branchTextCol}>
-                    <ShimmerBone
-                      height={14}
-                      width="100%"
-                      borderRadius={BorderRadius.md}
-                      baseColor={bone}
-                      highlight={highlight}
-                      translateX={translateX}
-                    />
-                    <ShimmerBone
-                      height={10}
-                      width="78%"
-                      borderRadius={BorderRadius.md}
-                      baseColor={boneMuted}
-                      highlight={highlight}
-                      translateX={translateX}
-                    />
-                  </View>
-                </View>
-                <View style={[styles.branchMeta, { borderTopColor: colors.border }]}>
-                  <ShimmerBone
-                    height={10}
-                    width={44}
-                    borderRadius={BorderRadius.md}
-                    baseColor={bone}
-                    highlight={highlight}
-                    translateX={translateX}
-                  />
-                  <ShimmerBone
-                    height={10}
-                    width={56}
-                    borderRadius={BorderRadius.md}
-                    baseColor={boneMuted}
-                    highlight={highlight}
-                    translateX={translateX}
-                  />
-                  <ShimmerBone
-                    height={10}
-                    width={40}
-                    borderRadius={BorderRadius.md}
-                    baseColor={bone}
-                    highlight={highlight}
-                    translateX={translateX}
-                  />
-                </View>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
-
-        {/* Extra list-style rows */}
-        <View style={styles.sectionBlock}>
-          <SectionHeaderSkeleton
-            baseColor={bone}
-            mutedColor={boneMuted}
-            highlight={highlight}
-            translateX={translateX}
-          />
-          <View style={styles.listRows}>
-            {[0, 1, 2].map((i) => (
-              <ShimmerBone
-                key={i}
-                height={72}
-                width="100%"
-                borderRadius={BorderRadius.xl}
-                baseColor={boneMuted}
-                highlight={highlight}
-                translateX={translateX}
-                style={{ marginTop: i === 0 ? 0 : Spacing.sm + Spacing.xs }}
-              />
-            ))}
-          </View>
-        </View>
-      </ScrollView>
+        <LinearGradient
+          colors={['transparent', shimmer.highlight, 'transparent']}
+          locations={[0.25, 0.5, 0.75]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={styles.gradient}
+        />
+      </Animated.View>
     </View>
+  );
+}
+
+/** Title + optional description bones, matching SectionHeader spacing. */
+function SectionHeaderSkeleton({
+  shimmer,
+  withDescription,
+}: {
+  shimmer: Shimmer;
+  withDescription?: boolean;
+}) {
+  return (
+    <View style={styles.headerRow}>
+      <ShimmerBone shimmer={shimmer} height={16} width="42%" borderRadius={BorderRadius.md} />
+      {withDescription ? (
+        <ShimmerBone
+          shimmer={shimmer}
+          height={11}
+          width="64%"
+          borderRadius={BorderRadius.md}
+          muted
+          style={styles.headerDescription}
+        />
+      ) : null}
+    </View>
+  );
+}
+
+function MainBannerSkeleton({ shimmer }: { shimmer: Shimmer }) {
+  return (
+    <View style={styles.bannerSection}>
+      <ShimmerBone
+        shimmer={shimmer}
+        height={BANNER_HEIGHT}
+        borderRadius={BorderRadius['2xl']}
+        muted
+      />
+    </View>
+  );
+}
+
+function StoreCategoriesSkeleton({ shimmer }: { shimmer: Shimmer }) {
+  return (
+    <View style={styles.section}>
+      <SectionHeaderSkeleton shimmer={shimmer} />
+      <View style={styles.categoryRow}>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <View key={i} style={styles.categoryTile}>
+            <ShimmerBone
+              shimmer={shimmer}
+              height={CATEGORY_ICON}
+              width={CATEGORY_ICON}
+              borderRadius={BorderRadius['2xl']}
+              muted
+            />
+            <ShimmerBone
+              shimmer={shimmer}
+              height={10}
+              width={56}
+              borderRadius={BorderRadius.md}
+              style={styles.categoryLabel}
+            />
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function SquareBannersSkeleton({ shimmer }: { shimmer: Shimmer }) {
+  return (
+    <View style={styles.section}>
+      <SectionHeaderSkeleton shimmer={shimmer} withDescription />
+      <View style={styles.squareRow}>
+        {Array.from({ length: 3 }).map((_, i) => (
+          <ShimmerBone
+            key={i}
+            shimmer={shimmer}
+            height={SQUARE_SIZE}
+            width={SQUARE_SIZE}
+            borderRadius={BorderRadius['2xl']}
+            muted
+          />
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function RectangleBannerSkeleton({ shimmer }: { shimmer: Shimmer }) {
+  return (
+    <View style={styles.section}>
+      <SectionHeaderSkeleton shimmer={shimmer} />
+      <View style={styles.rectangleWrap}>
+        <ShimmerBone
+          shimmer={shimmer}
+          height={RECTANGLE_HEIGHT}
+          borderRadius={BorderRadius['2xl']}
+          muted
+        />
+      </View>
+    </View>
+  );
+}
+
+export const HomePageSkeleton: React.FC = () => {
+  const shimmer = useShimmer();
+
+  return (
+    <>
+      {/* <SearchSkeleton shimmer={shimmer} /> */}
+      <MainBannerSkeleton shimmer={shimmer} />
+      <StoreCategoriesSkeleton shimmer={shimmer} />
+      <SquareBannersSkeleton shimmer={shimmer} />
+      <RectangleBannerSkeleton shimmer={shimmer} />
+    </>
   );
 };
 
-const CARD_W = 272;
-
 const styles = StyleSheet.create({
-  screen: {
+  container: {
     flex: 1,
+    backgroundColor: Colors.background,
   },
-  scrollContent: {
-    paddingBottom: Spacing.lg,
-    paddingTop: Spacing.sm,
+  gradient: {
+    width: STRIP_WIDTH,
+    height: '100%',
+  },
+  headerRow: {
+    marginBottom: Spacing.tight,
+    paddingHorizontal: Spacing.gutter,
+    alignItems: 'flex-start',
+  },
+  headerDescription: {
+    marginTop: Spacing.narrow,
   },
   searchWrap: {
     marginBottom: Spacing.tight,
-    paddingHorizontal: Spacing.gutter,
-  },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: BorderRadius.xl,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.tight,
-  },
-  searchInputSlot: {
-    flex: 1,
-    minWidth: 0,
-    marginStart: Spacing.sm,
-    justifyContent: 'center',
-  },
-  searchDivider: {
-    height: 28,
-    width: 1,
-    marginHorizontal: Spacing.sm + Spacing.xs,
-  },
-  listRows: {
     paddingHorizontal: Spacing.gutter,
   },
   bannerSection: {
     marginBottom: Spacing.md,
     paddingHorizontal: Spacing.md,
   },
-  bannerInner: {
-    width: '100%',
-  },
-  sectionBlock: {
+  section: {
     marginBottom: Spacing.md,
   },
-  sectionHeaderRow: {
-    marginBottom: Spacing.tight,
+  categoryRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: Spacing.gutter,
-  },
-  titleBlock: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    flexShrink: 1,
-    marginEnd: Spacing.sm,
-  },
-  seeAllBone: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  categoryGridWrap: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: CATEGORY_GRID_GAP,
-  },
-  categoryItem: {
-    alignItems: 'center',
-  },
-  gridRow: {
-    flexDirection: 'row',
-    gap: Spacing.sm + Spacing.xs,
-    paddingHorizontal: Spacing.gutter,
-  },
-  gridCell: {
-    flex: 1,
-  },
-  branchListContent: {
-    paddingHorizontal: Spacing.gutter,
-    flexDirection: 'row',
-  },
-  branchCard: {
-    width: CARD_W,
-    marginEnd: Spacing.tight,
-    borderRadius: BorderRadius['2xl'],
-    borderWidth: StyleSheet.hairlineWidth,
-    padding: Spacing.tight,
+    gap: Spacing.sm,
     overflow: 'hidden',
   },
-  branchTop: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: Spacing.sm + Spacing.xs,
-  },
-  branchTextCol: {
-    flex: 1,
-    minWidth: 0,
-    gap: Spacing.xs,
-    justifyContent: 'center',
-  },
-  branchMeta: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  categoryTile: {
+    width: CATEGORY_TILE,
     alignItems: 'center',
-    gap: Spacing.sm + Spacing.xs,
-    marginTop: Spacing.sm + Spacing.xs,
-    paddingTop: Spacing.sm + Spacing.xs,
-    borderTopWidth: StyleSheet.hairlineWidth,
+  },
+  categoryLabel: {
+    marginTop: Spacing.sm,
+  },
+  squareRow: {
+    flexDirection: 'row',
+    paddingHorizontal: Spacing.gutter,
+    gap: Spacing.tight,
+    overflow: 'hidden',
+  },
+  rectangleWrap: {
+    paddingHorizontal: Spacing.md,
   },
 });

@@ -38,6 +38,7 @@ const headerStyles = StyleSheet.create({
     settingsHeaderContent: {
         flex: 1,
         gap: Spacing.xs,
+        alignItems: 'flex-start',
     },
     settingsHeaderTitle: {
         fontSize: 24,

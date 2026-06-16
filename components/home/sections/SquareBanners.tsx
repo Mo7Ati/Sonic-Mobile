@@ -42,8 +42,8 @@ export const SquareBanners: React.FC<SquareBannersProps> = ({
               cachePolicy="memory-disk"
               transition={150}
               recyclingKey={String(item.id)}
-              placeholder={{ blurhash: IMAGE_BLURHASH }}
-              placeholderContentFit="cover"
+              // placeholder={{ blurhash: IMAGE_BLURHASH }}
+              // placeholderContentFit="cover"
             />
           </Pressable>
         )}

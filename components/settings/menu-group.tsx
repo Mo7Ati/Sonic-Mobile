@@ -1,4 +1,5 @@
-import { BorderRadius, Spacing } from '@/constants/theme';
+import { FontFamily } from '@/constants/fonts';
+import { BorderRadius, Colors, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { Ionicons } from '@expo/vector-icons';
 import { Fragment } from 'react';
@@ -18,99 +19,49 @@ interface MenuGroupProps {
 }
 
 export function MenuGroup({ title, items }: MenuGroupProps) {
-    const { colors, font } = useAppTheme();
+    const { colors } = useAppTheme();
 
     return (
-        <View style={styles.container}>
-            {title && (
-                <Text
-                    style={[
-                        styles.title,
-                        { color: colors.foreground, fontFamily: font.bold },
-                    ]}
-                >
-                    {title}
-                </Text>
-            )}
-            <View style={[styles.group, { borderColor: colors.border }]}>
-                {items.map((item, index) => {
-                    const isLast = index === items.length - 1;
-                    const tone = item.destructive ? colors.destructive : colors.foreground;
-                    const iconTone = item.destructive ? colors.destructive : colors.primary;
-                    return (
-                        <Fragment key={item.key}>
-                            <Pressable
-                                onPress={item.onPress}
-                                style={({ pressed }) => [
-                                    styles.row,
-                                    pressed && { backgroundColor: colors.muted },
-                                ]}
-                            >
-                                <View style={styles.rowLeft}>
-                                    <Ionicons name={item.icon} size={22} color={iconTone} />
-                                    <Text
-                                        style={[
-                                            styles.label,
-                                            { color: tone, fontFamily: font.medium },
-                                        ]}
-                                    >
-                                        {item.label}
-                                    </Text>
-                                </View>
-                                {!item.destructive && (
-                                    <Ionicons
-                                        name="chevron-forward"
-                                        size={18}
-                                        color={colors.mutedForeground}
-                                    />
-                                )}
-                            </Pressable>
-                            {!isLast && (
-                                <View
-                                    style={[styles.divider, { backgroundColor: colors.border }]}
-                                />
-                            )}
-                        </Fragment>
-                    );
-                })}
-            </View>
+        <View >
+            {items.map((item, index) => {
+                return (
+                    <Fragment key={item.key}>
+                        <Pressable
+                            onPress={item.onPress}
+                            style={({ pressed }) => [
+                                styles.row,
+                                pressed && { backgroundColor: colors.muted },
+                            ]}
+                        >
+                            <View style={styles.rowLeft}>
+                                <Ionicons name={item.icon} size={22} />
+                                <Text style={styles.label} >
+                                    {item.label}
+                                </Text>
+                            </View>
+                        </Pressable>
+                    </Fragment>
+                );
+            })}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        paddingHorizontal: Spacing.gutter,
-        paddingTop: Spacing.lg,
-        gap: Spacing.sm,
-    },
-    title: {
-        fontSize: 13,
-        textTransform: 'uppercase',
-        letterSpacing: 0.5,
-    },
-    group: {
-        borderWidth: 1,
-        borderRadius: BorderRadius.lg,
-        overflow: 'hidden',
-    },
     row: {
+        padding: Spacing.md,
         flexDirection: 'row',
-        alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: Spacing.md,
-        paddingVertical: Spacing.md,
+        alignItems: 'center',
     },
     rowLeft: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: Spacing.tight,
+        gap: Spacing.sm,
     },
     label: {
-        fontSize: 16,
-    },
-    divider: {
-        height: StyleSheet.hairlineWidth,
-        marginStart: Spacing.md + 22 + Spacing.tight,
+        fontSize: 14,
+        color: Colors.foreground,
+        fontFamily: FontFamily.medium,
     },
 });

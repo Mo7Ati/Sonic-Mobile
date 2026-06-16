@@ -1,4 +1,5 @@
 {
+    "language": "Language",
     "actions": {
         "retry": "Retry",
         "go_back": "Go back",

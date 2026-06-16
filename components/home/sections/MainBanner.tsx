@@ -51,10 +51,10 @@ export const MainBanner: React.FC<MainBannerProps> = ({ section }) => {
               contentFit="cover"
               cachePolicy="memory-disk"
               transition={200}
-              priority="high"
+              // priority="high"
               recyclingKey={String(item.id)}
-              placeholder={{ blurhash: IMAGE_BLURHASH }}
-              placeholderContentFit="cover"
+              // placeholder={{ blurhash: IMAGE_BLURHASH }}
+              // placeholderContentFit="cover"
             />
           </Pressable>
         )}

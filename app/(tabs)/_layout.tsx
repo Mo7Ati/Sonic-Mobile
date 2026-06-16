@@ -20,14 +20,14 @@ export default function TabLayout() {
         name="index"
         options={{
           title: t('tab_bar.home'),
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={Colors.primary} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
         name="orders"
         options={{
           title: t('tab_bar.orders'),
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="list.bullet" color={Colors.primary} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="list.bullet" color={color} />,
         }}
       />
 
@@ -35,7 +35,7 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: t('tab_bar.settings'),
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="gearshape.fill" color={Colors.primary} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="gearshape.fill" color={color} />,
         }}
       />
     </Tabs>
