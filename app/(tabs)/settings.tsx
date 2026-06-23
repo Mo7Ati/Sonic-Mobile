@@ -103,7 +103,13 @@ export default function SettingsScreen() {
                 onClose={() => setLanguageVisible(false)}
             />
 
-            <Button title="Login" onPress={() => { router.push('/login'); }} />
+            {
+                isAuthenticated ? (
+                    <Button title="Logout" onPress={confirmLogout} />
+                ) : (
+                    <Button title="Login" onPress={() => { router.push('/login'); }} />
+                )
+            }
         </SafeAreaView >
     );
 }

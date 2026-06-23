@@ -1,5 +1,11 @@
 import api, { type ApiResponse } from "@/lib/api";
-import type { Order, PaymentMethod, PlaceOrderPayload } from "./types";
+import type {
+    Order,
+    OrdersFilter,
+    PaginatedOrders,
+    PaymentMethod,
+    PlaceOrderPayload,
+} from "./types";
 
 export async function getBranchPaymentMethods(
     branchId: number,
@@ -7,6 +13,24 @@ export async function getBranchPaymentMethods(
     const { data } = await api.get<ApiResponse<PaymentMethod[]>>(
         `/branches/${branchId}/payment-methods`,
     );
+    return data.data;
+}
+
+export async function getOrders(
+    page = 1,
+    filter: OrdersFilter = "all",
+): Promise<PaginatedOrders> {
+    const { data } = await api.get<ApiResponse<PaginatedOrders>>("/orders", {
+        params: {
+            page,
+            ...(filter === "active" ? { filter: "active" } : {}),
+        },
+    });
+    return data.data;
+}
+
+export async function getOrder(orderId: number): Promise<Order> {
+    const { data } = await api.get<ApiResponse<Order>>(`/orders/${orderId}`);
     return data.data;
 }
 

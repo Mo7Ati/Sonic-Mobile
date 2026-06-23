@@ -80,6 +80,14 @@ export function usePushNotifications(): void {
 }
 
 function routeFromNotification(data: AppNotificationData, router: Router): void {
+    if (data?.type === "order_status" && data.order_id != null) {
+        router.push({
+            pathname: "/order/[id]",
+            params: { id: String(data.order_id) },
+        });
+        return;
+    }
+
     if (data?.type === "order_status") {
         router.push("/orders");
         return;

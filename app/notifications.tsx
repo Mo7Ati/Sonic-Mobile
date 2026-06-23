@@ -49,7 +49,12 @@ export default function NotificationsScreen() {
                 markRead.mutate(item.id);
             }
 
-            if (item.data?.type === "order_status") {
+            if (item.data?.type === "order_status" && item.data?.order_id) {
+                router.push({
+                    pathname: "/order/[id]",
+                    params: { id: String(item.data.order_id) },
+                });
+            } else if (item.data?.type === "order_status") {
                 router.push("/orders");
             }
         },

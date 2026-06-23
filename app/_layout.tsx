@@ -56,6 +56,7 @@ export default function RootLayout() {
         <Stack.Screen name="notifications" options={{ headerShown: false }} />
 
         <Stack.Protected guard={status === "authenticated"}>
+          <Stack.Screen name="order/[id]" options={{ headerShown: false }} />
           <Stack.Screen name="checkout" options={{ headerShown: false }} />
           <Stack.Screen name="pay" options={{ headerShown: false }} />
         </Stack.Protected>
