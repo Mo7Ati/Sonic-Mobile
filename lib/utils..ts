@@ -23,10 +23,12 @@ export const getHeaderAddressSummary = (address: Address | null): string | null 
 }
 
 export const getAddressFieldsSummary = (address: Address | null): string | null => {
-    if (!address) return null;
+    if (!address?.fields?.length) return null;
 
-    return address.fields
+    const summary = address.fields
         .map((f) => f.value)
         .filter(Boolean)
         .join(', ');
+
+    return summary || null;
 };

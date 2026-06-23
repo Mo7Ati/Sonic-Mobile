@@ -1,4 +1,4 @@
-import { AddressSelector } from "@/app/addresses/components/AddressSelector";
+import { AddressSelector } from "@/app/addresses/_components/AddressSelector";
 import { BorderRadius, Spacing } from "@/constants/theme";
 import { useBranchPaymentMethods } from "@/hooks/react-query-hooks/use-orders";
 import { useAppTheme } from "@/hooks/use-app-theme";

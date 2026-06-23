@@ -9,7 +9,7 @@ import { FontFamily } from '@/constants/fonts';
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { selectItemsCount, useCartStore } from '@/stores/cart-store';
 import { useLastSelectedAddress } from '@/stores/app-prefs-store';
-import { AddressSelector } from '@/app/addresses/components/AddressSelector';
+import { AddressSelector } from '@/app/addresses/_components/AddressSelector';
 import { getHeaderAddressSummary } from '@/lib/utils.';
 import { Colors } from '@/constants/theme';
 
