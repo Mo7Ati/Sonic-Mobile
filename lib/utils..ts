@@ -9,7 +9,7 @@ export function formatAmount(value: number | string): string {
         return String(value);
     }
 
-    return `${SHEKEL_SYMBOL}${amount.toFixed(2)}`;
+    return `${SHEKEL_SYMBOL} ${amount.toFixed(2)}`;
 }
 
 // addresses utils
