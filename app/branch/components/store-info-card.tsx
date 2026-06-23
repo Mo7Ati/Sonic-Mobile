@@ -1,5 +1,6 @@
 import { BorderRadius, Colors, Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { formatAmount } from "@/lib/utils.";
 import { Branch } from "@/services/branch/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
@@ -61,7 +62,7 @@ export default function StoreInfoCard({ branch }: StoreInfoCardProps) {
                         <View style={styles.metaItem}>
                             <Ionicons name="bicycle-outline" size={16} color={colors.mutedForeground} />
                             <Text style={[styles.metaText, { color: colors.foreground }]}>
-                                {t("currency.ils")} {Number(branch.delivery_fee).toFixed(2)}
+                                {formatAmount(branch.delivery_fee)}
                             </Text>
                         </View>
                     </>

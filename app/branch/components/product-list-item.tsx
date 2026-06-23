@@ -1,5 +1,6 @@
 import { BorderRadius, Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { formatAmount } from "@/lib/utils.";
 import { Product } from "@/services/product/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
@@ -38,11 +39,11 @@ export default function ProductListItem({ product, onPress }: ProductListItemPro
                 ) : null}
                 <View style={styles.priceRow}>
                     <Text style={[styles.price, { color: colors.foreground }]}>
-                        {t("general:currency.egp")} {Number(product.price).toFixed(2)}
+                        {formatAmount(product.price)}
                     </Text>
                     {hasComparePrice ? (
                         <Text style={[styles.comparePrice, { color: colors.mutedForeground }]}>
-                            {t("general:currency.egp")} {Number(product.compare_price).toFixed(2)}
+                            {formatAmount(product.compare_price!)}
                         </Text>
                     ) : null}
                 </View>

@@ -1,7 +1,6 @@
 import { Image } from "expo-image";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { useTranslation } from "react-i18next";
 
 import { BorderRadius, Spacing } from "@/constants/theme";
 import { FontFamily } from "@/constants/fonts";
@@ -10,6 +9,7 @@ import {
     formatOrderItemDescription,
     resolveOrderItemName,
 } from "@/lib/order-utils";
+import { formatAmount } from "@/lib/utils.";
 import type { OrderItem } from "@/services/orders/types";
 
 interface OrderDetailItemProps {
@@ -18,7 +18,6 @@ interface OrderDetailItemProps {
 
 export function OrderDetailItem({ item }: OrderDetailItemProps) {
     const { colors } = useAppTheme();
-    const { t } = useTranslation("general");
 
     const description = formatOrderItemDescription(item);
 
@@ -51,7 +50,7 @@ export function OrderDetailItem({ item }: OrderDetailItemProps) {
                 )}
 
                 <Text style={[styles.price, { color: colors.foreground }]}>
-                    {Number(item.total_price).toFixed(2)} {t("currency.egp")}
+                    {formatAmount(item.total_price)}
                 </Text>
             </View>
         </View>

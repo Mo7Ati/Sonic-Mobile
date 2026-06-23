@@ -23,6 +23,7 @@ import { parseApiError } from "@/lib/api";
 import {
     formatOrderAddress,
 } from "@/lib/order-utils";
+import { formatAmount } from "@/lib/utils.";
 import { BackButton } from "@/components/ui/back-button";
 
 function SummaryRow({
@@ -209,16 +210,16 @@ export default function OrderDetailScreen() {
 
                     <SummaryRow
                         label={t("checkout:subtotal")}
-                        value={`${Number(order.total_items_amount).toFixed(2)} ${t("general:currency.egp")}`}
+                        value={formatAmount(order.total_items_amount)}
                     />
                     <SummaryRow
                         label={t("checkout:delivery_fee")}
-                        value={`${Number(order.delivery_amount).toFixed(2)} ${t("general:currency.egp")}`}
+                        value={formatAmount(order.delivery_amount)}
                     />
                     <View style={[styles.divider, { backgroundColor: colors.border }]} />
                     <SummaryRow
                         label={t("checkout:total")}
-                        value={`${Number(order.total).toFixed(2)} ${t("general:currency.egp")}`}
+                        value={formatAmount(order.total)}
                         bold
                     />
                 </View>

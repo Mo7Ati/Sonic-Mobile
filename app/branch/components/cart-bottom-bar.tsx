@@ -1,5 +1,6 @@
 import { BorderRadius, Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { formatAmount } from "@/lib/utils.";
 import {
     selectCartBranchId,
     selectItemsCount,
@@ -20,7 +21,7 @@ interface CartBottomBarProps {
 export default function CartBottomBar({ branchId }: CartBottomBarProps) {
     const { colors } = useAppTheme();
     const insets = useSafeAreaInsets();
-    const { t } = useTranslation(["cart", "general"]);
+    const { t } = useTranslation("cart");
     const router = useRouter();
 
     const cartBranchId = useCartStore(selectCartBranchId);
@@ -52,7 +53,7 @@ export default function CartBottomBar({ branchId }: CartBottomBarProps) {
                     </Text>
                 </View>
                 <Text style={[styles.price, { color: colors.primaryForeground }]}>
-                    {subtotal.toFixed(2)} {t("general:currency.egp")}
+                    {formatAmount(subtotal)}
                 </Text>
             </View>
         </Pressable>

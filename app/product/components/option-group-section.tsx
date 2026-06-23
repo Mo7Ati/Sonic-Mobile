@@ -1,5 +1,6 @@
 import { Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { formatAmount } from "@/lib/utils.";
 import { OptionGroup } from "@/services/product/types";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Text } from "@react-navigation/elements";
@@ -54,7 +55,7 @@ export default function OptionGroupSection({
                         <View style={styles.rowEnd}>
                             {price > 0 && (
                                 <Text style={[styles.price, { color: colors.mutedForeground }]}>
-                                    (+{price.toFixed(2)} {t("general:currency.egp")})
+                                    (+{formatAmount(price)})
                                 </Text>
                             )}
                             <View

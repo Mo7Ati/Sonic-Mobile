@@ -1,5 +1,6 @@
 import { BorderRadius, Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { formatAmount } from "@/lib/utils.";
 import {
     selectItemsCount,
     selectSubtotal,
@@ -205,7 +206,7 @@ export default function CartScreen() {
                             { color: colors.foreground, fontFamily: font.bold },
                         ]}
                     >
-                        {subtotal.toFixed(2)} {t("general:currency.egp")}
+                        {formatAmount(subtotal)}
                     </Text>
                     <Text
                         style={[
@@ -373,7 +374,7 @@ function CartItemRow({
                                 { color: colors.mutedForeground, fontFamily: font.regular },
                             ]}
                         >
-                            {(item.compare_price! * item.quantity).toFixed(2)}
+                            {formatAmount(item.compare_price! * item.quantity)}
                         </Text>
                     )}
                     <Text
@@ -384,8 +385,7 @@ function CartItemRow({
                                 : { color: colors.foreground, fontFamily: font.bold },
                         ]}
                     >
-                        {item.total_price.toFixed(2)}{" "}
-                        {t("general:currency.egp")}
+                        {formatAmount(item.total_price)}
                     </Text>
                 </View>
             </View>

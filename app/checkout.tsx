@@ -2,7 +2,7 @@ import { AddressSelector } from "@/app/addresses/components/AddressSelector";
 import { BorderRadius, Spacing } from "@/constants/theme";
 import { useBranchPaymentMethods } from "@/hooks/react-query-hooks/use-orders";
 import { useAppTheme } from "@/hooks/use-app-theme";
-import { getAddressFieldsSummary } from "@/lib/utils.";
+import { getAddressFieldsSummary, formatAmount } from "@/lib/utils.";
 import { useLastSelectedAddress } from "@/stores/app-prefs-store";
 import {
     selectCartBranchId,
@@ -400,7 +400,7 @@ export default function CheckoutScreen() {
                                         },
                                     ]}
                                 >
-                                    {item.total_price.toFixed(2)}
+                                    {formatAmount(item.total_price)}
                                 </Text>
                             </View>
                         ))}
@@ -441,13 +441,13 @@ export default function CheckoutScreen() {
                     <View style={styles.summaryGroup}>
                         <SummaryRow
                             label={t("checkout:subtotal")}
-                            value={`${subtotal.toFixed(2)} ${t("general:currency.egp")}`}
+                            value={formatAmount(subtotal)}
                             colors={colors}
                             font={font}
                         />
                         <SummaryRow
                             label={t("checkout:total")}
-                            value={`${total.toFixed(2)} ${t("general:currency.egp")}`}
+                            value={formatAmount(total)}
                             colors={colors}
                             font={font}
                             emphasized
@@ -474,7 +474,7 @@ export default function CheckoutScreen() {
                             },
                         ]}
                     >
-                        {`${t("checkout:continue_to_payment")} · ${total.toFixed(2)} ${t("general:currency.egp")}`}
+                        {`${t("checkout:continue_to_payment")} · ${formatAmount(total)}`}
                     </Text>
                 </Pressable>
             </View>

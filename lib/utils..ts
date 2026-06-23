@@ -1,5 +1,16 @@
 import { Address } from "@/services/addresses/types";
-import { useTranslation } from "react-i18next";
+
+export const SHEKEL_SYMBOL = "₪";
+
+export function formatAmount(value: number | string): string {
+    const amount = typeof value === "number" ? value : Number(value);
+
+    if (!Number.isFinite(amount)) {
+        return String(value);
+    }
+
+    return `${SHEKEL_SYMBOL}${amount.toFixed(2)}`;
+}
 
 // addresses utils
 

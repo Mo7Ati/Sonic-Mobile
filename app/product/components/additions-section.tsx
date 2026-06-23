@@ -1,5 +1,6 @@
 import { Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { formatAmount } from "@/lib/utils.";
 import { Addition } from "@/services/product/types";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -62,7 +63,7 @@ export default function AdditionsSection({
                         <View style={styles.rowEnd}>
                             {price > 0 && (
                                 <Text style={[styles.price, { color: colors.mutedForeground }]}>
-                                    (+{price.toFixed(2)} {t("general:currency.egp")})
+                                    (+{formatAmount(price)})
                                 </Text>
                             )}
                             <View

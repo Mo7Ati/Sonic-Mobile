@@ -1,5 +1,6 @@
 import { BorderRadius, Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { formatAmount } from "@/lib/utils.";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Text } from "@react-navigation/elements";
@@ -26,7 +27,7 @@ export default function AddToCartBar({
     onAddToCart,
 }: AddToCartBarProps) {
     const { colors } = useAppTheme();
-    const { t } = useTranslation(["product", "general", "cart"]);
+    const { t } = useTranslation(["product", "cart"]);
     const insets = useSafeAreaInsets();
 
     return (
@@ -70,7 +71,7 @@ export default function AddToCartBar({
                         ]}
                     >
                         {isEditing ? t("cart:update_item") : t("product:add_to_cart")}{"  "}
-                        {totalPrice.toFixed(2)} {t("general:currency.egp")}
+                        {formatAmount(totalPrice)}
                     </Text>
                 </Pressable>
 

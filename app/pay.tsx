@@ -1,5 +1,6 @@
 import { useBranchPaymentMethods, usePlaceOrder } from "@/hooks/react-query-hooks/use-orders";
 import { useAppTheme } from "@/hooks/use-app-theme";
+import { formatAmount } from "@/lib/utils.";
 import type { PaymentMethod, ProofFile } from "@/services/orders/types";
 import { useLastSelectedAddress } from "@/stores/app-prefs-store";
 import {
@@ -328,7 +329,7 @@ export default function PayScreen() {
                         >
                             {submitting
                                 ? t("checkout:placing_order")
-                                : `${t("checkout:confirm_payment")} · ${subtotal.toFixed(2)} ${t("general:currency.egp")}`}
+                                : `${t("checkout:confirm_payment")} · ${formatAmount(subtotal)}`}
                         </Text>
                     </Pressable>
                 </View>

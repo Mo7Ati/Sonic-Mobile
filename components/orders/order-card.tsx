@@ -10,6 +10,7 @@ import {
     formatItemsBrief,
     formatOrderTime,
 } from "@/lib/order-utils";
+import { formatAmount } from "@/lib/utils.";
 import type { Order } from "@/services/orders/types";
 import { Image } from "expo-image";
 
@@ -20,7 +21,7 @@ interface OrderCardProps {
 
 export function OrderCard({ order, onPress }: OrderCardProps) {
     const { colors } = useAppTheme();
-    const { t } = useTranslation(["orders", "general"]);
+    const { t } = useTranslation("orders");
 
     const itemsBrief = formatItemsBrief(order.items);
     const isPaymentPending = order.payment_status.value === "wait_for_confirmation";
@@ -91,7 +92,7 @@ export function OrderCard({ order, onPress }: OrderCardProps) {
                 </Text>
 
                 <Text style={[styles.total, { color: colors.foreground }]}>
-                    {order.total} {t("general:currency.egp")}
+                    {formatAmount(order.total)}
                 </Text>
             </View>
 

@@ -1,6 +1,6 @@
 {
     "cart_bottom_bar": {
-        "minimum_hint": "Add EGP {{amount}} to start your order"
+        "minimum_hint": "Add {{amount}} to start your order"
     },
     "product": {
         "customizable": "Customizable"
