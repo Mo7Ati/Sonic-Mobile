@@ -1,26 +1,21 @@
-import Header from '@/components/settings/header';
+import { AccountHeader } from '@/components/settings/account-header';
 import { LanguageSelector } from '@/components/settings/language-selector';
 import { MenuGroup, type MenuItem } from '@/components/settings/menu-group';
 import { UserCard } from '@/components/settings/user-card';
-import { BorderRadius, Colors, Spacing } from '@/constants/theme';
+import { Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { useAuth } from '@/hooks/use-auth';
-import { Ionicons } from '@expo/vector-icons';
-import { Text } from '@react-navigation/elements';
 import { useRouter } from 'expo-router';
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Button, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Toast from 'react-native-toast-message';
-import { FontFamily } from '@/constants/fonts';
 
 export default function SettingsScreen() {
     const { colors } = useAppTheme();
-    const { t } = useTranslation(['settings', 'addresses', 'general']);
+    const { t } = useTranslation(['settings', 'general']);
     const router = useRouter();
-    const { isAuthenticated, logout } = useAuth();
-    const [loggingOut, setLoggingOut] = useState(false);
+    const { isAuthenticated } = useAuth();
     const [languageVisible, setLanguageVisible] = useState(false);
 
     const accountItems: MenuItem[] = [
@@ -31,42 +26,12 @@ export default function SettingsScreen() {
             onPress: () => router.push('/orders'),
         },
         {
-            key: 'addresses',
-            label: t('addresses:title'),
-            icon: 'location-outline',
-            onPress: () => router.push('/addresses'),
-        },
-        {
             key: 'language',
             label: t('general:language'),
             icon: 'globe-outline',
             onPress: () => setLanguageVisible(true),
         },
     ];
-
-    const confirmLogout = () => {
-        Alert.alert(t('settings:logout.confirm_title'), t('settings:logout.confirm_message'), [
-            { text: t('settings:logout.cancel'), style: 'cancel' },
-            {
-                text: t('settings:logout.confirm'),
-                style: 'destructive',
-                onPress: async () => {
-                    if (loggingOut) return;
-                    setLoggingOut(true);
-                    try {
-                        await logout();
-                    } catch {
-                        Toast.show({
-                            type: 'error',
-                            text1: t('general:errors.something_went_wrong'),
-                        });
-                    } finally {
-                        setLoggingOut(false);
-                    }
-                },
-            },
-        ]);
-    };
 
     return (
         <SafeAreaView
@@ -77,23 +42,9 @@ export default function SettingsScreen() {
                 contentContainerStyle={styles.content}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Settings Header */}
-                <Header />
+                <AccountHeader />
 
-                {/* User Card */}
-                {/* <UserCard /> */}
-
-                {/* Account Menu Group */}
                 <MenuGroup items={accountItems} />
-
-
-                {/* Logout Button */}
-                {/* {isAuthenticated && (
-                    <Pressable style={styles.logoutButton} onPress={confirmLogout}>
-                        <Text style={styles.logoutButtonText}>{t('settings:logout.action')}</Text>
-                    </Pressable>
-                )} */}
-
 
                 <View style={styles.footerSpacer} />
             </ScrollView>
@@ -102,34 +53,12 @@ export default function SettingsScreen() {
                 visible={languageVisible}
                 onClose={() => setLanguageVisible(false)}
             />
-
-            {
-                isAuthenticated ? (
-                    <Button title="Logout" onPress={confirmLogout} />
-                ) : (
-                    <Button title="Login" onPress={() => { router.push('/login'); }} />
-                )
-            }
-        </SafeAreaView >
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-
     screen: { flex: 1 },
-
     content: { paddingBottom: Spacing.xl },
     footerSpacer: { height: Spacing.xl },
-    logoutButton: {
-        padding: Spacing.md,
-        marginHorizontal: Spacing.gutter,
-        marginTop: Spacing.md,
-        borderRadius: BorderRadius.lg,
-        backgroundColor: Colors.destructive,
-    },
-    logoutButtonText: {
-        textAlign: 'center',
-        color: Colors.destructiveForeground,
-        fontSize: 16,
-    },
 });

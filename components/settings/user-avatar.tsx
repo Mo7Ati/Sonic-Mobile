@@ -21,7 +21,7 @@ export function UserAvatar({ name, size = 64, style }: UserAvatarProps) {
                     width: size,
                     height: size,
                     borderRadius: BorderRadius.full,
-                    backgroundColor: initials ? colors.primary : colors.muted,
+                    backgroundColor: colors.accent,
                     borderColor: colors.border,
                 },
                 style,
@@ -32,7 +32,7 @@ export function UserAvatar({ name, size = 64, style }: UserAvatarProps) {
                     style={{
                         fontSize: size * 0.4,
                         fontFamily: font.semiBold,
-                        color: colors.primaryForeground,
+                        color: colors.mutedForeground,
                     }}
                 >
                     {initials}

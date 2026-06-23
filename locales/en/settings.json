@@ -25,5 +25,17 @@
         "description": "Choose your preferred language. The app will reload.",
         "english": "English",
         "arabic": "Arabic"
+    },
+    "user_settings": {
+        "title": "Settings",
+        "general_information": "Account information",
+        "notifications": "Notifications",
+        "notifications_enabled": "Enabled",
+        "notifications_disabled": "Disabled"
+    },
+    "account_info": {
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone"
     }
 }

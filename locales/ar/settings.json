@@ -25,5 +25,17 @@
         "description": "اختر لغتك المفضلة. سيتم إعادة تشغيل التطبيق.",
         "english": "English",
         "arabic": "العربية"
+    },
+    "user_settings": {
+        "title": "الإعدادات",
+        "general_information": "معلومات الحساب",
+        "notifications": "الإشعارات",
+        "notifications_enabled": "الإشعارات مفعلة",
+        "notifications_disabled": "الإشعارات معطلة"
+    },
+    "account_info": {
+        "name": "الاسم",
+        "email": "البريد الإلكتروني",
+        "phone": "رقم الهاتف"
     }
 }

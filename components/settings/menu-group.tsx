@@ -14,11 +14,10 @@ export interface MenuItem {
 }
 
 interface MenuGroupProps {
-    title?: string;
     items: MenuItem[];
 }
 
-export function MenuGroup({ title, items }: MenuGroupProps) {
+export function MenuGroup({ items }: MenuGroupProps) {
     const { colors } = useAppTheme();
 
     return (
