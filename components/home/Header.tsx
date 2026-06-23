@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 
 import { FontFamily } from '@/constants/fonts';
 import { BorderRadius, Spacing } from '@/constants/theme';
-import { useAppTheme } from '@/hooks/use-app-theme';
 import { selectItemsCount, useCartStore } from '@/stores/cart-store';
 import { useLastSelectedAddress } from '@/stores/app-prefs-store';
 import { AddressSelector } from '@/app/addresses/components/AddressSelector';
@@ -42,18 +41,20 @@ export function Header({ canSelectOtherAddress = true, showCartButton = true, sh
         </View>
       </View>
 
-      {
-        showCartButton && <Pressable onPress={() => router.push('/cart')} hitSlop={8} style={styles.cartButton}>
-          <Ionicons name="cart-outline" size={24} color={Colors.foreground} />
-          {itemsCount > 0 && (
-            <View style={[styles.badge, { backgroundColor: Colors.primary }]}>
-              <Text style={[styles.badgeText, { color: Colors.primaryForeground }]}>
-                {itemsCount > 99 ? '99+' : itemsCount}
-              </Text>
-            </View>
-          )}
-        </Pressable>
-      }
+      <View style={styles.actions}>
+        {
+          showCartButton && <Pressable onPress={() => router.push('/cart')} hitSlop={8} style={styles.cartButton}>
+            <Ionicons name="cart-outline" size={24} color={Colors.foreground} />
+            {itemsCount > 0 && (
+              <View style={[styles.badge, { backgroundColor: Colors.primary }]}>
+                <Text style={[styles.badgeText, { color: Colors.primaryForeground }]}>
+                  {itemsCount > 99 ? '99+' : itemsCount}
+                </Text>
+              </View>
+            )}
+          </Pressable>
+        }
+      </View>
 
 
       <AddressSelector
@@ -77,6 +78,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xs,
   },
   addressTextContainer: {
     display: 'flex',

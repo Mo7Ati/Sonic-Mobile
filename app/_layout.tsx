@@ -1,4 +1,5 @@
 import Bootstrap from '@/components/bootstrap';
+import PushNotificationsManager from '@/components/push-notifications-manager';
 import { AppDialogHost } from '@/components/ui/app-dialog';
 import { CairoFontsToLoad } from '@/constants/fonts';
 import '@/lib/i18n';
@@ -39,6 +40,7 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <Bootstrap fontsReady={fontsReady} />
+      <PushNotificationsManager />
       {/* <FloatingDevTools zustandStores={stores} /> */}
 
       <Stack>
@@ -51,6 +53,7 @@ export default function RootLayout() {
         <Stack.Screen name="cart" options={{ headerShown: false }} />
         <Stack.Screen name="addresses/index" options={{ headerShown: false }} />
         <Stack.Screen name="addresses/add" options={{ headerShown: false }} />
+        <Stack.Screen name="notifications" options={{ headerShown: false }} />
 
         <Stack.Protected guard={status === "authenticated"}>
           <Stack.Screen name="checkout" options={{ headerShown: false }} />

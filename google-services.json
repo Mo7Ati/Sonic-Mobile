@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "689347087447",
+    "project_id": "zad1-8e0d7",
+    "storage_bucket": "zad1-8e0d7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689347087447:android:645da05ca7ac67a5fca712",
+        "android_client_info": {
+          "package_name": "com.anonymous.Sonic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTOh50cX0chnnsuGw0rXmXJxh9ibAeobY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

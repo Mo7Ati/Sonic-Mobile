@@ -8,6 +8,7 @@ import {
     resetPasswordApi,
 } from "@/services/auth";
 import { removeToken, setToken } from "@/services/secure-store";
+import { unregisterPushToken } from "@/services/notifications/registration";
 import { clearSessionId } from "@/services/session";
 import { useAddressesStore } from "@/stores/addresses-store";
 import { useAuthStore } from "@/stores/auth-store";
@@ -42,6 +43,9 @@ export async function register(params: {
 }
 
 export async function logout() {
+    // Drop this device's push token while the bearer token is still valid.
+    await unregisterPushToken();
+
     try {
         await logoutApi();
     } catch {

@@ -3,13 +3,10 @@ import { StyleSheet, View } from "react-native";
 
 
 
-import { Pressable } from 'react-native'
-
-import React from 'react'
-import { Ionicons } from "@expo/vector-icons";
 import { Colors, Spacing } from "@/constants/theme";
 import { Text } from "@react-navigation/elements";
 import { useTranslation } from "react-i18next";
+import { NotificationBell } from "../notifications/notification-bell";
 
 export default function Header() {
     const { t } = useTranslation('settings');
@@ -20,9 +17,7 @@ export default function Header() {
                 <Text style={headerStyles.settingsHeaderSubtitle}>{t('settings:header.subtitle')}</Text>
             </View>
 
-            <Pressable>
-                <Ionicons name="notifications-outline" size={24} />
-            </Pressable>
+            <NotificationBell />
         </View>
     )
 }

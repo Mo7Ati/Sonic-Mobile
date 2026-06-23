@@ -10,7 +10,7 @@ import { Text } from '@react-navigation/elements';
 import { useRouter } from 'expo-router';
 import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Button, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 import { FontFamily } from '@/constants/fonts';
@@ -102,6 +102,8 @@ export default function SettingsScreen() {
                 visible={languageVisible}
                 onClose={() => setLanguageVisible(false)}
             />
+
+            <Button title="Login" onPress={() => { router.push('/login'); }} />
         </SafeAreaView >
     );
 }
