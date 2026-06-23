@@ -56,6 +56,7 @@ export default function RootLayout() {
         <Stack.Screen name="notifications" options={{ headerShown: false }} />
         <Stack.Screen name="user-settings" options={{ headerShown: false }} />
         <Stack.Screen name="account-info" options={{ headerShown: false }} />
+        <Stack.Screen name="custom-page/[index]" options={{ headerShown: false }} />
 
         <Stack.Protected guard={status === "authenticated"}>
           <Stack.Screen name="order/[id]" options={{ headerShown: false }} />

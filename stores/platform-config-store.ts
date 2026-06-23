@@ -4,11 +4,18 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import type { AddressFieldTemplate } from "@/services/addresses/types";
 import type { OnboardingSlide } from "@/services/onboarding/types";
 
+export interface CustomPages {
+    title: string;
+    content: string;
+}
+
 interface PlatformConfigState {
     addressFieldTemplates: AddressFieldTemplate[];
     setAddressFieldTemplates: (templates: AddressFieldTemplate[]) => void;
     onboardingSlides: OnboardingSlide[];
     setOnboardingSlides: (slides: OnboardingSlide[]) => void;
+    customPages: CustomPages[];
+    setCustomPages: (pages: CustomPages[]) => void;
 }
 
 export const usePlatformConfigStore = create<PlatformConfigState>()(
@@ -20,6 +27,9 @@ export const usePlatformConfigStore = create<PlatformConfigState>()(
             onboardingSlides: [],
             setOnboardingSlides: (onboardingSlides) =>
                 set({ onboardingSlides }),
+            customPages: [],
+            setCustomPages: (customPages) =>
+                set({ customPages }),
         }),
         {
             name: "platform-config-store",

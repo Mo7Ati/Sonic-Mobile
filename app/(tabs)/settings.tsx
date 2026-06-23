@@ -5,6 +5,7 @@ import { UserCard } from '@/components/settings/user-card';
 import { Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { useAuth } from '@/hooks/use-auth';
+import { usePlatformConfigStore } from '@/stores/platform-config-store';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,8 +16,9 @@ export default function SettingsScreen() {
     const { colors } = useAppTheme();
     const { t } = useTranslation(['settings', 'general']);
     const router = useRouter();
-    const { isAuthenticated } = useAuth();
     const [languageVisible, setLanguageVisible] = useState(false);
+
+    const { customPages } = usePlatformConfigStore();
 
     const accountItems: MenuItem[] = [
         {
@@ -33,6 +35,17 @@ export default function SettingsScreen() {
         },
     ];
 
+    const customPageItems: MenuItem[] = customPages.map((page, index) => ({
+        key: `custom-page-${index}`,
+        label: page.title,
+        icon: 'document-text-outline',
+        onPress: () =>
+            router.push({
+                pathname: '/custom-page/[index]',
+                params: { index: String(index) },
+            }),
+    }));
+
     return (
         <SafeAreaView
             style={[styles.screen, { backgroundColor: colors.background }]}
@@ -45,6 +58,10 @@ export default function SettingsScreen() {
                 <AccountHeader />
 
                 <MenuGroup items={accountItems} />
+
+                {customPageItems.length > 0 ? (
+                    <MenuGroup items={customPageItems} />
+                ) : null}
 
                 <View style={styles.footerSpacer} />
             </ScrollView>
