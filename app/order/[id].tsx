@@ -26,41 +26,6 @@ import {
 import { formatAmount } from "@/lib/utils.";
 import { BackButton } from "@/components/ui/back-button";
 
-function SummaryRow({
-    label,
-    value,
-    bold,
-}: {
-    label: string;
-    value: string;
-    bold?: boolean;
-}) {
-    const { colors } = useAppTheme();
-
-    return (
-        <View style={styles.summaryRow}>
-            <Text
-                style={[
-                    styles.summaryLabel,
-                    { color: colors.mutedForeground },
-                    bold && { color: colors.foreground, fontFamily: FontFamily.semiBold },
-                ]}
-            >
-                {label}
-            </Text>
-            <Text
-                style={[
-                    styles.summaryValue,
-                    { color: colors.foreground },
-                    bold && { fontFamily: FontFamily.bold, fontSize: 17 },
-                ]}
-            >
-                {value}
-            </Text>
-        </View>
-    );
-}
-
 export default function OrderDetailScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const orderId = Number(id);
@@ -100,7 +65,6 @@ export default function OrderDetailScreen() {
         }
 
         const addressSummary = formatOrderAddress(order.address_data);
-        const isPaymentPending = order.payment_status.value === "wait_for_confirmation";
 
         return (
             <ScrollView
@@ -131,10 +95,6 @@ export default function OrderDetailScreen() {
                             </Text>
                         </View>
                     </View>
-
-                    <Text style={[styles.placedAt, { color: colors.mutedForeground }]}>
-                        {order.created_at}
-                    </Text>
                 </View>
 
                 <View style={[styles.section, { backgroundColor: colors.card, borderColor: colors.border }]}>
@@ -169,6 +129,21 @@ export default function OrderDetailScreen() {
                             </Text>
                         </View>
                     </View>
+
+
+
+                    <View style={styles.statusRow}>
+                        <Text style={[styles.statusLabel, { color: colors.mutedForeground }]}>
+                            {t("orders:detail.placed_at")}:
+                        </Text>
+                        <View style={[styles.badge, { backgroundColor: colors.muted }]}>
+                            <Text style={[styles.placedAt, { color: colors.mutedForeground }]}>
+                                {order.created_at}
+                            </Text>
+                        </View>
+                    </View>
+
+
                 </View>
 
                 {!!addressSummary && (
@@ -203,25 +178,21 @@ export default function OrderDetailScreen() {
                     </View>
                 )}
 
-                <View style={[styles.section, { backgroundColor: colors.card, borderColor: colors.border }]}>
-                    <Text style={[styles.sectionTitle, { color: colors.foreground }]}>
-                        {t("checkout:order_summary")}
+                <View
+                    style={[
+                        styles.totalSection,
+                        {
+                            backgroundColor: colors.card,
+                            borderColor: colors.border,
+                        },
+                    ]}
+                >
+                    <Text style={[styles.totalLabel, { color: colors.mutedForeground }]}>
+                        {t("checkout:total")}
                     </Text>
-
-                    <SummaryRow
-                        label={t("checkout:subtotal")}
-                        value={formatAmount(order.total_items_amount)}
-                    />
-                    <SummaryRow
-                        label={t("checkout:delivery_fee")}
-                        value={formatAmount(order.delivery_amount)}
-                    />
-                    <View style={[styles.divider, { backgroundColor: colors.border }]} />
-                    <SummaryRow
-                        label={t("checkout:total")}
-                        value={formatAmount(order.total)}
-                        bold
-                    />
+                    <Text style={[styles.totalValue, { color: colors.foreground }]}>
+                        {formatAmount(order.total)}
+                    </Text>
                 </View>
             </ScrollView>
         );
@@ -369,22 +340,25 @@ const styles = StyleSheet.create({
         fontSize: 14,
         lineHeight: 20,
     },
-    summaryRow: {
+    totalSection: {
         flexDirection: "row",
-        justifyContent: "space-between",
         alignItems: "center",
-        paddingVertical: 4,
+        justifyContent: "space-between",
+        alignSelf: "stretch",
+        borderRadius: BorderRadius.xl,
+        borderWidth: StyleSheet.hairlineWidth,
+        paddingHorizontal: Spacing.md,
+        paddingVertical: Spacing.md,
+        gap: Spacing.tight,
     },
-    summaryLabel: {
-        fontSize: 14,
+    totalLabel: {
+        fontSize: 16,
+        fontFamily: FontFamily.semiBold,
     },
-    summaryValue: {
-        fontSize: 14,
-        fontFamily: FontFamily.medium,
-    },
-    divider: {
-        height: StyleSheet.hairlineWidth,
-        marginVertical: Spacing.xs,
+    totalValue: {
+        fontSize: 22,
+        fontFamily: FontFamily.bold,
+        letterSpacing: -0.3,
     },
     center: {
         flex: 1,

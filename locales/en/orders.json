@@ -11,7 +11,8 @@
     "detail": {
         "title": "Order Details",
         "order_status": "Order status",
-        "payment_status": "Payment status"
+        "payment_status": "Payment status",
+        "placed_at": "Placed at"
     },
     "guest": {
         "title": "Sign in to view orders",

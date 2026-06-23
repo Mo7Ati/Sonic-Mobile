@@ -11,7 +11,8 @@
     "detail": {
         "title": "تفاصيل الطلب",
         "order_status": "حالة الطلب",
-        "payment_status": "حالة الدفع"
+        "payment_status": "حالة الدفع",
+        "placed_at": "تم الطلب في"
     },
     "guest": {
         "title": "سجّل الدخول لعرض الطلبات",
