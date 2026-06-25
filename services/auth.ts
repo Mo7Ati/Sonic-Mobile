@@ -14,19 +14,16 @@ interface ApiResponse<T = unknown> {
   extra: unknown;
 }
 
-export interface OtpMeta {
-  expires_in: number;
-  phone_masked: string;
+export interface UpdateProfileResult {
+  otp_sent: boolean;
 }
 
-export async function sendOtpApi(phone_number: string): Promise<OtpMeta> {
-  const { data } = await api.post<ApiResponse<OtpMeta>>('/send-otp', { phone_number });
-  return data.data;
+export async function sendOtpApi(phone_number: string): Promise<void> {
+  await api.post<ApiResponse>('/login', { phone_number });
 }
 
-export async function resendOtpApi(phone_number: string): Promise<OtpMeta> {
-  const { data } = await api.post<ApiResponse<OtpMeta>>('/resend-otp', { phone_number });
-  return data.data;
+export async function resendOtpApi(phone_number: string): Promise<void> {
+  await api.post<ApiResponse>('/resend-otp', { phone_number });
 }
 
 export async function verifyOtpApi(phone_number: string, otp: string) {
@@ -42,16 +39,22 @@ export async function verifyOtpApi(phone_number: string, otp: string) {
   };
 }
 
-export async function updateProfileApi(name: string): Promise<Customer> {
-  const { data } = await api.patch<ApiResponse<Customer>>('/user', { name });
+export async function updateProfileApi(
+  name: string,
+  phone_number: string,
+): Promise<UpdateProfileResult> {
+  const { data } = await api.patch<ApiResponse<UpdateProfileResult>>('/update-profile', {
+    name,
+    phone_number,
+  });
+
   return data.data;
+}
+
+export async function verifyNewPhoneApi(new_phone_number: string, otp: string): Promise<void> {
+  await api.post('/verify-new-phone', { new_phone_number, otp });
 }
 
 export async function logoutApi() {
   await api.post('/logout');
-}
-
-export async function getUserApi() {
-  const { data } = await api.get<ApiResponse<Customer>>('/user');
-  return data.data;
 }

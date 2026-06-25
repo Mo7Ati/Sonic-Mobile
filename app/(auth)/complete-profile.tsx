@@ -49,10 +49,12 @@ export default function CompleteProfileScreen() {
   }, [isAuthenticated, user?.name]);
 
   async function onSubmit(form: ProfileForm) {
+    if (!user?.phone_number) return;
+
     setLoading(true);
 
     try {
-      await updateProfile(form.name.trim());
+      await updateProfile(form.name.trim(), user.phone_number);
       router.replace('/');
     } catch (error) {
       const apiError = parseApiError(error);

@@ -36,6 +36,16 @@
     "account_info": {
         "name": "Name",
         "email": "Email",
-        "phone": "Phone"
+        "phone": "Phone",
+        "name_placeholder": "John Doe",
+        "phone_placeholder": "05XXXXXXXX",
+        "save": "Save changes",
+        "saved_title": "Profile updated",
+        "saved_message": "Your account information has been saved.",
+        "save_failed_title": "Could not save profile",
+        "verify_phone_title": "Verify new number",
+        "verify_phone_subtitle": "Enter the 6-digit code sent to {{phone}}",
+        "phone_updated_title": "Phone updated",
+        "phone_updated_message": "Your phone number has been updated successfully."
     }
 }

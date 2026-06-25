@@ -23,12 +23,22 @@ import Toast from 'react-native-toast-message';
 const OTP_LENGTH = 6;
 const RESEND_COOLDOWN_SECONDS = 60;
 
-export default function VerifyOtpScreen() {
-  const { verifyOtp, resendOtp } = useAuth();
-  const { t } = useTranslation('auth');
+type OtpMode = 'login' | 'phone_change';
 
-  const params = useLocalSearchParams<{ phone_number: string }>();
+export default function VerifyOtpScreen() {
+  const { verifyOtp, verifyNewPhone, resendOtp, updateProfile } = useAuth();
+  const { t } = useTranslation(['auth', 'settings']);
+
+  const params = useLocalSearchParams<{
+    phone_number: string;
+    mode?: OtpMode;
+    name?: string;
+  }>();
+
   const phoneNumber = params.phone_number;
+  const mode: OtpMode = params.mode === 'phone_change' ? 'phone_change' : 'login';
+  const name = params.name;
+  const isPhoneChange = mode === 'phone_change';
 
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
@@ -39,11 +49,16 @@ export default function VerifyOtpScreen() {
   const inputRef = useRef<TextInput>(null);
   const verifyingRef = useRef(false);
 
-  // useEffect(() => {
-  //   if (!phoneNumber) {
-  //     router.replace('/(auth)/login');
-  //   }
-  // }, [phoneNumber]);
+  useEffect(() => {
+    if (!phoneNumber) {
+      router.replace(isPhoneChange ? '/account-info' : '/(auth)/login');
+      return;
+    }
+
+    if (isPhoneChange && !name) {
+      router.replace('/account-info');
+    }
+  }, [phoneNumber, name, isPhoneChange]);
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -57,13 +72,26 @@ export default function VerifyOtpScreen() {
 
   const handleVerify = useCallback(
     async (code: string) => {
-      if (verifyingRef.current || code.length !== OTP_LENGTH) return;
+      if (verifyingRef.current || code.length !== OTP_LENGTH || !phoneNumber) return;
 
       verifyingRef.current = true;
       setLoading(true);
       setError(undefined);
 
       try {
+        if (isPhoneChange) {
+          await verifyNewPhone(phoneNumber, code);
+
+          Toast.show({
+            type: 'success',
+            text1: t('settings:account_info.phone_updated_title'),
+            text2: t('settings:account_info.phone_updated_message'),
+          });
+
+          router.replace('/account-info');
+          return;
+        }
+
         const { isNewCustomer } = await verifyOtp(phoneNumber, code);
 
         if (isNewCustomer) {
@@ -75,6 +103,7 @@ export default function VerifyOtpScreen() {
         const apiError = parseApiError(err);
         const otpError =
           apiError.errors?.otp?.[0] ??
+          apiError.errors?.new_phone_number?.[0] ??
           apiError.errors?.code?.[0] ??
           apiError.message;
 
@@ -94,7 +123,7 @@ export default function VerifyOtpScreen() {
         verifyingRef.current = false;
       }
     },
-    [phoneNumber, t, verifyOtp],
+    [phoneNumber, isPhoneChange, t, verifyOtp, verifyNewPhone],
   );
 
   useEffect(() => {
@@ -104,13 +133,20 @@ export default function VerifyOtpScreen() {
   }, [otp, handleVerify]);
 
   async function handleResend() {
-    if (cooldown > 0 || resendLoading) return;
+    if (cooldown > 0 || resendLoading || !phoneNumber) return;
+
+    if (isPhoneChange && !name) return;
 
     setResendLoading(true);
     setError(undefined);
 
     try {
-      await resendOtp(phoneNumber);
+      if (isPhoneChange) {
+        await updateProfile(name!, phoneNumber);
+      } else {
+        await resendOtp(phoneNumber);
+      }
+
       setCooldown(RESEND_COOLDOWN_SECONDS);
       setOtp('');
       inputRef.current?.focus();
@@ -140,6 +176,14 @@ export default function VerifyOtpScreen() {
     setOtp(digits);
   }
 
+  const title = isPhoneChange
+    ? t('settings:account_info.verify_phone_title')
+    : t('otp.title');
+
+  const subtitle = isPhoneChange
+    ? t('settings:account_info.verify_phone_subtitle', { phone: phoneNumber })
+    : t('otp.subtitle', { phone: phoneNumber });
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.backRow}>
@@ -156,10 +200,8 @@ export default function VerifyOtpScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-            <Text style={styles.title}>{t('otp.title')}</Text>
-            <Text style={styles.subtitle}>
-              {t('otp.subtitle', { phone: phoneNumber })}
-            </Text>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.subtitle}>{subtitle}</Text>
           </View>
 
           <Pressable style={styles.otpRow} onPress={() => inputRef.current?.focus()}>

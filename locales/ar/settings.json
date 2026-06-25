@@ -36,6 +36,16 @@
     "account_info": {
         "name": "الاسم",
         "email": "البريد الإلكتروني",
-        "phone": "رقم الهاتف"
+        "phone": "رقم الهاتف",
+        "name_placeholder": "محمد أحمد",
+        "phone_placeholder": "05XXXXXXXX",
+        "save": "حفظ التغييرات",
+        "saved_title": "تم تحديث الملف الشخصي",
+        "saved_message": "تم حفظ معلومات حسابك.",
+        "save_failed_title": "تعذر حفظ الملف الشخصي",
+        "verify_phone_title": "تحقق من الرقم الجديد",
+        "verify_phone_subtitle": "أدخل الرمز المكوّن من 6 أرقام المرسل إلى {{phone}}",
+        "phone_updated_title": "تم تحديث الهاتف",
+        "phone_updated_message": "تم تحديث رقم هاتفك بنجاح."
     }
 }

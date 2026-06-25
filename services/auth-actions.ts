@@ -1,13 +1,13 @@
 import {
-    getUserApi,
     logoutApi,
     resendOtpApi,
     sendOtpApi,
     updateProfileApi,
+    verifyNewPhoneApi,
     verifyOtpApi,
     type Customer,
-    type OtpMeta,
 } from "@/services/auth";
+import { splashApi } from "@/services/splash";
 import { removeToken, setToken } from "@/services/secure-store";
 import { unregisterPushToken } from "@/services/notifications/registration";
 import { clearSessionId } from "@/services/session";
@@ -17,11 +17,11 @@ import { useCartStore } from "@/stores/cart-store";
 import { useAppPrefsStore } from "@/stores/app-prefs-store";
 import { parseApiError } from "@/lib/api";
 
-export async function sendOtp(phone_number: string): Promise<OtpMeta> {
+export async function sendOtp(phone_number: string): Promise<void> {
     return sendOtpApi(phone_number);
 }
 
-export async function resendOtp(phone_number: string): Promise<OtpMeta> {
+export async function resendOtp(phone_number: string): Promise<void> {
     return resendOtpApi(phone_number);
 }
 
@@ -39,10 +39,30 @@ export async function verifyOtp(
     return { isNewCustomer, customer };
 }
 
-export async function updateProfile(name: string): Promise<Customer> {
-    const customer = await updateProfileApi(name);
-    useAuthStore.setState({ user: customer });
-    return customer;
+export async function updateProfile(
+    name: string,
+    phone_number: string,
+): Promise<{ otpSent: boolean }> {
+    const { otp_sent } = await updateProfileApi(name, phone_number);
+
+    if (!otp_sent) {
+        await refreshUser();
+    }
+
+    return { otpSent: otp_sent };
+}
+
+export async function verifyNewPhone(new_phone_number: string, otp: string): Promise<Customer> {
+    await verifyNewPhoneApi(new_phone_number, otp);
+    await refreshUser();
+
+    const user = useAuthStore.getState().user;
+
+    if (!user) {
+        throw new Error("User not found after phone verification.");
+    }
+
+    return user;
 }
 
 export async function logout() {
@@ -71,8 +91,11 @@ export async function logoutLocal() {
 
 export async function refreshUser() {
     try {
-        const user = await getUserApi();
-        useAuthStore.setState({ user });
+        const data = await splashApi();
+
+        if (data.customer) {
+            useAuthStore.setState({ user: data.customer });
+        }
     } catch (error) {
         const apiError = parseApiError(error);
         if (apiError.status === 401) await logoutLocal();
