@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import {
+  Button,
   FlatList,
   Pressable,
   RefreshControl,
@@ -19,6 +20,7 @@ import { useHomeSections } from '@/hooks/react-query-hooks/use-home-sections';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { parseApiError } from '@/lib/api';
 import { useLastSelectedAddress } from '@/stores/app-prefs-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -55,23 +57,28 @@ export default function HomeScreen() {
     }
 
     return (
-      <FlatList
-        data={sections}
-        renderItem={({ item }) => <SectionRenderer section={item} />}
-        keyExtractor={(item) => item.id.toString()}
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponent={<Header />}
-        // refreshControl={
-        //   <RefreshControl
-        //     refreshing={isFetching}
-        //     onRefresh={() => void refetch()}
-        //     tintColor={colors.primary}
-        //     progressBackgroundColor={colors.background}
-        //     progressViewOffset={insets.top}
-        //   />
-        // }
-        ListEmptyComponent={<Text style={[styles.emptyText, { color: colors.mutedForeground }]}>{t('general:empty.nothing_to_show')}</Text>}
-      />
+      <>
+        <FlatList
+          data={sections}
+          renderItem={({ item }) => <SectionRenderer section={item} />}
+          keyExtractor={(item) => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={<Header />}
+          // refreshControl={
+          //   <RefreshControl
+          //     refreshing={isFetching}
+          //     onRefresh={() => void refetch()}
+          //     tintColor={colors.primary}
+          //     progressBackgroundColor={colors.background}
+          //     progressViewOffset={insets.top}
+          //   />
+          // }
+          ListEmptyComponent={<Text style={[styles.emptyText, { color: colors.mutedForeground }]}>{t('general:empty.nothing_to_show')}</Text>}
+        />
+        <Button title="Clear Async Storage" onPress={() => {
+            AsyncStorage.clear();
+        }} />
+      </>
     );
   };
 

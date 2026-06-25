@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Sonic",
-    "slug": "Sonic",
+    "name": "Zad",
+    "slug": "zad",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "sonic",
+    "scheme": "zad",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {

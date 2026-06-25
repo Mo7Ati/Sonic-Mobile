@@ -33,7 +33,7 @@ import { I18nManager } from "react-native";
 
 export type AppLanguage = "ar" | "en";
 
-export const LANGUAGE_STORAGE_KEY = "sonic_language";
+export const LANGUAGE_STORAGE_KEY = "zad_language";
 export const DEFAULT_LANGUAGE: AppLanguage = "ar";
 
 const resources = {

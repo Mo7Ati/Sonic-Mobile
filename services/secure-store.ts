@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
-const TOKEN_KEY = 'sonic_auth_token';
+const TOKEN_KEY = 'zad_auth_token';
 
 let memoryToken: string | null = null;
 
