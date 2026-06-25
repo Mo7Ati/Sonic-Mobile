@@ -2,11 +2,9 @@ import api from '@/lib/api';
 
 export interface Customer {
   id: number;
-  name: string;
-  email: string;
-  phone_number: string | null;
-  email_verified_at: string | null;
-  is_active: boolean;
+  name: string | null;
+  phone_number: string;
+  last_seen_at: string | null;
 }
 
 interface ApiResponse<T = unknown> {
@@ -16,25 +14,36 @@ interface ApiResponse<T = unknown> {
   extra: unknown;
 }
 
-export async function loginApi(email: string, password: string) {
-  const { data } = await api.post<ApiResponse<{ customer: Customer; token: string }>>(
-    '/login',
-    { email, password },
-  );
+export interface OtpMeta {
+  expires_in: number;
+  phone_masked: string;
+}
+
+export async function sendOtpApi(phone_number: string): Promise<OtpMeta> {
+  const { data } = await api.post<ApiResponse<OtpMeta>>('/send-otp', { phone_number });
   return data.data;
 }
 
-export async function registerApi(params: {
-  name: string;
-  email: string;
-  phone_number?: string;
-  password: string;
-  password_confirmation: string;
-}) {
-  const { data } = await api.post<ApiResponse<{ customer: Customer; token: string }>>(
-    '/register',
-    params,
+export async function resendOtpApi(phone_number: string): Promise<OtpMeta> {
+  const { data } = await api.post<ApiResponse<OtpMeta>>('/resend-otp', { phone_number });
+  return data.data;
+}
+
+export async function verifyOtpApi(phone_number: string, otp: string) {
+  const response = await api.post<ApiResponse<{ customer: Customer; token: string }>>(
+    '/verify-otp',
+    { phone_number, otp },
   );
+
+  return {
+    ...response.data.data,
+    isNewCustomer: response.status === 201,
+    message: response.data.message,
+  };
+}
+
+export async function updateProfileApi(name: string): Promise<Customer> {
+  const { data } = await api.patch<ApiResponse<Customer>>('/user', { name });
   return data.data;
 }
 
@@ -45,31 +54,4 @@ export async function logoutApi() {
 export async function getUserApi() {
   const { data } = await api.get<ApiResponse<Customer>>('/user');
   return data.data;
-}
-
-export async function forgotPasswordApi(email: string) {
-  const { data } = await api.post<ApiResponse>('/forgot-password', { email });
-  return data;
-}
-
-export async function resetPasswordApi(params: {
-  token: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
-}) {
-  const { data } = await api.post<ApiResponse>('/reset-password', params);
-  return data;
-}
-
-export async function resendVerificationApi() {
-  const { data } = await api.post<ApiResponse>('/email/verification-notification');
-  return data;
-}
-
-export async function verifyEmailApi(id: string, hash: string, queryString: string) {
-  const { data } = await api.get<ApiResponse>(
-    `/email/verify/${id}/${hash}?${queryString}`,
-  );
-  return data;
 }

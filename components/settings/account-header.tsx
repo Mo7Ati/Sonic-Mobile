@@ -16,20 +16,24 @@ export function AccountHeader() {
 
     const openUserSettings = () => router.push('/user-settings');
 
+    const displayName = isAuthenticated && user
+        ? (user.name ?? user.phone_number)
+        : t('guest.title');
+
     return (
         <View style={styles.container}>
             <Pressable
                 onPress={openUserSettings}
                 style={({ pressed }) => [styles.userInfo, pressed && styles.pressed]}
                 accessibilityRole="button"
-                accessibilityLabel={isAuthenticated && user ? user.name : t('guest.title')}
+                accessibilityLabel={displayName}
             >
                 <UserAvatar name={isAuthenticated ? user?.name : null} size={44} />
                 <Text
                     style={[styles.title, { color: colors.foreground }]}
                     numberOfLines={1}
                 >
-                    {isAuthenticated && user ? user.name : t('guest.title')}
+                    {displayName}
                 </Text>
             </Pressable>
 

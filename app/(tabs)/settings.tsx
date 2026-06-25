@@ -1,7 +1,6 @@
 import { AccountHeader } from '@/components/settings/account-header';
 import { LanguageSelector } from '@/components/settings/language-selector';
 import { MenuGroup, type MenuItem } from '@/components/settings/menu-group';
-import { UserCard } from '@/components/settings/user-card';
 import { Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { useAuth } from '@/hooks/use-auth';

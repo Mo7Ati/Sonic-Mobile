@@ -1,11 +1,12 @@
 import {
-    forgotPasswordApi,
     getUserApi,
-    loginApi,
     logoutApi,
-    registerApi,
-    resendVerificationApi,
-    resetPasswordApi,
+    resendOtpApi,
+    sendOtpApi,
+    updateProfileApi,
+    verifyOtpApi,
+    type Customer,
+    type OtpMeta,
 } from "@/services/auth";
 import { removeToken, setToken } from "@/services/secure-store";
 import { unregisterPushToken } from "@/services/notifications/registration";
@@ -16,34 +17,35 @@ import { useCartStore } from "@/stores/cart-store";
 import { useAppPrefsStore } from "@/stores/app-prefs-store";
 import { parseApiError } from "@/lib/api";
 
-export async function login(email: string, password: string) {
-    const { customer, token } = await loginApi(email, password);
-    await setToken(token);
-    useAuthStore.setState({ user: customer, token, status: "authenticated" });
-
-    // The guest session has been merged server-side; drop our local id and
-    // refresh the cart so the merged contents land in the store.
-    await clearSessionId();
-    useCartStore.getState().fetchCart();
+export async function sendOtp(phone_number: string): Promise<OtpMeta> {
+    return sendOtpApi(phone_number);
 }
 
-export async function register(params: {
-    name: string;
-    email: string;
-    phone_number?: string;
-    password: string;
-    password_confirmation: string;
-}) {
-    const { customer, token } = await registerApi(params);
+export async function resendOtp(phone_number: string): Promise<OtpMeta> {
+    return resendOtpApi(phone_number);
+}
+
+export async function verifyOtp(
+    phone_number: string,
+    otp: string,
+): Promise<{ isNewCustomer: boolean; customer: Customer }> {
+    const { customer, token, isNewCustomer } = await verifyOtpApi(phone_number, otp);
     await setToken(token);
     useAuthStore.setState({ user: customer, token, status: "authenticated" });
 
     await clearSessionId();
     useCartStore.getState().fetchCart();
+
+    return { isNewCustomer, customer };
+}
+
+export async function updateProfile(name: string): Promise<Customer> {
+    const customer = await updateProfileApi(name);
+    useAuthStore.setState({ user: customer });
+    return customer;
 }
 
 export async function logout() {
-    // Drop this device's push token while the bearer token is still valid.
     await unregisterPushToken();
 
     try {
@@ -75,24 +77,4 @@ export async function refreshUser() {
         const apiError = parseApiError(error);
         if (apiError.status === 401) await logoutLocal();
     }
-}
-
-export async function forgotPassword(email: string) {
-    const result = await forgotPasswordApi(email);
-    return result.message;
-}
-
-export async function resetPassword(params: {
-    token: string;
-    email: string;
-    password: string;
-    password_confirmation: string;
-}) {
-    const result = await resetPasswordApi(params);
-    return result.message;
-}
-
-export async function resendVerification() {
-    const result = await resendVerificationApi();
-    return result.message;
 }

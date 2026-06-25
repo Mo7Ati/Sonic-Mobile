@@ -4,9 +4,8 @@ import { FontFamily } from '@/constants/fonts';
 import { Colors, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/use-auth';
 import { parseApiError } from '@/lib/api';
-import { isValidPhone, normalizePhoneInput } from '@/lib/phone';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
@@ -15,18 +14,17 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
-interface PhoneForm {
-  phone_number: string;
+interface ProfileForm {
+  name: string;
 }
 
-export default function LoginScreen() {
-  const { sendOtp } = useAuth();
+export default function CompleteProfileScreen() {
+  const { updateProfile, isAuthenticated, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation(['auth', 'general']);
 
@@ -35,32 +33,36 @@ export default function LoginScreen() {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<PhoneForm>({
-    defaultValues: {
-      phone_number: '',
-    },
+  } = useForm<ProfileForm>({
+    defaultValues: { name: '' },
   });
 
-  async function onSubmit(form: PhoneForm) {
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace('/(auth)/login');
+      return;
+    }
+
+    if (user?.name) {
+      router.replace('/');
+    }
+  }, [isAuthenticated, user?.name]);
+
+  async function onSubmit(form: ProfileForm) {
     setLoading(true);
 
     try {
-      await sendOtp(form.phone_number);
-      router.push({
-        pathname: '/(auth)/verify-otp',
-        params: {
-          phone_number: form.phone_number,
-        },
-      });
+      await updateProfile(form.name.trim());
+      router.replace('/');
     } catch (error) {
       const apiError = parseApiError(error);
 
-      if (apiError.status === 422 && apiError.errors?.phone_number) {
-        setError('phone_number', { message: apiError.errors.phone_number[0] });
+      if (apiError.status === 422 && apiError.errors?.name) {
+        setError('name', { message: apiError.errors.name[0] });
       } else {
         Toast.show({
           type: 'error',
-          text1: t('phone_auth.toast_failed_title'),
+          text1: t('complete_profile.toast_failed_title'),
           text2: apiError.message,
         });
       }
@@ -81,47 +83,36 @@ export default function LoginScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-            <Text style={styles.title}>{t('phone_auth.title')}</Text>
-            <Text style={styles.subtitle}>{t('phone_auth.subtitle')}</Text>
+            <Text style={styles.title}>{t('complete_profile.title')}</Text>
+            <Text style={styles.subtitle}>{t('complete_profile.subtitle')}</Text>
           </View>
 
           <View style={styles.form}>
             <Controller
               control={control}
-              name="phone_number"
-              rules={{
-                required: t('general:validation.phone_required'),
-                validate: (value) =>
-                  isValidPhone(value) || t('general:validation.phone_invalid'),
-              }}
+              name="name"
+              rules={{ required: t('general:validation.name_required') }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <AuthInput
-                  label={t('phone_auth.phone_label')}
-                  icon="call-outline"
-                  placeholder={t('phone_auth.phone_placeholder')}
-                  keyboardType="phone-pad"
-                  autoComplete="tel"
-                  maxLength={10}
+                  label={t('complete_profile.name_label')}
+                  icon="person-outline"
+                  placeholder={t('complete_profile.name_placeholder')}
+                  autoComplete="name"
+                  autoFocus
                   value={value}
-                  onChangeText={(text) => onChange(normalizePhoneInput(text))}
+                  onChangeText={onChange}
                   onBlur={onBlur}
-                  error={errors.phone_number?.message}
+                  error={errors.name?.message}
                 />
               )}
             />
 
             <AuthButton
-              title={t('phone_auth.submit')}
+              title={t('complete_profile.submit')}
               onPress={handleSubmit(onSubmit)}
               loading={loading}
               style={styles.submitButton}
             />
-
-            <TouchableOpacity style={styles.guestButton} onPress={() => router.push('/')}>
-              <Text style={styles.guestButtonText}>
-                {t('login.continue_as_guest')}
-              </Text>
-            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -163,14 +154,5 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     marginTop: Spacing.xs,
-  },
-  guestButton: {
-    alignItems: 'center',
-    marginTop: Spacing.lg,
-  },
-  guestButtonText: {
-    fontSize: 15,
-    fontFamily: FontFamily.semiBold,
-    color: Colors.primary,
   },
 });

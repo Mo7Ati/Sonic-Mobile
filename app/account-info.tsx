@@ -29,11 +29,8 @@ export default function AccountInfoScreen() {
     }
 
     const fields = [
-        { label: t('settings:account_info.name'), value: user.name, icon: 'person-outline' as const },
-        { label: t('settings:account_info.email'), value: user.email, icon: 'mail-outline' as const },
-        ...(user.phone_number
-            ? [{ label: t('settings:account_info.phone'), value: user.phone_number, icon: 'call-outline' as const }]
-            : []),
+        { label: t('settings:account_info.name'), value: user.name ?? '—', icon: 'person-outline' as const },
+        { label: t('settings:account_info.phone'), value: user.phone_number, icon: 'call-outline' as const },
     ];
 
     return (

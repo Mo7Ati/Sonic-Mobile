@@ -1,11 +1,10 @@
 import {
-    forgotPassword,
-    login,
     logout,
     refreshUser,
-    register,
-    resendVerification,
-    resetPassword,
+    resendOtp,
+    sendOtp,
+    updateProfile,
+    verifyOtp,
 } from "@/services/auth-actions";
 import { useAuthStore } from "@/stores/auth-store";
 
@@ -18,12 +17,11 @@ export function useAuth() {
         status,
         isAuthenticated: status === "authenticated",
         isLoading: status === "loading",
-        login,
-        register,
+        sendOtp,
+        verifyOtp,
+        resendOtp,
+        updateProfile,
         logout,
         refreshUser,
-        forgotPassword,
-        resetPassword,
-        resendVerification,
     };
 }

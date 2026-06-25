@@ -37,6 +37,8 @@
         "password_min": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
         "password_confirm_required": "يرجى تأكيد كلمة المرور",
         "passwords_mismatch": "كلمتا المرور غير متطابقتين",
-        "reset_token_required": "رمز إعادة التعيين مطلوب"
+        "reset_token_required": "رمز إعادة التعيين مطلوب",
+        "phone_required": "رقم الهاتف مطلوب",
+        "phone_invalid": "أدخل رقم جوال فلسطيني صالح (056 أو 059)"
     }
 }

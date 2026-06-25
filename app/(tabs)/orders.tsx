@@ -73,7 +73,7 @@ export default function OrdersScreen() {
             </Text>
             <Pressable
                 style={[styles.primaryButton, { backgroundColor: colors.primary }]}
-                onPress={() => router.push("/login")}
+                onPress={() => router.push("/(auth)/login")}
             >
                 <Text style={[styles.primaryButtonText, { color: colors.primaryForeground }]}>
                     {t("orders:guest.action")}
