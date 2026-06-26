@@ -25,7 +25,18 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60_000,
+            retry: 2,
+            refetchOnWindowFocus: false,
+          },
+        },
+      }),
+  );
   const [fontsLoaded, fontsError] = useFonts(CairoFontsToLoad);
   const fontsReady = fontsLoaded || !!fontsError;
   const { status } = useAuthStore();
