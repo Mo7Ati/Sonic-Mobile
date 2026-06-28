@@ -2,11 +2,10 @@ import { BorderRadius, Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { formatAmount } from "@/lib/utils.";
 import {
-    selectCartBranchId,
-    selectItemsCount,
-    selectSubtotal,
-    useCartStore,
-} from "@/stores/cart-store";
+    useCartBranchId,
+    useCartItemsCount,
+    useCartSubtotal,
+} from "@/hooks/react-query-hooks/use-cart";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { useRouter } from "expo-router";
@@ -24,9 +23,9 @@ export default function CartBottomBar({ branchId }: CartBottomBarProps) {
     const { t } = useTranslation("cart");
     const router = useRouter();
 
-    const cartBranchId = useCartStore(selectCartBranchId);
-    const itemsCount = useCartStore(selectItemsCount);
-    const subtotal = useCartStore(selectSubtotal);
+    const cartBranchId = useCartBranchId();
+    const itemsCount = useCartItemsCount();
+    const subtotal = useCartSubtotal();
 
     if (cartBranchId !== branchId || itemsCount === 0) return null;
 

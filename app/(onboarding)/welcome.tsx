@@ -1,7 +1,7 @@
 import Svg, { Path } from 'react-native-svg';
 import { BorderRadius, Colors, Spacing } from "@/constants/theme";
 import { FontFamily } from "@/constants/fonts";
-import { useOnboardingSlides, usePlatformConfigStore } from "@/stores/platform-config-store";
+import { useOnboardingSlides } from "@/hooks/react-query-hooks/use-config";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";

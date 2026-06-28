@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { ENV } from '@/config/env';
 import i18n from '@/lib/i18n';
 import { getOrCreateSessionId } from '@/services/session';
-import { useAuthStore } from '@/stores/auth-store';
+import { useSessionStore } from '@/stores/session-store';
 
 export interface ApiError {
   message: string;
@@ -29,7 +29,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  const token = useAuthStore.getState().token;
+  const token = useSessionStore.getState().token;
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

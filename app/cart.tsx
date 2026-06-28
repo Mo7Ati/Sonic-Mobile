@@ -2,10 +2,12 @@ import { BorderRadius, Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { formatAmount } from "@/lib/utils.";
 import {
-    selectItemsCount,
-    selectSubtotal,
-    useCartStore,
-} from "@/stores/cart-store";
+    useCart,
+    useCartItemsCount,
+    useCartSubtotal,
+    useRemoveCartItem,
+    useUpdateCartItem,
+} from "@/hooks/react-query-hooks/use-cart";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { Image } from "expo-image";
@@ -30,9 +32,9 @@ export default function CartScreen() {
     const { t } = useTranslation(["cart", "general"]);
     const router = useRouter();
 
-    const { cart, isLoading } = useCartStore();
-    const itemsCount = useCartStore(selectItemsCount);
-    const subtotal = useCartStore(selectSubtotal);
+    const { data: cart, isPending: isLoading } = useCart();
+    const itemsCount = useCartItemsCount();
+    const subtotal = useCartSubtotal();
     const [notes, setNotes] = useState("");
 
     if (isLoading && !cart) {
@@ -284,19 +286,19 @@ function CartItemRow({
     const { colors, font } = useAppTheme();
     const { t } = useTranslation(["cart", "general"]);
     const router = useRouter();
-    const updateItemQuantity = useCartStore((s) => s.updateItemQuantity);
-    const removeItem = useCartStore((s) => s.removeItem);
+    const updateItem = useUpdateCartItem();
+    const removeItem = useRemoveCartItem();
 
     const handleDecrement = () => {
         if (item.quantity <= 1) {
-            removeItem(item.id);
+            removeItem.mutate(item.id);
         } else {
-            updateItemQuantity(item.id, item.quantity - 1);
+            updateItem.mutate({ itemId: item.id, quantity: item.quantity - 1 });
         }
     };
 
     const handleIncrement = () => {
-        updateItemQuantity(item.id, item.quantity + 1);
+        updateItem.mutate({ itemId: item.id, quantity: item.quantity + 1 });
     };
 
     const handleEdit = () => {

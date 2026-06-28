@@ -4,7 +4,7 @@ import {
     markAllNotificationsAsRead,
     markNotificationAsRead,
 } from "@/services/notifications/notifications-service";
-import { useIsAuthenticated } from "@/stores/auth-store";
+import { useIsAuthenticated } from "@/stores/session-store";
 import {
     useInfiniteQuery,
     useMutation,

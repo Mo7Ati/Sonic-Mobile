@@ -7,13 +7,15 @@ import {
     verifyOtpApi,
     type Customer,
 } from "@/services/auth";
-import { splashApi } from "@/services/splash";
+import { meApi } from "@/services/customer";
 import { removeToken, setToken } from "@/services/secure-store";
 import { unregisterPushToken } from "@/services/notifications/registration";
 import { clearSessionId } from "@/services/session";
-import { useAddressesStore } from "@/stores/addresses-store";
-import { useAuthStore } from "@/stores/auth-store";
-import { useCartStore } from "@/stores/cart-store";
+import { addressesKey } from "@/hooks/react-query-hooks/use-addresses";
+import { cartKey } from "@/hooks/react-query-hooks/use-cart";
+import { meKey } from "@/hooks/react-query-hooks/use-me";
+import { queryClient } from "@/lib/query-client";
+import { useSessionStore } from "@/stores/session-store";
 import { useAppPrefsStore } from "@/stores/app-prefs-store";
 import { parseApiError } from "@/lib/api";
 
@@ -31,10 +33,14 @@ export async function verifyOtp(
 ): Promise<{ isNewCustomer: boolean; customer: Customer }> {
     const { customer, token, isNewCustomer } = await verifyOtpApi(phone_number, otp);
     await setToken(token);
-    useAuthStore.setState({ user: customer, token, status: "authenticated" });
+    useSessionStore.setState({ token, status: "authenticated" });
+    queryClient.setQueryData(meKey, customer);
 
     await clearSessionId();
-    useCartStore.getState().fetchCart();
+
+    // Identity changed from guest to customer: refetch user-scoped data.
+    queryClient.invalidateQueries({ queryKey: cartKey });
+    queryClient.invalidateQueries({ queryKey: addressesKey });
 
     return { isNewCustomer, customer };
 }
@@ -56,7 +62,7 @@ export async function verifyNewPhone(new_phone_number: string, otp: string): Pro
     await verifyNewPhoneApi(new_phone_number, otp);
     await refreshUser();
 
-    const user = useAuthStore.getState().user;
+    const user = queryClient.getQueryData<Customer>(meKey);
 
     if (!user) {
         throw new Error("User not found after phone verification.");
@@ -79,23 +85,20 @@ export async function logout() {
 
 /**
  * Wipe client-side session state. Safe to call from the 401 interceptor —
- * does not hit the network.
+ * does not hit the network. `queryClient.clear()` drops every server cache in
+ * one call, replacing the previous per-store resets.
  */
 export async function logoutLocal() {
     await removeToken();
-    useAuthStore.setState({ user: null, token: null, status: "guest" });
-    useAddressesStore.getState().reset();
-    useCartStore.getState().reset();
+    useSessionStore.setState({ token: null, status: "guest" });
     useAppPrefsStore.getState().reset();
+    queryClient.clear();
 }
 
 export async function refreshUser() {
     try {
-        const data = await splashApi();
-
-        if (data.customer) {
-            useAuthStore.setState({ user: data.customer });
-        }
+        const customer = await meApi();
+        queryClient.setQueryData(meKey, customer);
     } catch (error) {
         const apiError = parseApiError(error);
         if (apiError.status === 401) await logoutLocal();

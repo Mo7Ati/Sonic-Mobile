@@ -1,5 +1,5 @@
 import { useAppTheme } from '@/hooks/use-app-theme';
-import { useDeleteAddress } from '@/hooks/react-query-hooks/use-addresses';
+import { useAddresses, useDeleteAddress } from '@/hooks/react-query-hooks/use-addresses';
 import type { Address } from '@/services/addresses/types';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -16,7 +16,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BorderRadius, Spacing } from '@/constants/theme';
-import { useAddressesStore } from '@/stores/addresses-store';
 import { useAppPrefsStore } from '@/stores/app-prefs-store';
 import { getAddressFieldsSummary } from '@/lib/utils.';
 
@@ -27,11 +26,12 @@ export default function AddressListScreen() {
 
     const deleteAddress = useDeleteAddress();
 
-    // Addresses
-    const { addresses, removeAddress } = useAddressesStore();
+    // Addresses (server state)
+    const { data: addresses = [] } = useAddresses();
 
-    // Last selected address
-    const { lastSelectedAddress, setLastSelectedAddress } = useAppPrefsStore();
+    // Last selected address (client pref)
+    const lastSelectedAddressId = useAppPrefsStore((s) => s.lastSelectedAddressId);
+    const setLastSelectedAddress = useAppPrefsStore((s) => s.setLastSelectedAddress);
 
     const handleDelete = (address: Address) => {
         Alert.alert(
@@ -45,7 +45,7 @@ export default function AddressListScreen() {
                     onPress: () => {
                         deleteAddress.mutate(address.id, {
                             onSuccess: () => {
-                                if (lastSelectedAddress?.id === address.id) {
+                                if (lastSelectedAddressId === address.id) {
                                     setLastSelectedAddress(null);
                                 }
                             },

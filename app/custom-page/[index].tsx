@@ -1,7 +1,7 @@
 import { BackButton } from '@/components/ui/back-button';
 import { Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
-import { usePlatformConfigStore } from '@/stores/platform-config-store';
+import { useCustomPages } from '@/hooks/react-query-hooks/use-config';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -11,7 +11,7 @@ export default function CustomPageScreen() {
     const { colors, font } = useAppTheme();
     const router = useRouter();
     const { index } = useLocalSearchParams<{ index: string }>();
-    const customPages = usePlatformConfigStore((s) => s.customPages);
+    const customPages = useCustomPages();
 
     const pageIndex = Number(index);
     const page = Number.isInteger(pageIndex) ? customPages[pageIndex] : undefined;

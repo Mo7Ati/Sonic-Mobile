@@ -4,7 +4,7 @@ import { MenuGroup, type MenuItem } from '@/components/settings/menu-group';
 import { Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
 import { useAuth } from '@/hooks/use-auth';
-import { usePlatformConfigStore } from '@/stores/platform-config-store';
+import { useCustomPages } from '@/hooks/react-query-hooks/use-config';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,7 @@ export default function SettingsScreen() {
     const router = useRouter();
     const [languageVisible, setLanguageVisible] = useState(false);
 
-    const { customPages } = usePlatformConfigStore();
+    const customPages = useCustomPages();
 
     const accountItems: MenuItem[] = [
         {

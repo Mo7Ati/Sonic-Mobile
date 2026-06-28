@@ -8,7 +8,7 @@ import {
 } from "@/services/notifications/push";
 import { syncPushToken } from "@/services/notifications/registration";
 import type { AppNotificationData } from "@/services/notifications/types";
-import { useAuthStore } from "@/stores/auth-store";
+import { useSessionStore } from "@/stores/session-store";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, type Router } from "expo-router";
 import * as Notifications from "expo-notifications";
@@ -28,7 +28,7 @@ configureNotificationHandler();
 export function usePushNotifications(): void {
     const router = useRouter();
     const queryClient = useQueryClient();
-    const status = useAuthStore((s) => s.status);
+    const status = useSessionStore((s) => s.status);
     const registeredRef = useRef(false);
 
     useEffect(() => {

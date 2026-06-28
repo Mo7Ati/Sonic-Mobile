@@ -1,66 +1,43 @@
-import { getToken, removeToken } from "@/services/secure-store";
-import { splashApi } from "@/services/splash";
-import { useAddressesStore } from "@/stores/addresses-store";
-import { useAuthStore } from "@/stores/auth-store";
-import { useCartStore } from "@/stores/cart-store";
-import { usePlatformConfigStore } from "@/stores/platform-config-store";
+import { isAxiosError } from "axios";
+import { configQuery } from "@/hooks/react-query-hooks/use-config";
+import { meQuery } from "@/hooks/react-query-hooks/use-me";
+import { queryClient } from "@/lib/query-client";
+import { getToken } from "@/services/secure-store";
+import { useSessionStore } from "@/stores/session-store";
 
 /**
  * App-start orchestrator. Runs once on mount.
  *
- *   1. Read the persisted token and seed the auth store so the splash request
- *      goes out authenticated.
- *   2. Fetch /splash and fan out into the auth, addresses, and platform-config
- *      stores.
- *   3. If we held a token but the server returned a null customer, the token
- *      is stale — wipe it and downgrade to guest.
- *   4. On network failure, fall back to whatever is already persisted: trust
- *      the token if present, otherwise mark as guest.
- *   5. Whatever the outcome, hydrate the cart for the resolved identity.
+ *   1. Seed the persisted token into the session store so the identity request
+ *      goes out authenticated and the api interceptor can read it.
+ *   2. Resolve identity: only when a token exists, verify it via `/me`.
+ *      - success  -> authenticated
+ *      - 401       -> stale token; the api interceptor already cleared it, so
+ *                     we settle on guest
+ *      - offline   -> trust the token as the best available signal
+ *   3. No token -> guest.
+ *   4. Warm the static config so the welcome/onboarding screen can render
+ *      without a skeleton. Addresses and cart are fetched on demand by the
+ *      screens that need them.
  */
 export async function bootstrap() {
     const token = await getToken();
-    useAuthStore.setState({ token });
+    useSessionStore.setState({ token });
 
-    try {
-        const data = await splashApi();
-
-        // Sync addresses from the API to the store
-        useAddressesStore.getState().setAddresses(data.addresses);
-
-        // Sync platform config from the API to the store
-        usePlatformConfigStore.getState().setAddressFieldTemplates(data.platformAddressFields);
-        usePlatformConfigStore.getState().setOnboardingSlides(data.onboardingSlides ?? []);
-        usePlatformConfigStore.getState().setCustomPages(data.customPages ?? []);
-        
-        // If the token is present and the customer is null, the token is stale — wipe it and downgrade to guest.
-        if (token && !data.customer) {
-            await removeToken();
-            useAuthStore.setState({
-                user: null,
-                token: null,
-                status: "guest",
+    if (token) {
+        try {
+            await queryClient.fetchQuery(meQuery());
+            useSessionStore.setState({ status: "authenticated" });
+        } catch (error) {
+            const isUnauthorized =
+                isAxiosError(error) && error.response?.status === 401;
+            useSessionStore.setState({
+                status: isUnauthorized ? "guest" : "authenticated",
             });
-            return;
         }
-
-        // Sync customer from the API to the store
-        useAuthStore.setState({
-            user: data.customer,
-            status: data.customer ? "authenticated" : "guest",
-        });
-    } catch {
-        // Offline / server down — keep the persisted stores as they are and
-        // trust the token as the best available signal of identity.
-        useAuthStore.setState({
-            status: token ? "authenticated" : "guest",
-        });
-    } finally {
-        // Hydrate the cart once identity is resolved. Runs on every path —
-        // user, guest, and the stale-token downgrade above — so a returning
-        // user or guest opens the app with their server cart already loaded.
-        // The API interceptor picks the bearer token or guest session id based
-        // on the auth state we just set; fetchCart swallows its own errors.
-        useCartStore.getState().fetchCart();
+    } else {
+        useSessionStore.setState({ status: "guest" });
     }
+
+    queryClient.prefetchQuery(configQuery());
 }

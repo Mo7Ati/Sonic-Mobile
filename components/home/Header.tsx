@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FontFamily } from '@/constants/fonts';
 import { BorderRadius, Spacing } from '@/constants/theme';
-import { selectItemsCount, useCartStore } from '@/stores/cart-store';
+import { useCartItemsCount } from '@/hooks/react-query-hooks/use-cart';
 import { useLastSelectedAddress } from '@/stores/app-prefs-store';
 import { AddressSelector } from '@/app/addresses/_components/AddressSelector';
 import { getHeaderAddressSummary } from '@/lib/utils.';
@@ -21,7 +21,7 @@ export function Header({ canSelectOtherAddress = true, showCartButton = true, sh
 
   const address = useLastSelectedAddress();
   const addressDisplay = getHeaderAddressSummary(address) ?? t('address_placeholder');
-  const itemsCount = useCartStore(selectItemsCount);
+  const itemsCount = useCartItemsCount();
 
   return (
     <View style={styles.header}>

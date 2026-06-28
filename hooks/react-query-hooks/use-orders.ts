@@ -1,6 +1,6 @@
 import { getBranchPaymentMethods, getOrder, getOrders, placeOrder } from "@/services/orders/order-service";
 import type { OrdersFilter, PlaceOrderPayload } from "@/services/orders/types";
-import { useIsAuthenticated } from "@/stores/auth-store";
+import { useIsAuthenticated } from "@/stores/session-store";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const ordersKey = (filter: OrdersFilter) => ["orders", filter] as const;

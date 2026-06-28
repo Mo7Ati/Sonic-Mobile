@@ -4,10 +4,10 @@ import { formatAmount } from "@/lib/utils.";
 import type { PaymentMethod, ProofFile } from "@/services/orders/types";
 import { useLastSelectedAddress } from "@/stores/app-prefs-store";
 import {
-    selectCartBranchId,
-    selectSubtotal,
-    useCartStore,
-} from "@/stores/cart-store";
+    useCartBranchId,
+    useCartSubtotal,
+    useClearCart,
+} from "@/hooks/react-query-hooks/use-cart";
 import { BorderRadius, Spacing } from "@/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
@@ -34,9 +34,9 @@ export default function PayScreen() {
     const router = useRouter();
     const params = useLocalSearchParams<{ methodId?: string; notes?: string }>();
 
-    const branchId = useCartStore(selectCartBranchId);
-    const subtotal = useCartStore(selectSubtotal);
-    const clearCart = useCartStore((s) => s.clearCart);
+    const branchId = useCartBranchId();
+    const subtotal = useCartSubtotal();
+    const clearCart = useClearCart();
     const selectedAddress = useLastSelectedAddress();
 
     const { data: paymentMethods, isLoading } = useBranchPaymentMethods(branchId);
@@ -94,7 +94,7 @@ export default function PayScreen() {
             },
             {
                 onSuccess: () => {
-                    clearCart();
+                    clearCart.mutate();
                     Alert.alert(
                         t("checkout:order_success_title"),
                         t("checkout:order_success_message"),

@@ -7,13 +7,16 @@ import {
     verifyNewPhone,
     verifyOtp,
 } from "@/services/auth-actions";
-import { useAuthStore } from "@/stores/auth-store";
+import { useCustomer } from "@/hooks/react-query-hooks/use-me";
+import { useSessionStore } from "@/stores/session-store";
 
 export function useAuth() {
-    const { user, token, status } = useAuthStore();
+    const token = useSessionStore((s) => s.token);
+    const status = useSessionStore((s) => s.status);
+    const { data: user } = useCustomer();
 
     return {
-        user,
+        user: user ?? null,
         token,
         status,
         isAuthenticated: status === "authenticated",

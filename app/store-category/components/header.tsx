@@ -1,7 +1,7 @@
 import { BorderRadius, Spacing } from "@/constants/theme";
 import { useAppTheme } from "@/hooks/use-app-theme";
 import { getHeaderAddressSummary } from "@/lib/utils.";
-import { useAppPrefsStore } from "@/stores/app-prefs-store";
+import { useLastSelectedAddress } from "@/stores/app-prefs-store";
 import { Ionicons } from "@expo/vector-icons";
 import { Text } from "@react-navigation/elements";
 import { useRouter } from "expo-router";
@@ -12,7 +12,7 @@ export default function Header() {
   const router = useRouter();
   const { colors } = useAppTheme();
   const { t } = useTranslation("store_category");
-  const { lastSelectedAddress } = useAppPrefsStore();
+  const lastSelectedAddress = useLastSelectedAddress();
 
   return (
     <View style={styles.header}>

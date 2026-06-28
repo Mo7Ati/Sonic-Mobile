@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BorderRadius, Spacing } from '@/constants/theme';
-import { useAddressesStore } from '@/stores/addresses-store';
+import { useAddresses } from '@/hooks/react-query-hooks/use-addresses';
 import { useAppPrefsStore } from '@/stores/app-prefs-store';
 import { getAddressFieldsSummary } from '@/lib/utils.';
 
@@ -28,11 +28,12 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
     const router = useRouter();
     const insets = useSafeAreaInsets();
 
-    // Addresses
-    const { addresses } = useAddressesStore();
+    // Addresses (server state)
+    const { data: addresses = [] } = useAddresses();
 
-    // Last selected address
-    const { lastSelectedAddress, setLastSelectedAddress } = useAppPrefsStore();
+    // Last selected address (client pref)
+    const lastSelectedAddressId = useAppPrefsStore((s) => s.lastSelectedAddressId);
+    const setLastSelectedAddress = useAppPrefsStore((s) => s.setLastSelectedAddress);
 
     const handleChange = (address: Address) => {
         setLastSelectedAddress(address);
@@ -48,7 +49,7 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
     };
 
     const renderItem = ({ item }: { item: Address }) => {
-        const isSelected = lastSelectedAddress?.id === item.id;
+        const isSelected = lastSelectedAddressId === item.id;
 
         return (
             <Pressable

@@ -5,11 +5,11 @@ import { useAppTheme } from "@/hooks/use-app-theme";
 import { getAddressFieldsSummary, formatAmount } from "@/lib/utils.";
 import { useLastSelectedAddress } from "@/stores/app-prefs-store";
 import {
-    selectCartBranchId,
-    selectItemsCount,
-    selectSubtotal,
-    useCartStore,
-} from "@/stores/cart-store";
+    useCart,
+    useCartBranchId,
+    useCartItemsCount,
+    useCartSubtotal,
+} from "@/hooks/react-query-hooks/use-cart";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -40,10 +40,10 @@ export default function CheckoutScreen() {
     const { t } = useTranslation(["checkout", "general"]);
     const router = useRouter();
 
-    const cart = useCartStore((s) => s.cart);
-    const subtotal = useCartStore(selectSubtotal);
-    const itemsCount = useCartStore(selectItemsCount);
-    const branchId = useCartStore(selectCartBranchId);
+    const { data: cart } = useCart();
+    const subtotal = useCartSubtotal();
+    const itemsCount = useCartItemsCount();
+    const branchId = useCartBranchId();
 
     const selectedAddress = useLastSelectedAddress();
 

@@ -1,8 +1,12 @@
 import { BorderRadius, Spacing } from '@/constants/theme';
 import { useAppTheme } from '@/hooks/use-app-theme';
-import { useCreateAddress, useDeleteAddress, useUpdateAddress } from '@/hooks/react-query-hooks/use-addresses';
-import { useAddressesStore } from '@/stores/addresses-store';
-import { useAddressFieldTemplates } from '@/stores/platform-config-store';
+import {
+    useAddresses,
+    useAddressFields,
+    useCreateAddress,
+    useDeleteAddress,
+    useUpdateAddress,
+} from '@/hooks/react-query-hooks/use-addresses';
 import { useAppPrefsStore } from '@/stores/app-prefs-store';
 import type { Address, AddressFieldTemplate, StoreAddressPayload } from '@/services/addresses/types';
 import { Ionicons } from '@expo/vector-icons';
@@ -39,14 +43,15 @@ export default function AddAddressScreen() {
         else router.back();
     };
 
-    // Address field templates
-    const fields = useAddressFieldTemplates();
+    // Address field templates (server state)
+    const { data: fields = [] } = useAddressFields();
 
-    // Addresses
-    const { addresses, addAddress, updateAddress, removeAddress } = useAddressesStore();
+    // Addresses (server state)
+    const { data: addresses = [] } = useAddresses();
 
-    // Last selected address
-    const { lastSelectedAddress, setLastSelectedAddress } = useAppPrefsStore();
+    // Last selected address (client pref)
+    const lastSelectedAddressId = useAppPrefsStore((s) => s.lastSelectedAddressId);
+    const setLastSelectedAddress = useAppPrefsStore((s) => s.setLastSelectedAddress);
 
     const editing = useMemo(
         () => (id ? addresses.find((a) => String(a.id) === String(id)) ?? null : null),
@@ -114,8 +119,7 @@ export default function AddAddressScreen() {
                 { id: editing.id, payload },
                 {
                     onSuccess: (address: Address) => {
-                        updateAddress(address);
-                        if (lastSelectedAddress?.id === address.id) {
+                        if (lastSelectedAddressId === address.id) {
                             setLastSelectedAddress(address);
                         }
                         leave();
@@ -125,8 +129,7 @@ export default function AddAddressScreen() {
         } else {
             createAddressMutation.mutate(payload, {
                 onSuccess: (address: Address) => {
-                    addAddress(address);
-                    if (!lastSelectedAddress || shouldSelectOnCreate) {
+                    if (lastSelectedAddressId == null || shouldSelectOnCreate) {
                         setLastSelectedAddress(address);
                     }
                     leave();
@@ -148,7 +151,9 @@ export default function AddAddressScreen() {
                     onPress: () => {
                         deleteAddressMutation.mutate(editing.id, {
                             onSuccess: () => {
-                                removeAddress(editing.id);
+                                if (lastSelectedAddressId === editing.id) {
+                                    setLastSelectedAddress(null);
+                                }
                                 router.back();
                             },
                         });

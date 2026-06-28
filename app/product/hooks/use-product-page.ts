@@ -1,6 +1,7 @@
 import { useProductDetail } from "@/hooks/react-query-hooks/use-product-detail";
+import { useAddCartItem, useCart, useRemoveCartItem } from "@/hooks/react-query-hooks/use-cart";
 import type { AddCartItemPayload } from "@/services/cart/types";
-import { useCartStore } from "@/stores/cart-store";
+import { isAxiosError } from "axios";
 import { useRouter } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -10,10 +11,11 @@ import { ScrollView } from "react-native";
 export default function useProductPage(productId: number, branchId: number, editCartItemId?: number) {
     const { data: product, isPending, error } = useProductDetail(productId);
 
-    // Resolve edit state from cart store
-    const editItem = useCartStore((s) =>
-        editCartItemId ? s.cart?.items.find((i) => i.id === editCartItemId) : undefined,
-    );
+    // Resolve edit state from the cart cache
+    const { data: cart } = useCart();
+    const editItem = editCartItemId
+        ? cart?.items.find((i) => i.id === editCartItemId)
+        : undefined;
 
     const scrollRef = useRef<ScrollView>(null);
     const [showCompactHeader, setShowCompactHeader] = useState(false);
@@ -103,8 +105,8 @@ export default function useProductPage(productId: number, branchId: number, edit
         return total * quantity;
     }, [product, selectedOptions, selectedAdditions, quantity]);
 
-    const addItem = useCartStore((state) => state.addItem);
-    const removeItem = useCartStore((state) => state.removeItem);
+    const addItemMutation = useAddCartItem();
+    const removeItemMutation = useRemoveCartItem();
     const router = useRouter();
     const { t } = useTranslation(["cart", "general"]);
     const isEditing = !!editCartItemId;
@@ -133,20 +135,20 @@ export default function useProductPage(productId: number, branchId: number, edit
         const payload = buildPayload();
         if (!payload) return;
 
-        // Edit mode: remove old item first, then add updated one
-        if (editCartItemId) {
-            await removeItem(editCartItemId);
-        }
+        try {
+            // Edit mode: remove old item first, then add updated one
+            if (editCartItemId) {
+                await removeItemMutation.mutateAsync(editCartItemId);
+            }
 
-        const result = await addItem(payload);
-        
-
-        if (result.success) {
+            await addItemMutation.mutateAsync(payload);
             router.back();
-            return;
-        }
+        } catch (error) {
+            const isBranchConflict =
+                isAxiosError(error) && error.response?.status === 409;
 
-        if (result.conflict) {
+            if (!isBranchConflict) return;
+
             AppDialog.alert(
                 t("cart:branch_conflict_title"),
                 t("cart:branch_conflict_message"),
@@ -156,19 +158,21 @@ export default function useProductPage(productId: number, branchId: number, edit
                         text: t("cart:replace_cart"),
                         style: "destructive",
                         onPress: async () => {
-                            const retry = await addItem({
-                                ...payload,
-                                force_replace: true,
-                            });
-                            if (retry.success) {
+                            try {
+                                await addItemMutation.mutateAsync({
+                                    ...payload,
+                                    force_replace: true,
+                                });
                                 router.back();
+                            } catch {
+                                // Replacement failed; leave the user on the page.
                             }
                         },
                     },
                 ],
             );
         }
-    }, [buildPayload, editCartItemId, addItem, removeItem, router, t]);
+    }, [buildPayload, editCartItemId, addItemMutation, removeItemMutation, router, t]);
 
     return {
         product,

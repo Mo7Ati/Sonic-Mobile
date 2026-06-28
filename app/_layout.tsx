@@ -3,56 +3,44 @@ import PushNotificationsManager from '@/components/push-notifications-manager';
 import { AppDialogHost } from '@/components/ui/app-dialog';
 import { CairoFontsToLoad } from '@/constants/fonts';
 import '@/lib/i18n';
-import { useAddressesStore } from '@/stores/addresses-store';
-import { useAppPrefsStore } from '@/stores/app-prefs-store';
-import { useAuthStore } from '@/stores/auth-store';
-import { useCartStore } from '@/stores/cart-store';
-import { FloatingDevTools } from '@buoy-gg/core';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from '@/lib/query-client';
+import { useSessionStore } from '@/stores/session-store';
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
 import 'react-native-reanimated';
 import Toast, { ToastProps } from 'react-native-toast-message';
 
 
 SplashScreen.preventAutoHideAsync();
 
+const asyncStoragePersister = createAsyncStoragePersister({
+  storage: AsyncStorage,
+});
+
 export const unstable_settings = {
   anchor: '(tabs)',
 };
 
 export default function RootLayout() {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: 60_000,
-            retry: 2,
-            refetchOnWindowFocus: false,
-          },
-        },
-      }),
-  );
   const [fontsLoaded, fontsError] = useFonts(CairoFontsToLoad);
   const fontsReady = fontsLoaded || !!fontsError;
-  const { status } = useAuthStore();
-
-  const stores = {
-    authStore: useAuthStore,
-    cartStore: useCartStore,
-    addressStore: useAddressesStore,
-    appPrefsStore: useAppPrefsStore,
-  };
+  const status = useSessionStore((s) => s.status);
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{
+        persister: asyncStoragePersister,
+        maxAge: 1000 * 60 * 60 * 24,
+      }}
+    >
       <Bootstrap fontsReady={fontsReady} />
       <PushNotificationsManager />
-      <FloatingDevTools zustandStores={stores} />
 
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -77,6 +65,6 @@ export default function RootLayout() {
       <StatusBar style="auto" />
       <AppDialogHost />
       <Toast />
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }

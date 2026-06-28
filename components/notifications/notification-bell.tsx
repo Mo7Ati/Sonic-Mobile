@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { BorderRadius, Colors, Spacing } from "@/constants/theme";
 import { useUnreadCount } from "@/hooks/react-query-hooks/use-notifications";
-import { useIsAuthenticated } from "@/stores/auth-store";
+import { useIsAuthenticated } from "@/stores/session-store";
 
 /**
  * Bell button with an unread badge. Renders nothing for guests, who have no
