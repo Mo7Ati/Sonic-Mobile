@@ -24,7 +24,7 @@ interface ProfileForm {
 }
 
 export default function CompleteProfileScreen() {
-  const { updateProfile, isAuthenticated, user } = useAuth();
+  const { updateProfile, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation(['auth', 'general']);
 
@@ -37,17 +37,6 @@ export default function CompleteProfileScreen() {
     defaultValues: { name: '' },
   });
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.replace('/(auth)/login');
-      return;
-    }
-
-    if (user?.name) {
-      router.replace('/');
-    }
-  }, [isAuthenticated, user?.name]);
-
   async function onSubmit(form: ProfileForm) {
     if (!user?.phone_number) return;
 
@@ -55,7 +44,7 @@ export default function CompleteProfileScreen() {
 
     try {
       await updateProfile(form.name.trim(), user.phone_number);
-      router.replace('/');
+      router.replace({ pathname: '/addresses/add', params: { onboarding: '1' } });
     } catch (error) {
       const apiError = parseApiError(error);
 

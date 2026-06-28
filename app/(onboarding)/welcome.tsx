@@ -70,13 +70,13 @@ export default function OnboardingSlidesScreen() {
         carouselRef.current?.next();
     };
 
-    if (slides.length === 0) {
-        return (
-            <View style={styles.center}>
-                <ActivityIndicator size="large" color={Colors.primary} />
-            </View>
-        );
-    }
+    // if (slides.length === 0) {
+    //     return (
+    //         <View style={styles.center}>
+    //             <ActivityIndicator size="large" color={Colors.primary} />
+    //         </View>
+    //     );
+    // }
 
     const screenBg = slides[activeIndex]?.background_color || "#FFF7ED";
 

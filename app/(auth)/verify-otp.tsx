@@ -36,9 +36,8 @@ export default function VerifyOtpScreen() {
   }>();
 
   const phoneNumber = params.phone_number;
-  const mode: OtpMode = params.mode === 'phone_change' ? 'phone_change' : 'login';
   const name = params.name;
-  const isPhoneChange = mode === 'phone_change';
+  const isPhoneChange = params.mode === 'phone_change';
 
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);

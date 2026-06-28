@@ -1,6 +1,5 @@
 import Bootstrap from '@/components/bootstrap';
 import PushNotificationsManager from '@/components/push-notifications-manager';
-import { AppDialogHost } from '@/components/ui/app-dialog';
 import { CairoFontsToLoad } from '@/constants/fonts';
 import '@/lib/i18n';
 import { queryClient } from '@/lib/query-client';
@@ -14,7 +13,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import Toast, { ToastProps } from 'react-native-toast-message';
-
+import { FloatingDevTools } from '@buoy-gg/core';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -41,6 +40,7 @@ export default function RootLayout() {
     >
       <Bootstrap fontsReady={fontsReady} />
       <PushNotificationsManager />
+      <FloatingDevTools />
 
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -54,16 +54,19 @@ export default function RootLayout() {
         <Stack.Screen name="addresses/add" options={{ headerShown: false }} />
         <Stack.Screen name="notifications" options={{ headerShown: false }} />
         <Stack.Screen name="user-settings" options={{ headerShown: false }} />
-        <Stack.Screen name="account-info" options={{ headerShown: false }} />
         <Stack.Screen name="custom-page/[index]" options={{ headerShown: false }} />
+
+
+        {/* protected routes */}
         <Stack.Protected guard={status === "authenticated"}>
+          <Stack.Screen name="account-info" options={{ headerShown: false }} />
           <Stack.Screen name="order/[id]" options={{ headerShown: false }} />
           <Stack.Screen name="checkout" options={{ headerShown: false }} />
           <Stack.Screen name="pay" options={{ headerShown: false }} />
         </Stack.Protected>
       </Stack>
       <StatusBar style="auto" />
-      <AppDialogHost />
+      {/* <AppDialogHost /> */}
       <Toast />
     </PersistQueryClientProvider>
   );

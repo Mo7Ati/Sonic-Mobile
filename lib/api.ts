@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { ENV } from '@/config/env';
 import i18n from '@/lib/i18n';
 import { getOrCreateSessionId } from '@/services/session';
-import { useSessionStore } from '@/stores/session-store';
+import { sessionHydrated, useSessionStore } from '@/stores/session-store';
 
 export interface ApiError {
   message: string;
@@ -29,6 +29,10 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
+  // Wait until the persisted token has been seeded at startup so requests
+  // fired by screens mounted on the first frame don't race ahead as guest.
+  await sessionHydrated;
+
   const token = useSessionStore.getState().token;
 
   if (token) {

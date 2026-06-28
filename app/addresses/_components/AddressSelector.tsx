@@ -31,12 +31,12 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
     // Addresses (server state)
     const { data: addresses = [] } = useAddresses();
 
-    // Last selected address (client pref)
-    const lastSelectedAddressId = useAppPrefsStore((s) => s.lastSelectedAddressId);
-    const setLastSelectedAddress = useAppPrefsStore((s) => s.setLastSelectedAddress);
+    // // Last selected address (client pref)
+    // const lastSelectedAddressId = useAppPrefsStore((s) => s.lastSelectedAddressId);
+    // const setLastSelectedAddress = useAppPrefsStore((s) => s.setLastSelectedAddress);
 
     const handleChange = (address: Address) => {
-        setLastSelectedAddress(address);
+        // setLastSelectedAddress(address);
         onClose();
     };
 
@@ -49,7 +49,7 @@ export function AddressSelector({ visible, onClose }: AddressSelectorProps) {
     };
 
     const renderItem = ({ item }: { item: Address }) => {
-        const isSelected = lastSelectedAddressId === item.id;
+        const isSelected = true; // lastSelectedAddressId === item.id;
 
         return (
             <Pressable

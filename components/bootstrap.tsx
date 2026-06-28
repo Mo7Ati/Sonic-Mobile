@@ -33,10 +33,10 @@ export default function Bootstrap({ fontsReady }: BootstrapProps) {
                     router.replace('/welcome');
                 }
 
-                // Defer the splash hide so the chosen route's first paint
-                // lands before the native splash drops away — otherwise the
-                // (tabs) anchor flashes its skeleton for a frame or two.
-                await nextPaint();
+                // // Defer the splash hide so the chosen route's first paint
+                // // lands before the native splash drops away — otherwise the
+                // // (tabs) anchor flashes its skeleton for a frame or two.
+                // await nextPaint();
             } finally {
                 SplashScreen.hideAsync();
             }

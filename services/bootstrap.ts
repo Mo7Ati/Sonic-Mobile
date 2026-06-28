@@ -3,7 +3,7 @@ import { configQuery } from "@/hooks/react-query-hooks/use-config";
 import { meQuery } from "@/hooks/react-query-hooks/use-me";
 import { queryClient } from "@/lib/query-client";
 import { getToken } from "@/services/secure-store";
-import { useSessionStore } from "@/stores/session-store";
+import { markSessionHydrated, useSessionStore } from "@/stores/session-store";
 
 /**
  * App-start orchestrator. Runs once on mount.
@@ -23,6 +23,10 @@ import { useSessionStore } from "@/stores/session-store";
 export async function bootstrap() {
     const token = await getToken();
     useSessionStore.setState({ token });
+
+    // Release any requests waiting in the api interceptor now that the token
+    // (or its absence) is known. Must run before the /me fetch below.
+    markSessionHydrated();
 
     if (token) {
         try {

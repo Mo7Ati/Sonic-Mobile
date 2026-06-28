@@ -23,6 +23,8 @@
     "select_delivery_subtitle": "Saved addresses",
     "last_used": "Last used",
     "add_new_address": "Add new address",
+    "first_address_title": "Add your address",
+    "first_address_subtitle": "Add a delivery address so we know where to bring your orders.",
     "confirm_address": "Confirm address",
     "deliver_to_other_address": "Deliver to other address"
 }

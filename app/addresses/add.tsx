@@ -32,13 +32,20 @@ export default function AddAddressScreen() {
     const { colors, font } = useAppTheme();
     const { t, i18n } = useTranslation('addresses');
     const router = useRouter();
-    const { id, selectOnCreate, next } = useLocalSearchParams<{ id?: string; selectOnCreate?: string; next?: string }>();
+    const { id, selectOnCreate, next, onboarding } = useLocalSearchParams<{
+        id?: string;
+        selectOnCreate?: string;
+        next?: string;
+        onboarding?: string;
+    }>();
     const shouldSelectOnCreate = selectOnCreate === '1';
+    const isOnboarding = onboarding === '1';
 
-    // When invoked with a `next` param (e.g. from onboarding), leaving this
-    // screen should replace into that route rather than popping back to a
-    // screen the user shouldn't see again.
     const leave = () => {
+        if (isOnboarding) {
+            router.replace('/(tabs)');
+            return;
+        }
         if (next) router.replace(next as any);
         else router.back();
     };
@@ -129,7 +136,7 @@ export default function AddAddressScreen() {
         } else {
             createAddressMutation.mutate(payload, {
                 onSuccess: (address: Address) => {
-                    if (lastSelectedAddressId == null || shouldSelectOnCreate) {
+                    if (lastSelectedAddressId == null || shouldSelectOnCreate || isOnboarding) {
                         setLastSelectedAddress(address);
                     }
                     leave();
@@ -170,15 +177,23 @@ export default function AddAddressScreen() {
         <SafeAreaView style={[styles.screen, { backgroundColor: colors.background }]}>
             {/* Header */}
             <View style={styles.header}>
-                <Pressable onPress={leave} hitSlop={10} style={styles.headerSide}>
-                    <Ionicons
-                        name={I18nManager.isRTL ? 'chevron-forward' : 'chevron-back'}
-                        size={26}
-                        color={colors.foreground}
-                    />
-                </Pressable>
+                {isOnboarding ? (
+                    <View style={styles.headerSide} />
+                ) : (
+                    <Pressable onPress={leave} hitSlop={10} style={styles.headerSide}>
+                        <Ionicons
+                            name={I18nManager.isRTL ? 'chevron-forward' : 'chevron-back'}
+                            size={26}
+                            color={colors.foreground}
+                        />
+                    </Pressable>
+                )}
                 <Text style={[styles.headerTitle, { color: colors.foreground, fontFamily: font.bold }]}>
-                    {editing ? t('edit_address') : t('add_new_address')}
+                    {editing
+                        ? t('edit_address')
+                        : isOnboarding
+                            ? t('first_address_title')
+                            : t('add_new_address')}
                 </Text>
                 <Pressable
                     onPress={handleSubmit}
@@ -205,6 +220,18 @@ export default function AddAddressScreen() {
                     keyboardShouldPersistTaps="handled"
                     showsVerticalScrollIndicator={false}
                 >
+                    {/* Onboarding intro */}
+                    {isOnboarding && (
+                        <Text
+                            style={[
+                                styles.introText,
+                                { color: colors.mutedForeground, fontFamily: font.regular },
+                            ]}
+                        >
+                            {t('first_address_subtitle')}
+                        </Text>
+                    )}
+
                     {/* Address name */}
                     <FieldInput
                         label={`${t('address_name')} (${t('address_name_hint')})`}
@@ -338,6 +365,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: Spacing.gutter,
         paddingTop: Spacing.sm,
         paddingBottom: Spacing.lg,
+    },
+    introText: {
+        fontSize: 14,
+        lineHeight: 20,
+        marginBottom: Spacing.sm,
     },
     fieldGroup: { marginBottom: Spacing.tight },
     fieldLabel: {

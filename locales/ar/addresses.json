@@ -23,6 +23,8 @@
     "select_delivery_subtitle": "العناوين المحفوظة",
     "last_used": "آخر استخدام",
     "add_new_address": "إضافة عنوان جديد",
+    "first_address_title": "أضف عنوانك",
+    "first_address_subtitle": "أضف عنوان التوصيل حتى نعرف أين نوصّل طلباتك.",
     "confirm_address": "تأكيد العنوان",
     "deliver_to_other_address": "التوصيل إلى عنوان آخر"
 }
